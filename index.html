@@ -1,589 +1,1150 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Slow News, Smart Citizens — Instructor Guide</title>
+<title>The Citizen Scholar — 10-Week Canvas Shell Preview</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap');
 
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  background:#faf8f4;
-  font-family:'Source Serif 4',Georgia,serif;
-  color:#1a1a1a;font-size:16px;line-height:1.75;
-}
+body{background:#f0ede8;font-family:'Source Serif 4',Georgia,serif;color:#1a1a1a;font-size:16px}
 
-/* ── Nav ── */
-.nav{
-  background:#1a1a1a;
-  padding:0 32px;
-  display:flex;align-items:center;gap:0;
-  position:sticky;top:0;z-index:100;
-  border-bottom:3px solid #8b2332;
+/* ── Preview chrome ── */
+.preview-top{background:#1a1a1a;padding:10px 24px 0;position:sticky;top:0;z-index:200}
+.preview-course-title{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:#666;padding:8px 0 10px;
+  border-bottom:1px solid #333;
 }
-.nav-brand{
-  font-family:'DM Mono',monospace;font-size:10px;
-  letter-spacing:.12em;text-transform:uppercase;
-  color:#555;padding:14px 20px 14px 0;
-  border-right:1px solid #333;margin-right:4px;
-  white-space:nowrap;flex-shrink:0;
-}
-.nav-brand span{color:#c9a96e}
-.nav a{
+.preview-course-title span{color:#c9a96e}
+.week-nav{display:flex;gap:0;overflow-x:auto;padding-bottom:0}
+.week-nav button{
+  background:none;border:none;color:#666;
   font-family:'DM Mono',monospace;font-size:10px;
   letter-spacing:.06em;text-transform:uppercase;
-  color:#555;padding:14px 14px;
-  text-decoration:none;white-space:nowrap;
-  transition:color .15s;
+  padding:10px 14px;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:0;
+  transition:all .15s;flex-shrink:0;
 }
-.nav a:hover{color:#fff}
-
-/* ── Page ── */
-.page{max-width:760px;margin:0 auto;padding:64px 32px 120px}
-
-/* ── Hero ── */
-.hero{margin-bottom:64px;padding-bottom:52px;border-bottom:1px solid #ddd8cf}
-.hero-kicker{
-  font-family:'DM Mono',monospace;font-size:10px;
-  letter-spacing:.16em;text-transform:uppercase;
-  color:#8b2332;margin-bottom:16px;
-}
-.hero-title{
-  font-family:'Playfair Display',Georgia,serif;
-  font-size:44px;font-weight:900;line-height:1.08;
-  color:#1a1a1a;margin-bottom:20px;max-width:560px;
-}
-.hero-sub{
-  font-size:19px;line-height:1.65;color:#444;
-  max-width:560px;font-style:italic;margin-bottom:24px;
-}
-.hero-body{
-  font-size:15.5px;line-height:1.8;color:#555;
-  max-width:580px;
-}
-
-/* ── Sections ── */
-.section{margin-bottom:72px}
-.section-label{
-  font-family:'DM Mono',monospace;font-size:10px;
-  letter-spacing:.14em;text-transform:uppercase;
-  color:#8b2332;margin-bottom:8px;
-}
-.section-title{
-  font-family:'Playfair Display',Georgia,serif;
-  font-size:28px;font-weight:700;color:#1a1a1a;
-  margin-bottom:14px;line-height:1.2;
-}
-.section-rule{width:36px;height:2px;background:#8b2332;margin-bottom:26px}
-.body{
-  font-size:15.5px;line-height:1.8;color:#333;
-  margin-bottom:18px;max-width:640px;
-}
-.body:last-child{margin-bottom:0}
-
-/* ── Pull quote ── */
-.pull{
-  border-left:4px solid #8b2332;padding:14px 22px;
-  background:#fff;margin:26px 0;
-  font-style:italic;font-size:18px;
-  line-height:1.6;color:#2a1818;max-width:600px;
-}
-
-/* ── The three sizes ── */
-.sizes{display:flex;flex-direction:column;gap:3px;margin:28px 0}
-
-.size{
-  background:#fff;border:1px solid #e0dbd3;
-  overflow:hidden;
-}
-.size-header{
-  display:flex;align-items:center;gap:0;
-  cursor:pointer;user-select:none;
-  padding:0;
-}
-.size-stripe{
-  width:8px;flex-shrink:0;align-self:stretch;
-}
-.size-stripe.s{background:#c9a96e}
-.size-stripe.m{background:#8b2332}
-.size-stripe.l{background:#1a1a1a}
-
-.size-header-content{
-  flex:1;padding:20px 24px;
-  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;
-}
-.size-tag{
-  font-family:'DM Mono',monospace;font-size:10px;
-  letter-spacing:.12em;text-transform:uppercase;
-  color:#999;flex-shrink:0;
-}
-.size-name{
-  font-family:'Playfair Display',Georgia,serif;
-  font-size:21px;font-weight:700;color:#1a1a1a;
-  flex-shrink:0;
-}
-.size-tagline{
-  font-size:14px;color:#666;font-style:italic;
-  line-height:1.4;
-}
-.size-toggle{
-  font-family:'DM Mono',monospace;font-size:16px;
-  color:#8b2332;padding:20px 24px;flex-shrink:0;
-  transition:transform .2s;
-}
-.size.open .size-toggle{transform:rotate(45deg)}
-
-.size-body{
-  display:none;padding:0 24px 28px 32px;
-  border-top:1px solid #ede8e2;
-}
-.size.open .size-body{display:block}
-
-.size-meta{
-  display:flex;gap:24px;flex-wrap:wrap;
-  padding:16px 0 20px;
-}
-.size-meta-item{
-  font-family:'DM Mono',monospace;font-size:10px;
-  letter-spacing:.05em;text-transform:uppercase;color:#aaa;
-}
-.size-meta-item span{color:#8b2332;font-weight:500}
-
-.size-body .body{max-width:100%}
-
-/* Session blocks */
-.session{
-  background:#faf8f4;border:1px solid #e8e3da;
-  padding:20px 22px;margin:16px 0;
-}
-.session-label{
+.week-nav button.active{color:#fff;border-bottom-color:#8b2332}
+.week-nav button:hover:not(.active){color:#ccc}
+.unit-divider{
+  display:inline-block;padding:10px 10px;
   font-family:'DM Mono',monospace;font-size:9px;
-  letter-spacing:.1em;text-transform:uppercase;
-  color:#8b2332;margin-bottom:10px;
-}
-.session-title{
-  font-size:16px;font-weight:600;color:#1a1a1a;
-  margin-bottom:10px;
-}
-.session p{font-size:14.5px;line-height:1.7;color:#444;margin-bottom:8px}
-.session p:last-child{margin-bottom:0}
-.session-steps{list-style:none;padding:0;margin-top:10px}
-.session-steps li{
-  padding:6px 0 6px 20px;position:relative;
-  font-size:14.5px;line-height:1.55;color:#333;
-  border-bottom:1px solid #ede8e2;
-}
-.session-steps li:last-child{border-bottom:none}
-.session-steps li::before{
-  content:'→';position:absolute;left:0;
-  color:#8b2332;font-family:'DM Mono',monospace;font-size:11px;
-  top:7px;
+  text-transform:uppercase;letter-spacing:.1em;color:#444;
+  border-right:1px solid #333;cursor:default;
 }
 
-/* Callouts */
-.callout{
-  background:#fff8f5;border:1px solid #e8d0d0;
-  border-left:4px solid #8b2332;
-  padding:14px 18px;margin:14px 0;
-}
-.callout-label{
-  font-family:'DM Mono',monospace;font-size:9px;
-  letter-spacing:.1em;text-transform:uppercase;
-  color:#8b2332;margin-bottom:8px;
-}
-.callout p{font-size:14.5px;line-height:1.65;color:#3a3a3a;margin:0}
-.callout p+p{margin-top:8px}
+.week-panel{display:none;max-width:900px;margin:0 auto;padding:0 0 60px}
+.week-panel.active{display:block}
 
-/* Dark box */
-.dark{background:#1a1a1a;padding:28px 32px;margin:24px 0}
-.dark-label{
-  font-family:'DM Mono',monospace;font-size:9px;
-  letter-spacing:.12em;text-transform:uppercase;
-  color:#c9a96e;margin-bottom:12px;
+/* ── Canvas dp-wrapper faithful reproduction ── */
+.dp-wrapper{
+  background:#fff;font-family:'Source Serif 4',Georgia,serif;
+  margin-bottom:3px;
 }
-.dark p{font-size:15px;line-height:1.75;color:#bbb;margin-bottom:12px}
-.dark p:last-child{margin-bottom:0}
-.dark strong{color:#fff}
-.dark em{color:#c9a96e;font-style:normal}
-
-/* Week rows */
-.weeks{margin:14px 0}
-.wk{
-  display:flex;gap:14px;padding:10px 0;
-  border-bottom:1px solid #f0ece6;align-items:flex-start;
+.dp-header{
+  background-color:#8b2332;color:#fff;
+  padding:16px 28px 14px;
 }
-.wk:last-child{border-bottom:none}
-.wk-label{
-  font-family:'DM Mono',monospace;font-size:10px;
+.dp-heading{
+  margin:0;padding:0;border-top:none;
+  font-size:10px;font-family:'DM Mono',monospace;
+  letter-spacing:.16em;text-transform:uppercase;font-weight:500;
+  color:#fff;
+}
+.dp-header-title{color:#fff!important}
+.dp-content-block{
+  padding:26px 32px 22px;
+  border-bottom:1px solid #ede9e3;
+}
+.dp-content-block:last-child{border-bottom:none}
+.dp-has-icon{
+  display:flex;align-items:flex-start;gap:11px;
+  font-size:11px;font-family:'DM Mono',monospace;
   letter-spacing:.05em;text-transform:uppercase;
-  color:#8b2332;flex-shrink:0;width:64px;margin-top:3px;
+  color:#8b2332;margin-bottom:14px;font-weight:500;line-height:1.4;
 }
-.wk-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:3px}
-.wk-sub{font-size:13.5px;line-height:1.55;color:#666}
+.dp-icon{font-size:16px;margin-top:1px;flex-shrink:0}
+.dp-content-block p{
+  font-size:15.5px;line-height:1.78;color:#2c2c2c;
+  margin-bottom:14px;
+}
+.dp-content-block p:last-child{margin-bottom:0}
+.dp-content-block ul,
+.dp-content-block ol{padding-left:22px;margin-bottom:14px}
+.dp-content-block li{
+  font-size:15.5px;line-height:1.75;color:#2c2c2c;margin-bottom:7px;
+}
 
-/* Component grid */
-.comp-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;
+/* ── Custom components ── */
+.cs-pull{
+  border-left:4px solid #8b2332;padding:14px 20px;
+  background:#faf7f4;margin:14px 0 20px;
+  font-size:17px;line-height:1.65;font-style:italic;color:#2a1818;
 }
-@media(max-width:520px){.comp-grid{grid-template-columns:1fr}}
-.comp{
-  background:#fff;border:1px solid #e8e3dc;
-  border-left:3px solid #8b2332;padding:12px 13px;
+.cs-meta{
+  display:flex;gap:24px;flex-wrap:wrap;
+  margin:6px 0 18px;
 }
-.comp strong{
+.cs-meta-item{
+  font-family:'DM Mono',monospace;font-size:11px;
+  letter-spacing:.05em;text-transform:uppercase;color:#999;
+}
+.cs-meta-item span{color:#8b2332;font-weight:500}
+
+.cs-week-header{
+  padding:20px 32px 0;background:#fff;
+}
+.cs-unit-badge{
+  display:inline-block;background:#8b2332;color:#fff;
+  font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:3px 9px;margin-bottom:10px;
+}
+.cs-week-title{
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:26px;font-weight:700;color:#1a1a1a;
+  line-height:1.2;margin-bottom:6px;
+}
+.cs-week-subtitle{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:14px;font-style:italic;color:#888;margin-bottom:0;
+}
+.cs-rule{height:3px;background:#8b2332;margin:0}
+
+.cs-outcomes-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px;
+}
+.cs-outcome{
+  background:#faf7f4;border:1px solid #e8e2da;
+  border-left:3px solid #8b2332;
+  padding:11px 13px;font-size:14px;line-height:1.55;color:#2c2c2c;
+}
+.cs-outcome strong{
   display:block;font-family:'DM Mono',monospace;
-  font-size:9px;letter-spacing:.08em;
-  text-transform:uppercase;color:#8b2332;margin-bottom:4px;
+  font-size:9px;text-transform:uppercase;letter-spacing:.08em;
+  color:#8b2332;margin-bottom:4px;font-style:normal;
 }
-.comp span{font-size:13.5px;line-height:1.55;color:#444}
 
-/* The AI framing section */
-.ai-framing{
-  background:#fff;border:1px solid #e0dbd3;
-  padding:28px 32px;margin:28px 0;
+.cs-step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start}
+.cs-step-num{
+  flex-shrink:0;width:28px;height:28px;background:#8b2332;color:#fff;
+  font-family:'DM Mono',monospace;font-size:12px;font-weight:500;
+  display:flex;align-items:center;justify-content:center;border-radius:50%;margin-top:3px;
 }
-.ai-framing-title{
-  font-family:'Playfair Display',Georgia,serif;
-  font-size:20px;font-weight:700;color:#1a1a1a;
-  margin-bottom:6px;
-}
-.ai-framing-sub{
-  font-family:'DM Mono',monospace;font-size:10px;
-  letter-spacing:.06em;text-transform:uppercase;
-  color:#999;margin-bottom:18px;
-}
-.ai-framing p{
-  font-size:15px;line-height:1.75;color:#333;margin-bottom:12px;
-}
-.ai-framing p:last-child{margin-bottom:0}
+.cs-step-body{font-size:15px;line-height:1.72;color:#2c2c2c}
+.cs-step-body strong{color:#1a1a1a}
 
-/* The coffee klatch visual ── just text-based, honest */
-.klatch{
-  border:1px solid #ddd8cf;background:#fff;
-  padding:32px;margin:28px 0;text-align:center;
+.cs-callout{
+  background:#faf7f4;border:1px solid #e0dbd4;
+  padding:15px 19px;margin:14px 0;
 }
-.klatch-scene{
-  font-family:'Playfair Display',Georgia,serif;
-  font-size:15px;font-style:italic;color:#888;
-  margin-bottom:20px;line-height:1.6;
+.cs-callout-label{
+  font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:.1em;text-transform:uppercase;color:#8b2332;
+  margin-bottom:8px;font-weight:500;
 }
-.klatch-questions{
-  display:flex;flex-direction:column;gap:10px;
-  text-align:left;max-width:480px;margin:0 auto;
+.cs-callout p{font-size:14.5px;margin:0;color:#3a3a3a;line-height:1.65}
+
+.cs-rubric{
+  width:100%;border-collapse:collapse;margin-top:14px;
+  font-size:14px;
 }
-.klatch-q{
-  display:flex;gap:12px;align-items:flex-start;
+.cs-rubric th{
+  background:#8b2332;color:#fff;padding:9px 13px;text-align:left;
+  font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:.08em;text-transform:uppercase;font-weight:500;
 }
-.klatch-q-num{
-  font-family:'DM Mono',monospace;font-size:10px;
-  color:#8b2332;flex-shrink:0;margin-top:3px;font-weight:500;
+.cs-rubric td{
+  padding:9px 13px;vertical-align:top;
+  border-bottom:1px solid #ede9e3;line-height:1.55;color:#2c2c2c;
 }
-.klatch-q-text{font-size:15px;line-height:1.6;color:#333}
+.cs-rubric tr:nth-child(even) td{background:#faf7f4}
+.cs-rubric .pts{
+  font-family:'DM Mono',monospace;font-size:12px;
+  color:#8b2332;font-weight:500;white-space:nowrap;
+}
+
+.cs-reading{padding:11px 0;border-bottom:1px solid #ede9e3}
+.cs-reading:last-child{border-bottom:none}
+.cs-reading-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:3px}
+.cs-reading-meta{font-family:'DM Mono',monospace;font-size:11px;color:#888;letter-spacing:.03em}
+.cs-reading-tag{
+  display:inline-block;background:#f0ede8;
+  font-family:'DM Mono',monospace;font-size:9px;
+  text-transform:uppercase;letter-spacing:.08em;
+  color:#8b2332;padding:2px 6px;margin-left:7px;
+}
+
+.cs-paste-label{
+  background:#111;border-left:3px solid #8b2332;
+  padding:7px 14px;margin:2px 0;
+  font-family:'DM Mono',monospace;font-size:9px;
+  color:#666;letter-spacing:.08em;text-transform:uppercase;
+}
+
+.cs-journal-prompt{
+  border:2px dashed #d4cfc8;padding:18px 22px;margin:14px 0;
+  background:#fdfcfa;
+}
+.cs-journal-prompt .cs-callout-label{color:#6b5c5c}
+.cs-journal-prompt p{font-size:15px;line-height:1.7;color:#3a3a3a;margin:0}
+
+.cs-process-box{
+  background:#fff8f8;border:1px solid #e8d0d0;
+  border-left:4px solid #8b2332;padding:16px 20px;margin:14px 0;
+}
+.cs-process-box .cs-callout-label{color:#8b2332}
+.cs-process-box p{font-size:15px;margin:0;line-height:1.7;color:#2c2c2c}
 
 a{color:#8b2332;text-decoration:underline;text-underline-offset:2px}
+a:hover{color:#5a1520}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 
-<nav class="nav">
-  <div class="nav-brand"><span>Slow News, Smart Citizens</span> — Instructor Guide</div>
-  <a href="#idea">The Idea</a>
-  <a href="#ai">The AI Question</a>
-  <a href="#sizes">S / M / L</a>
-  <a href="#start">Getting Started</a>
-</nav>
-
-<div class="page">
-
-  <!-- ── HERO ── -->
-  <div class="hero">
-    <div class="hero-kicker">Slow News, Smart Citizens — A Framework for Any Classroom</div>
-    <div class="hero-title">Reading the News Together, on Purpose</div>
-    <div class="hero-sub">A media literacy practice that fits in any course, in any discipline, taught at any scale.</div>
-    <div class="hero-body">Pick it up for a single class session. Run it as a recurring weekly ritual. Build a full course around it. The framework scales to whatever you have room for — and the conversation it starts tends to go further than you expect.</div>
+<div class="preview-top">
+  <div class="preview-course-title">
+    <span>The Citizen Scholar: Following Your Field's News Beat</span> — 10-Week Canvas Shell · University of Denver · MFJS / General Education
   </div>
-
-
-  <!-- ── THE IDEA ── -->
-  <div class="section" id="idea">
-    <div class="section-label">The Idea</div>
-    <div class="section-title">The Coffee Klatch</div>
-    <div class="section-rule"></div>
-
-    <div class="body">Before it was a curriculum, this was a practice. A group of people sitting around a table, each with something they read, talking about what it means. No agenda, no expert at the front of the room — just the shared act of paying attention to what is happening in the world and thinking out loud about it together.</div>
-
-    <div class="body">That practice is older than journalism education. It is older than universities. And it turns out to be exactly what most students are not getting: a low-stakes, unhurried space to engage with the news as curious human beings rather than consumers or critics.</div>
-
-    <div class="klatch">
-      <div class="klatch-scene">Imagine your class, on any given Tuesday, opening with five questions. Not on a slide. Just in the air.</div>
-      <div class="klatch-questions">
-        <div class="klatch-q"><div class="klatch-q-num">01</div><div class="klatch-q-text">What did you read this week that surprised you?</div></div>
-        <div class="klatch-q"><div class="klatch-q-num">02</div><div class="klatch-q-text">Where did you find it — and how did it find you?</div></div>
-        <div class="klatch-q"><div class="klatch-q-num">03</div><div class="klatch-q-text">What does your field know about this that the story doesn't say?</div></div>
-        <div class="klatch-q"><div class="klatch-q-num">04</div><div class="klatch-q-text">Who isn't in this story?</div></div>
-        <div class="klatch-q"><div class="klatch-q-num">05</div><div class="klatch-q-text">What would you need to know to trust it?</div></div>
-      </div>
-    </div>
-
-    <div class="body">Those five questions are the whole curriculum, in compressed form. Everything else — the reading journals, the structured assignments, the collaborative capstone — is scaffolding around the practice of asking them regularly, with other people, about real things happening right now.</div>
-
-    <div class="pull">"You do not need to redesign your course. You need fifteen minutes at the start of class and students who brought something to read."</div>
-
-    <div class="body">The modern twist is that two of those five questions — where did you find it, and how did it find you — now open onto something genuinely new and worth talking about. Most of what students encounter as news in 2026 was selected, summarized, or generated by systems they cannot see, optimizing for attention rather than understanding. That fact, named plainly and without drama, is the entry point to everything the framework asks.</div>
+  <div class="week-nav" id="weekNav">
+    <span class="unit-divider">Unit 1<br>Description</span>
+    <button class="active" onclick="showWeek(0)">Week 1</button>
+    <button onclick="showWeek(1)">Week 2</button>
+    <span class="unit-divider">Unit 2<br>Analysis</span>
+    <button onclick="showWeek(2)">Week 3</button>
+    <button onclick="showWeek(3)">Week 4</button>
+    <span class="unit-divider">Unit 3<br>Interpretation</span>
+    <button onclick="showWeek(4)">Week 5</button>
+    <button onclick="showWeek(5)">Week 6</button>
+    <span class="unit-divider">Unit 4<br>Evaluation</span>
+    <button onclick="showWeek(6)">Week 7</button>
+    <button onclick="showWeek(7)">Week 8</button>
+    <span class="unit-divider">Unit 5<br>Engagement</span>
+    <button onclick="showWeek(8)">Week 9</button>
+    <button onclick="showWeek(9)">Week 10</button>
   </div>
+</div>
 
+<!-- ═══════════════════════════════════════════
+     WEEK 1 — Learning to Describe
+════════════════════════════════════════════════ -->
+<div class="week-panel active" id="week-0">
 
-  <!-- ── THE AI QUESTION ── -->
-  <div class="section" id="ai">
-    <div class="section-label">The AI Question</div>
-    <div class="section-title">What to Say When Students Ask About AI and the News</div>
-    <div class="section-rule"></div>
-
-    <div class="body">You do not need to be an AI expert to teach this framework. You need to be honest about what is happening — which is not complicated, even if it is unsettling.</div>
-
-    <div class="ai-framing">
-      <div class="ai-framing-title">A Plain Account of the Moment</div>
-      <div class="ai-framing-sub">For instructors — adapt freely for your students and your discipline</div>
-      <p>The information environment students navigate today is substantially shaped by AI systems — not in a futuristic sense, but right now. Recommendation algorithms decide what appears in their feeds. AI tools summarize articles before students read them. A growing portion of online content is generated, in whole or in part, by large language models. Some of that content is accurate and useful. Some of it is fabricated. Most of it exists somewhere between — plausible on the surface, missing the sourcing and context that would let a reader evaluate it properly.</p>
-      <p>At the same time, the companies building these tools are driving significant economic growth. This is worth naming because students are living inside both realities simultaneously: an information environment that is harder to read clearly, and an economy that depends on the tools making it harder. That is not a political observation. It is a structural one, and students generally recognize it as describing their own experience.</p>
-      <p>The framework does not ask students to be against AI or to distrust everything they read. It asks them to slow down enough to notice where information comes from, how it traveled, and what it is asking of them as readers and citizens. That is a very old ask. The AI moment makes it more urgent, not different in kind.</p>
+<div class="cs-paste-label">Canvas Page — Week 1 Overview</div>
+<div class="dp-wrapper">
+  <div class="cs-week-header">
+    <div class="cs-unit-badge">Unit 1 · Description — Week 1 of 2</div>
+    <div class="cs-week-title">Learning to Describe: What Is Actually There</div>
+    <div class="cs-week-subtitle">Before you can analyze, evaluate, or act on the news, you have to see it clearly.</div>
+  </div>
+  <div class="cs-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt" aria-hidden="true"></i>Overview and Purpose</h3>
+    <div class="cs-meta">
+      <div class="cs-meta-item">Unit: <span>1 of 5 — Description</span></div>
+      <div class="cs-meta-item">Week: <span>1 of 10</span></div>
+      <div class="cs-meta-item">Rhythm: <span>Reading · Journal · Discussion</span></div>
     </div>
+    <div class="cs-pull">"Description is the most underrated intellectual act. Before you can argue with the news, explain it, or do something about it — you have to be able to say, precisely and honestly, what it says."</div>
+    <p>This week introduces the foundation of the entire course: the five-step critical process that structures every unit. We begin with the first and most essential step — description. Description means setting aside reaction, opinion, and interpretation long enough to account for what is actually in front of you. It is harder than it sounds, and it is where most news consumption goes wrong.</p>
+    <p>The critical process you practice this week is not a checklist to complete once. It is a discipline to develop over ten weeks. Each unit builds on the last, moving from seeing the news clearly (description) to acting on it responsibly (engagement). This week, you will practice description on a piece of news content — without yet worrying about what it means or whether it is true.</p>
+    <p>You will also begin identifying your news beat — the field, discipline, or topic area that you will follow for the rest of the quarter. Your beat is not an assignment topic. It is your ongoing relationship with a living area of public life.</p>
 
-    <div class="body">How directly you engage the AI question depends on your course and your students. The Small version holds it lightly — as context, introduced once, returned to when it surfaces naturally. The Medium version makes it a recurring thread. The Large version builds it into the course's central inquiry. All three versions start from the same honest premise: the newspaper on the table and the feed on the phone are not equivalent objects, and it is worth knowing why.</div>
-
-    <div class="dark">
-      <div class="dark-label">Three things worth saying to students, in any version</div>
-      <p><strong>On speed:</strong> The news cycle moves faster than understanding. Slowing down is not falling behind — it is the condition for knowing what you think.</p>
-      <p><strong>On AI-generated content:</strong> The threat to a well-informed public is not dramatic fabrication. It is ordinary noise — content that is not quite sourced, not quite accurate, not quite authored by anyone, present everywhere. Learning to notice it is a skill, and skills improve with practice.</p>
-      <p><strong>On their own knowledge:</strong> Whatever they are studying, they know things about their field that most journalists covering it do not. That knowledge is not background — it is a contribution. The framework asks them to bring it into the room.</p>
+    <p>&nbsp;</p>
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt" aria-hidden="true"></i>Learning Outcomes</h3>
+    <div class="cs-outcomes-grid">
+      <div class="cs-outcome"><strong>Define</strong>Explain the five-step critical process (Description, Analysis, Interpretation, Evaluation, Engagement) and its logic as a sequence.</div>
+      <div class="cs-outcome"><strong>Practice Description</strong>Apply description as a discrete critical act to a news text: account for what is present without interpretation or evaluation.</div>
+      <div class="cs-outcome"><strong>Identify Sources</strong>Name at least three source types where your chosen beat lives, including primary sources, specialist outlets, and mainstream coverage.</div>
+      <div class="cs-outcome"><strong>Begin Your Beat</strong>Draft an initial statement of your beat: the field, the living questions it raises, and why it matters to you as a scholar and citizen.</div>
     </div>
   </div>
+</div>
 
-
-  <!-- ── THREE SIZES ── -->
-  <div class="section" id="sizes">
-    <div class="section-label">Small, Medium, Large</div>
-    <div class="section-title">Choose What Fits Your Course Right Now</div>
-    <div class="section-rule"></div>
-
-    <div class="body">Each size is a complete version of the framework. Pick one based on what you actually have room for — not what you wish you had room for. You can always grow into a larger version later. The Small version done well is better than the Large version done under pressure.</div>
-
-    <div class="sizes">
-
-      <!-- SMALL -->
-      <div class="size" id="size-small">
-        <div class="size-header" onclick="toggleSize('small')">
-          <div class="size-stripe s"></div>
-          <div class="size-header-content">
-            <div class="size-tag">Small</div>
-            <div class="size-name">The Opening Conversation</div>
-            <div class="size-tagline">One session, or a recurring ten-minute ritual at the start of class. No assignments. No redesign.</div>
-          </div>
-          <div class="size-toggle">+</div>
-        </div>
-        <div class="size-body">
-          <div class="size-meta">
-            <div class="size-meta-item">Time: <span>10–15 min per session, or 1–3 dedicated sessions</span></div>
-            <div class="size-meta-item">Student prep: <span>Read something. Bring it.</span></div>
-            <div class="size-meta-item">Assessment: <span>None required</span></div>
-          </div>
-
-          <div class="body">The simplest version of this framework is also the most durable. At the start of class — any class, any week — you ask students what they read. Then you ask where they found it. Then you ask one of the five questions above. That is it. That is the practice.</div>
-
-          <div class="body">Done consistently across a semester, even for ten minutes a week, it builds something: a class that shows up with things to say, that knows the difference between a story and a headline, and that has started noticing how their field lives in the public conversation.</div>
-
-          <div class="session">
-            <div class="session-label">One-Session Version — Stand-Alone</div>
-            <div class="session-title">Reading the Room: News, AI, and What We Actually Know</div>
-            <p>A single dedicated class session that introduces the five questions, practices description on a shared example, and opens the AI conversation. Works in any discipline. Requires nothing from students in advance except showing up.</p>
-            <ul class="session-steps">
-              <li><strong>Open (5 min):</strong> Ask students where they got their news this week. List the sources on the board — or just in the air. Do not evaluate them yet.</li>
-              <li><strong>The shared read (10 min):</strong> Bring one current news item related to your field. Read it together — aloud or briefly in silence. Then ask: what does this story actually say, according to the evidence it cites?</li>
-              <li><strong>The source question (10 min):</strong> Where did this story come from? Who reported it? What is the primary source — the study, the document, the event — and how far did it travel before becoming this article? Did AI touch it anywhere along the way?</li>
-              <li><strong>The field question (10 min):</strong> What does your discipline know about this topic that the story does not say? What would a specialist add — or correct?</li>
-              <li><strong>Close (5 min):</strong> What question does the story leave open? Not a rhetorical question — a real one that a careful reader would still have after finishing it.</li>
-            </ul>
-          </div>
-
-          <div class="session">
-            <div class="session-label">Recurring Ritual Version</div>
-            <div class="session-title">The Opening Ten Minutes, Every Week</div>
-            <p>Reserve the first ten minutes of class each week for the coffee klatch. One student brings something they read — from anywhere, in any format — and the class spends ten minutes with it using some version of the five questions. Rotate the student who brings the item. No grades attached; the practice is the point.</p>
-            <ul class="session-steps">
-              <li>Keep a running list of sources students have cited across the semester — it becomes a portrait of the class's information diet.</li>
-              <li>When AI-generated or AI-summarized content appears (it will), name it without drama and ask: how would you know? What would you look for?</li>
-              <li>Let the conversation go where it goes. The field question — what does your discipline know about this? — is the one that tends to surprise students most.</li>
-            </ul>
-          </div>
-
-          <div class="callout">
-            <div class="callout-label">What instructors say after trying this</div>
-            <p>The most common response: students start bringing better things. By Week 4, they are not just sharing what appeared in their feed — they are tracing stories, comparing sources, noticing gaps. The ten minutes does its own teaching.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- MEDIUM -->
-      <div class="size" id="size-medium">
-        <div class="size-header" onclick="toggleSize('medium')">
-          <div class="size-stripe m"></div>
-          <div class="size-header-content">
-            <div class="size-tag">Medium</div>
-            <div class="size-name">The Story Arc</div>
-            <div class="size-tagline">Four to five weeks. Students follow one story across the news cycle and write about what they find.</div>
-          </div>
-          <div class="size-toggle">+</div>
-        </div>
-        <div class="size-body">
-          <div class="size-meta">
-            <div class="size-meta-item">Time: <span>4–5 weeks, in-class and outside</span></div>
-            <div class="size-meta-item">Student prep: <span>Weekly reading + a brief journal entry</span></div>
-            <div class="size-meta-item">Assessment: <span>Two short written pieces</span></div>
-          </div>
-
-          <div class="body">The Medium version adds one thing to the coffee klatch: a thread. Students choose a story or topic they will follow across four or five weeks — not a research topic, but a live news story unfolding in real time. They watch it develop, notice how the coverage changes, and bring it to the weekly conversation from a position of sustained attention rather than fresh exposure.</div>
-
-          <div class="body">The difference between someone who has been following a story for three weeks and someone who just read about it for the first time is visible in the room. The Medium version cultivates that difference deliberately, without overwhelming students or requiring them to become experts.</div>
-
-          <div class="weeks">
-            <div class="wk">
-              <div class="wk-label">Week 1</div>
-              <div class="wk-content">
-                <div class="wk-title">Finding Your Story</div>
-                <div class="wk-sub">Students choose a live news story in any field connected to their interests or major. They describe it — just describe it, without evaluation — and identify where the story is coming from. Where is the primary source? What happens to it between origin and headline?</div>
-              </div>
-            </div>
-            <div class="wk">
-              <div class="wk-label">Week 2</div>
-              <div class="wk-content">
-                <div class="wk-title">Watching It Move</div>
-                <div class="wk-sub">A week later, the story has developed. Students track what changed: what new evidence appeared, whose voices entered or left the coverage, how the framing shifted. The AI question enters here naturally — was the summary they got this week different from what the reported story said?</div>
-              </div>
-            </div>
-            <div class="wk">
-              <div class="wk-label">Week 3</div>
-              <div class="wk-content">
-                <div class="wk-title">Bringing What You Know</div>
-                <div class="wk-sub">Students apply their disciplinary knowledge to the story. What does their field understand about this that the coverage does not explain? This is the interpretive move — not opinion, but the contribution that comes from actually knowing something about the subject.</div>
-              </div>
-            </div>
-            <div class="wk">
-              <div class="wk-label">Week 4–5</div>
-              <div class="wk-content">
-                <div class="wk-title">Saying Something About It</div>
-                <div class="wk-sub">Students write a short piece — 400–600 words — for a general reader: what this story is actually about, in light of what they now know about it. Not a summary, not a reaction. An account that only someone who has been paying attention for a month can give.</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="comp-grid">
-            <div class="comp"><strong>Weekly Journal</strong><span>A brief entry (150–200 words) before each class: what the student saw in their story this week, in the four-beat format. Completion-graded.</span></div>
-            <div class="comp"><strong>Source Map</strong><span>A short written piece (300–400 words) tracing the story's information architecture: where it comes from, how it travels, where AI enters.</span></div>
-            <div class="comp"><strong>The Short Piece</strong><span>400–600 words for a general reader. The student's interpretive contribution — what they know that the coverage does not say.</span></div>
-            <div class="comp"><strong>Weekly Discussion</strong><span>In-class: the coffee klatch conversation, now informed by four weeks of individual attention. Each student arrives knowing something the others do not.</span></div>
-          </div>
-
-          <div class="callout">
-            <div class="callout-label">Works in any discipline</div>
-            <p>A biology student follows coverage of a clinical trial. A history student follows a commemoration or anniversary story. An economics student follows a policy debate. A literature student follows a cultural controversy. The method is the same; the knowledge each brings to it is different — and that difference is the point.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- LARGE -->
-      <div class="size" id="size-large">
-        <div class="size-header" onclick="toggleSize('large')">
-          <div class="size-stripe l"></div>
-          <div class="size-header-content">
-            <div class="size-tag">Large</div>
-            <div class="size-name">The Citizen Scholar</div>
-            <div class="size-tagline">Ten weeks. A beat, five critical moves, a collective document the class makes together.</div>
-          </div>
-          <div class="size-toggle">+</div>
-        </div>
-        <div class="size-body">
-          <div class="size-meta">
-            <div class="size-meta-item">Time: <span>Full 10-week quarter</span></div>
-            <div class="size-meta-item">Student prep: <span>Weekly journal + readings + class ritual</span></div>
-            <div class="size-meta-item">Assessment: <span>Four unit assignments + collective capstone</span></div>
-          </div>
-
-          <div class="body">The Large version is the full Citizen Scholar framework: ten weeks, five critical moves (Description, Analysis, Interpretation, Evaluation, Engagement), four individual unit assignments, and a collective capstone — a class-produced document called the State of the World.</div>
-
-          <div class="body">The coffee klatch is still at the center. Every class session opens with the Huddle — a student-run fifteen-minute ritual where two or three students brief the room on their beat thread, and anyone can bring something from outside the course to the Open Floor. By Week 3 the instructor is no longer starting class. By Week 6 the room is making connections the instructor did not plan. By Week 10 the class has produced something together that none of them could have made alone.</div>
-
-          <div class="body">The full Canvas shell — all ten weeks, all pages, all rubrics and prompts — is available separately. What follows is the essential shape of the course.</div>
-
-          <div class="weeks">
-            <div class="wk"><div class="wk-label">Weeks 1–2</div><div class="wk-content"><div class="wk-title">Description</div><div class="wk-sub">Students choose a beat, map its source architecture, and identify a specific story thread they will follow for the rest of the quarter.</div></div></div>
-            <div class="wk"><div class="wk-label">Weeks 3–4</div><div class="wk-content"><div class="wk-title">Analysis</div><div class="wk-sub">Students track their thread across the news cycle, map whose voices are present and absent, and identify the structural pattern in how their beat gets covered.</div></div></div>
-            <div class="wk"><div class="wk-label">Weeks 5–6</div><div class="wk-content"><div class="wk-title">Interpretation</div><div class="wk-sub">Disciplinary knowledge applied to meaning. Students write the Interpretive Brief. The weekly Huddle begins surfacing connections between beats — clusters start to form.</div></div></div>
-            <div class="wk"><div class="wk-label">Weeks 7–8</div><div class="wk-content"><div class="wk-title">Evaluation</div><div class="wk-sub">Ethical and equity analysis. Who bears the costs of what is happening in the thread? Does the coverage serve public understanding of those stakes? Clusters confirm and begin planning their State of the World entry.</div></div></div>
-            <div class="wk"><div class="wk-label">Weeks 9–10</div><div class="wk-content"><div class="wk-title">Engagement</div><div class="wk-sub">Cluster drafts, peer review, revision, and assembly. Week 10 is the assembly session — the class puts together what it has been watching, and the document exists.</div></div></div>
-          </div>
-
-          <div class="callout">
-            <div class="callout-label">The State of the World</div>
-            <p>At Week 10, the class produces a shared document — the State of the World — assembled from cluster entries, each addressing the shared question that connected a group of beats. It can be a Google Doc, a printed zine, a Notion page, a simple PDF. What it is matters less than the fact that it exists: a record of what this particular class was watching, at this particular moment, and what they understood about it that most people did not.</p>
-          </div>
-
-          <div class="callout" style="margin-top:10px">
-            <div class="callout-label">What the Large version requires of instructors</div>
-            <p>One short lecture video per unit (five total, 10–12 minutes each). One current example selected per unit. Cluster groupings proposed after Week 6. The assembly session facilitated in Week 10. Everything else runs from the Canvas shell.</p>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /sizes -->
-  </div>
-
-
-  <!-- ── GETTING STARTED ── -->
-  <div class="section" id="start">
-    <div class="section-label">Getting Started</div>
-    <div class="section-title">Three Things Before Tuesday</div>
-    <div class="section-rule"></div>
-
-    <div class="body">Whichever size you choose, the first session is the same. You need three things.</div>
-
-    <div class="session" style="margin-top:20px">
-      <div class="session-label">Before Your First Session</div>
-      <ul class="session-steps">
-        <li><strong>One news item from your field, from this week.</strong> It does not need to be the most important story. It needs to be one you find genuinely interesting and that connects, however obliquely, to what your course is about. Print it or have it ready to share on screen.</li>
-        <li><strong>The five questions.</strong> You do not need them on a slide. You need them in your head: What does it say? Where did it come from? What does your field know about this? Who is missing? What would you need to trust it?</li>
-        <li><strong>A light hand.</strong> The coffee klatch works when the instructor is a participant, not a facilitator. Bring your own answer to the five questions. Let the conversation find its own level. If it goes somewhere unexpected, follow it.</li>
-      </ul>
+<div class="cs-paste-label">Canvas Page — Week 1 Readings and Materials</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Readings and Instructional Materials</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon icon-courses" aria-hidden="true"></i>Readings</h3>
+    <div class="cs-reading">
+      <div class="cs-reading-title">Course Introduction: The Critical Process and the Citizen Scholar <span class="cs-reading-tag">Instructor-Authored</span></div>
+      <div class="cs-reading-meta">Provided via Canvas · <em>Overview of the five-step framework, the news beat concept, and the argument for slow reading in a fast information environment</em></div>
     </div>
-
-    <div class="body">The rest follows from that. Students who spend fifteen minutes in a genuine conversation about a real news story, with someone who is genuinely curious about it alongside them, tend to show up the next week with something they found themselves. That is the practice taking root.</div>
-
-    <div class="pull">"The conversation is the curriculum. Everything else is structure to make sure it happens."</div>
-
-    <div class="body">The full Canvas shell content for all three versions — including weekly pages, journal prompts, assignment instructions, rubrics, and the complete Huddle Protocol for the Large version — is available in the Slow News, Smart Citizens project archive. Adapt freely. The framework is designed to be taken apart and reassembled for your course, your students, and the moment you are teaching in.</div>
-
-    <div class="dark">
-      <div class="dark-label">A final note on the AI conversation</div>
-      <p>At some point in the first few sessions, a student will mention that they found a story through an AI summary, or that they are not sure whether what they read was written by a person. When that happens — and it will — resist the urge to make it a lesson about AI. Let it be what it actually is: a moment of honest uncertainty about where information comes from and how to evaluate it. <strong>That uncertainty is not a problem to solve. It is the starting point of the whole conversation.</strong></p>
-      <p>Stay curious about it alongside them. That is the whole method, in one sentence.</p>
+    <div class="cs-reading">
+      <div class="cs-reading-title">Campbell, Media &amp; Culture — Chapter 1: Mass Communication: A Critical Approach <span class="cs-reading-tag">Course Text</span></div>
+      <div class="cs-reading-meta">Bedford/St. Martin's · <em>The critical process as a framework for media analysis; description as the necessary first move</em></div>
+    </div>
+    <div class="cs-reading">
+      <div class="cs-reading-title">Tracking the Fact Trail: Separating Events from Headlines <span class="cs-reading-tag">Instructor-Curated</span></div>
+      <div class="cs-reading-meta"><em>One short example of a mainstream headline alongside its primary source — press release, government document, or original study. Instructor selects a current example each quarter.</em></div>
+    </div>
+    <p>&nbsp;</p>
+    <h3 class="dp-has-icon"><i class="dp-icon fas fa-film" aria-hidden="true"></i>Instructional Video</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Lecture — The Five-Step Critical Process</div>
+      <p><em>[Instructor video, ~12 min. Cover: the logic of the five moves and why they must be practiced in sequence; the difference between description and reaction; how the beat will work across the quarter; what "slow news" means as a practice and why speed is the enemy of understanding.]</em></p>
+    </div>
+    <p>&nbsp;</p>
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-bookmark" aria-hidden="true"></i>Additional Materials</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Before You Begin: A Note on Description</div>
+      <p>Choose any news story published in the last 48 hours — on any topic, from any source you normally use. Read it once. Then, before doing anything else, write down in plain sentences: What happened? Who is involved? When and where? What evidence is cited? Do not yet ask whether you believe it, agree with it, or think it matters. Just say what it says. Bring this to your journal entry and discussion.</p>
     </div>
   </div>
+</div>
 
-</div><!-- /page -->
+<div class="cs-paste-label">Canvas Page — Week 1 Beat Journal (recurring each week)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Beat Journal — Week 1</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Purpose of the Beat Journal</h3>
+    <p>The Beat Journal is a recurring weekly assignment throughout the course. It is not a summary of readings. It is a record of your developing relationship with your news beat — what you are noticing, what is changing, what you do not yet understand. Think of it as a reporter's notebook crossed with a scholar's reflection. It should be honest, specific, and written in a voice you will recognize as your own when you read it back at Week 10.</p>
+    <p>Entries are evaluated for specificity, intellectual honesty, and evidence of genuine engagement with the beat — not for polish or certainty. Short and precise is better than long and vague.</p>
+    <p>&nbsp;</p>
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Week 1 Journal Prompt</h3>
+    <div class="cs-journal-prompt">
+      <div class="cs-callout-label">Journal Entry — 200–300 words</div>
+      <p>Describe your chosen beat in plain terms. What field or topic area are you following? Where does it live in the news — which outlets, which reporters, which institutions drive its coverage? Then describe one news item from your beat this week using only description: what happened, who is involved, what evidence is cited. Do not yet evaluate or interpret. End with one question your description leaves unanswered.</p>
+    </div>
+    <p>Submit to Canvas before the week's discussion session. Entries are read by the instructor and may be selectively shared (anonymized) in discussion.</p>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 1 Discussion</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Discussion — Week 1</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments" aria-hidden="true"></i>Discussion Prompt</h3>
+    <p>Post a 150–200 word response to the following, then reply substantively to at least one classmate.</p>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Prompt</div>
+      <p>Describe — using the first step of the critical process — one news story you encountered this week. What did the story actually say, according to the evidence it cited? Then: where did you find yourself wanting to jump ahead to evaluation or reaction before finishing the description? What made it hard to stay in description mode?</p>
+    </div>
+    <p>In your reply to a classmate, identify one thing in their description that surprised you — and ask one question their description raises but does not answer.</p>
+  </div>
+</div>
+
+</div><!-- /week-0 -->
+
+
+<!-- ═══════════════════════════════════════════
+     WEEK 2 — Finding and Sourcing Your Beat
+════════════════════════════════════════════════ -->
+<div class="week-panel" id="week-1">
+
+<div class="cs-paste-label">Canvas Page — Week 2 Overview</div>
+<div class="dp-wrapper">
+  <div class="cs-week-header">
+    <div class="cs-unit-badge">Unit 1 · Description — Week 2 of 2</div>
+    <div class="cs-week-title">Finding and Sourcing Your Beat</div>
+    <div class="cs-week-subtitle">Mapping where your field's news actually lives — from primary sources to mainstream headlines.</div>
+  </div>
+  <div class="cs-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt" aria-hidden="true"></i>Overview and Purpose</h3>
+    <div class="cs-meta">
+      <div class="cs-meta-item">Unit: <span>1 of 5 — Description</span></div>
+      <div class="cs-meta-item">Week: <span>2 of 10</span></div>
+      <div class="cs-meta-item">Deliverable: <span>Unit 1 Assignment — Beat Source Map</span></div>
+    </div>
+    <p>Every discipline has its own information architecture. A story about a pharmaceutical trial travels a very different path than a story about a currency policy or a cultural preservation effort — different primary sources, different specialist publications, different mainstream outlets, and different points at which the original evidence gets simplified, dramatized, or lost entirely. This week, you map that architecture for your own beat.</p>
+    <p>Description is not only about reading individual news items carefully. It is about understanding the system that produces them: who generates the original evidence or event, who covers it first and with what expertise, and how the story changes as it moves from specialized to general audiences. You cannot evaluate news accurately until you understand where it came from.</p>
+    <p>The Beat Source Map you produce this week will serve as a reference document for the rest of the quarter. You will return to it as you track a specific story or thread across Units 2 through 5.</p>
+    <div class="cs-outcomes-grid">
+      <div class="cs-outcome"><strong>Map Sources</strong>Identify the primary source layer, specialist publication layer, and mainstream media layer for your chosen beat.</div>
+      <div class="cs-outcome"><strong>Trace a Story</strong>Follow one item from your beat backwards from a mainstream headline to its originating source, noting what changes at each step.</div>
+      <div class="cs-outcome"><strong>Apply Description</strong>Describe the source ecosystem of your beat — its key institutions, publications, and reporters — without evaluating their quality or bias.</div>
+      <div class="cs-outcome"><strong>Establish Your Thread</strong>Identify the specific story, issue, or ongoing development within your beat that you will follow for the remainder of the quarter.</div>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 2 Readings and Materials</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Readings and Instructional Materials</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon icon-courses" aria-hidden="true"></i>Readings</h3>
+    <div class="cs-reading">
+      <div class="cs-reading-title">Campbell, Media &amp; Culture — Chapter on News and Journalism: Information, Power, and Democracy <span class="cs-reading-tag">Course Text</span></div>
+      <div class="cs-reading-meta"><em>How journalism functions as a system, not just a collection of individual stories; the relationship between beats, sources, and public knowledge</em></div>
+    </div>
+    <div class="cs-reading">
+      <div class="cs-reading-title">Instructor-Curated: Primary Source vs. Headline — This Week's Example <span class="cs-reading-tag">Instructor-Curated</span></div>
+      <div class="cs-reading-meta"><em>One current story provided by the instructor showing the full chain: raw data or event → specialist coverage → mainstream headline. Selected each quarter for currency.</em></div>
+    </div>
+    <p>&nbsp;</p>
+    <h3 class="dp-has-icon"><i class="dp-icon fas fa-film" aria-hidden="true"></i>Instructional Video</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Lecture — How to Map a News Beat</div>
+      <p><em>[Instructor video, ~10 min. Cover: the three-layer source model (primary / specialist / mainstream); how to identify the primary source behind a mainstream story; what a beat map looks like in practice; introducing the concept of the "thread" — the specific ongoing story or development the student will follow from Week 3 onward.]</em></p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 2 Beat Journal</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Beat Journal — Week 2</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Week 2 Journal Prompt</h3>
+    <div class="cs-journal-prompt">
+      <div class="cs-callout-label">Journal Entry — 200–300 words</div>
+      <p>Choose one story from your beat this week and trace it to its primary source. Describe what the primary source actually says — data, findings, a statement, a document — and then describe how the mainstream coverage presents it. What is present in the primary source that does not appear in the headline? What does this tell you about your beat's information architecture? What story thread are you planning to follow for the rest of the quarter, and why?</p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 2 Discussion</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Discussion — Week 2</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments" aria-hidden="true"></i>Discussion Prompt</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Prompt</div>
+      <p>Share the beat thread you are planning to follow for the rest of the quarter. Describe it using only the first step of the critical process: what is actually happening, according to the evidence available so far? In your reply to a classmate, identify one source or source layer they may not have considered for their beat.</p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Unit 1 Assignment (Due End of Week 2)</div>
+<div class="dp-wrapper">
+  <div class="dp-header" style="background-color:#8b2332"><h2 class="dp-heading"><span class="dp-header-title">Unit 1 Assignment — Beat Source Map</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle" aria-hidden="true"></i>Purpose</h3>
+    <p>The Beat Source Map is a structured document — not a list, but a description — of the information ecosystem surrounding your chosen beat. It establishes your baseline understanding of how news is produced and distributed in your field, and it will anchor your work for the next eight weeks. Think of it as the orientation document a new journalist writes before covering a beat for the first time.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Instructions</h3>
+    <p>Write a Beat Source Map of 400–500 words organized around the following structure. Use prose, not bullet lists. Write as if you are describing the beat to someone intelligent but unfamiliar with it.</p>
+    <div class="cs-step">
+      <div class="cs-step-num">1</div>
+      <div class="cs-step-body"><strong>The Beat:</strong> Name your field or topic area and describe, in one paragraph, what kind of news it generates and why it matters to public life.</div>
+    </div>
+    <div class="cs-step">
+      <div class="cs-step-num">2</div>
+      <div class="cs-step-body"><strong>The Source Layers:</strong> Describe the primary source layer (who generates original evidence or events), the specialist layer (who covers it first with expertise), and the mainstream layer (where the general public encounters it). Name specific institutions, publications, or outlets at each layer.</div>
+    </div>
+    <div class="cs-step">
+      <div class="cs-step-num">3</div>
+      <div class="cs-step-body"><strong>The Trace:</strong> Describe one story from this week, traced backwards from its mainstream presentation to its primary source. What changes at each step?</div>
+    </div>
+    <div class="cs-step">
+      <div class="cs-step-num">4</div>
+      <div class="cs-step-body"><strong>Your Thread:</strong> Name the specific ongoing story, issue, or development within your beat that you will follow for the rest of the quarter. Describe it using description only — what is happening, according to available evidence, as of this week.</div>
+    </div>
+    <table class="cs-rubric">
+      <tr><th>Criterion</th><th>Expectations</th><th>Points</th></tr>
+      <tr><td>Beat Description</td><td>Clear, specific account of the beat and its public significance</td><td class="pts">20 pts</td></tr>
+      <tr><td>Source Layer Description</td><td>All three layers named with specific examples; not evaluated, only described</td><td class="pts">25 pts</td></tr>
+      <tr><td>Story Trace</td><td>Accurately traces one story from headline to primary source; notes specific changes</td><td class="pts">30 pts</td></tr>
+      <tr><td>Thread Statement</td><td>Specific, present-tense description of the ongoing thread; evidence-based</td><td class="pts">25 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+  </div>
+</div>
+
+</div><!-- /week-1 -->
+
+
+<!-- ═══════════════════════════════════════════
+     WEEK 3 — Learning to Analyze
+════════════════════════════════════════════════ -->
+<div class="week-panel" id="week-2">
+
+<div class="cs-paste-label">Canvas Page — Week 3 Overview</div>
+<div class="dp-wrapper">
+  <div class="cs-week-header">
+    <div class="cs-unit-badge">Unit 2 · Analysis — Week 1 of 2</div>
+    <div class="cs-week-title">Learning to Analyze: Watching the News Cycle Move</div>
+    <div class="cs-week-subtitle">A story on Day 1 is not the same story on Day 14. Analysis tracks the change.</div>
+  </div>
+  <div class="cs-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt" aria-hidden="true"></i>Overview and Purpose</h3>
+    <div class="cs-meta">
+      <div class="cs-meta-item">Unit: <span>2 of 5 — Analysis</span></div>
+      <div class="cs-meta-item">Week: <span>3 of 10</span></div>
+      <div class="cs-meta-item">Rhythm: <span>Reading · Journal · Discussion</span></div>
+    </div>
+    <div class="cs-pull">"Analysis begins where description ends. Once you know what a story says, you can ask how it works — how it changed over time, whose perspectives it includes, and what structural forces are shaping its arc."</div>
+    <p>Analysis is the second step of the critical process, and it asks a fundamentally different kind of question than description. Description asks: what is there? Analysis asks: how does it work, and how did it get to be this way? In news terms, analysis means watching a story across time — from the breaking moment to the follow-ups, the corrections, the deepening investigations — and asking how the coverage shifts, who drives those shifts, and who is present or absent from the account.</p>
+    <p>This week you will practice two forms of analysis that recur throughout the course: timeline analysis (tracking how a story develops over days or weeks) and voice analysis (identifying whose perspectives are represented in the coverage and whose are not). Both are skills that journalism students, social scientists, historians, and engaged citizens need — and that require the patience that fast news culture works against.</p>
+    <div class="cs-outcomes-grid">
+      <div class="cs-outcome"><strong>Define Analysis</strong>Explain the difference between description and analysis in the critical process, and articulate what makes analysis a distinct intellectual act.</div>
+      <div class="cs-outcome"><strong>Timeline Analysis</strong>Track how a specific news story changes from its initial breaking moment to subsequent coverage, identifying the forces driving those changes.</div>
+      <div class="cs-outcome"><strong>Voice Analysis</strong>Identify the sources and perspectives represented in a piece of news coverage, and name at least two that are absent.</div>
+      <div class="cs-outcome"><strong>Apply to Your Beat</strong>Apply both forms of analysis to a current item in your beat thread.</div>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 3 Readings and Materials</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Readings and Instructional Materials</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon icon-courses" aria-hidden="true"></i>Readings</h3>
+    <div class="cs-reading">
+      <div class="cs-reading-title">Campbell, Media &amp; Culture — Chapter on News: Story Framing, Source Selection, and the Shape of Coverage <span class="cs-reading-tag">Course Text</span></div>
+      <div class="cs-reading-meta"><em>How news coverage is structured by sourcing patterns and framing choices; the concept of the story arc</em></div>
+    </div>
+    <div class="cs-reading">
+      <div class="cs-reading-title">Instructor-Curated: A Story Over Time — Day 1 vs. Day 14 <span class="cs-reading-tag">Instructor-Curated</span></div>
+      <div class="cs-reading-meta"><em>Instructor provides two versions of the same story — a breaking report and a follow-up or investigative piece — from a current event on any beat. Students analyze what changed and why.</em></div>
+    </div>
+    <p>&nbsp;</p>
+    <h3 class="dp-has-icon"><i class="dp-icon fas fa-film" aria-hidden="true"></i>Instructional Video</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Lecture — How to Analyze a News Story: Timeline and Voice</div>
+      <p><em>[Instructor video, ~12 min. Cover: the difference between description and analysis; the news story as a changing artifact rather than a fixed text; timeline analysis as a method; voice and source analysis — who speaks, who is quoted, who is described but not heard; the concept of "missing voices" and its structural causes; how to apply both to your beat thread.]</em></p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 3 Beat Journal</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Beat Journal — Week 3</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Week 3 Journal Prompt</h3>
+    <div class="cs-journal-prompt">
+      <div class="cs-callout-label">Journal Entry — 200–300 words</div>
+      <p>Look at two versions of a story from your beat thread — ideally a breaking story and a follow-up or correction published several days later. Analyze what changed: what new evidence appeared, which voices entered or left the coverage, and what structural forces (a document release, a new source, an editorial decision) drove the change. What does the arc of this story, over even a few days, reveal about how your beat works?</p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 3 Discussion</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Discussion — Week 3</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments" aria-hidden="true"></i>Discussion Prompt</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Prompt</div>
+      <p>Name one voice or perspective that is consistently absent from your beat's coverage. Describe — using analysis, not evaluation — why you think it is absent. Is it a structural feature of how the beat works (who journalists have access to, which institutions generate official statements, which communities do not have press operations)? In your reply to a classmate, add one example or complication to their analysis.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /week-2 -->
+
+
+<!-- ═══════════════════════════════════════════
+     WEEK 4 — Analysis Applied: The Story Arc
+════════════════════════════════════════════════ -->
+<div class="week-panel" id="week-3">
+
+<div class="cs-paste-label">Canvas Page — Week 4 Overview</div>
+<div class="dp-wrapper">
+  <div class="cs-week-header">
+    <div class="cs-unit-badge">Unit 2 · Analysis — Week 2 of 2</div>
+    <div class="cs-week-title">Analysis Applied: Tracing Your Thread's Story Arc</div>
+    <div class="cs-week-subtitle">Your beat thread is now two weeks old. What has changed — and what has not?</div>
+  </div>
+  <div class="cs-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt" aria-hidden="true"></i>Overview and Purpose</h3>
+    <div class="cs-meta">
+      <div class="cs-meta-item">Unit: <span>2 of 5 — Analysis</span></div>
+      <div class="cs-meta-item">Week: <span>4 of 10</span></div>
+      <div class="cs-meta-item">Deliverable: <span>Unit 2 Assignment — Story Arc Analysis</span></div>
+    </div>
+    <p>You have now been following your beat for two weeks. This week, you apply the analytical tools from Week 3 to your own thread — producing a Story Arc Analysis that maps how the coverage has developed, who has been speaking, and what has changed in the story's framing and evidence base since you began watching it.</p>
+    <p>Analysis resists the urgency of the news cycle. It asks you to slow down enough to see the shape of a story, not just its most recent moment. The Story Arc Analysis is a key document in your ongoing beat work — it will inform everything that follows in Units 3 through 5.</p>
+    <div class="cs-outcomes-grid">
+      <div class="cs-outcome"><strong>Timeline</strong>Map the development of your beat thread across at least two weeks of coverage, identifying key moments of change.</div>
+      <div class="cs-outcome"><strong>Voice Inventory</strong>Compile a source and voice inventory for your thread: who has spoken, who has been described, who has been silent.</div>
+      <div class="cs-outcome"><strong>Arc Argument</strong>Make an analytical claim about the shape of your thread's coverage arc — not whether the coverage is good or bad, but how it works.</div>
+      <div class="cs-outcome"><strong>Pattern Recognition</strong>Identify one recurring pattern in how your beat covers this story — a structural feature, not a one-time editorial decision.</div>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 4 Beat Journal</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Beat Journal — Week 4</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Week 4 Journal Prompt</h3>
+    <div class="cs-journal-prompt">
+      <div class="cs-callout-label">Journal Entry — 200–300 words</div>
+      <p>Looking back across four weeks of the course and at least two to three weeks of beat coverage: what has surprised you about how this story has developed? Not what the story is about — but how the coverage of it has behaved. What does the story arc reveal about your beat that description alone could not?</p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 4 Discussion</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Discussion — Week 4</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments" aria-hidden="true"></i>Discussion Prompt</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Prompt</div>
+      <p>Share one analytical finding from your Story Arc work: not a summary of your thread, but a claim about how the coverage works. What structural pattern have you identified? In your reply, tell a classmate whether the pattern they describe seems specific to their beat or whether you see a version of it in yours as well.</p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Unit 2 Assignment (Due End of Week 4)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Unit 2 Assignment — Story Arc Analysis</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle" aria-hidden="true"></i>Purpose</h3>
+    <p>The Story Arc Analysis asks you to treat your beat thread as a moving object — not a fixed text but a developing artifact that changes in response to new evidence, competing voices, and editorial decisions. The goal is an analytical account of how the coverage has worked, not an evaluation of whether it has been good journalism.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Instructions</h3>
+    <p>Write a Story Arc Analysis of 450–550 words in prose. Reference at least four specific coverage items from your beat thread (articles, reports, broadcasts, or posts, with dates). Your analysis should make at least one arguable analytical claim about the shape of the coverage — not a description of events, but an argument about how the coverage has worked.</p>
+    <div class="cs-step">
+      <div class="cs-step-num">1</div>
+      <div class="cs-step-body"><strong>The Arc:</strong> Map the development of your thread across its coverage. What were the key turning points? What drove them — a new document, a new source, an event?</div>
+    </div>
+    <div class="cs-step">
+      <div class="cs-step-num">2</div>
+      <div class="cs-step-body"><strong>The Voices:</strong> Who has spoken in this coverage? Who has been described but not heard? What structural reasons might explain the pattern?</div>
+    </div>
+    <div class="cs-step">
+      <div class="cs-step-num">3</div>
+      <div class="cs-step-body"><strong>The Pattern:</strong> Identify one recurring structural feature of how your beat covers this story. Name it as specifically as you can.</div>
+    </div>
+    <div class="cs-step">
+      <div class="cs-step-num">4</div>
+      <div class="cs-step-body"><strong>The Analytical Claim:</strong> In two to three sentences, state your analytical argument about this coverage arc. This is not an evaluation of quality — it is an argument about how the coverage works.</div>
+    </div>
+    <table class="cs-rubric">
+      <tr><th>Criterion</th><th>Expectations</th><th>Points</th></tr>
+      <tr><td>Arc Mapping</td><td>At least four coverage items cited with dates; turning points identified with specific causes</td><td class="pts">25 pts</td></tr>
+      <tr><td>Voice Inventory</td><td>Specific named sources present and absent; structural explanation attempted</td><td class="pts">25 pts</td></tr>
+      <tr><td>Pattern Identification</td><td>One recurring structural feature named specifically, not generally</td><td class="pts">25 pts</td></tr>
+      <tr><td>Analytical Claim</td><td>Clear arguable claim about how coverage works — distinct from evaluation</td><td class="pts">25 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+  </div>
+</div>
+
+</div><!-- /week-3 -->
+
+
+<!-- ═══════════════════════════════════════════
+     WEEK 5 — Learning to Interpret
+════════════════════════════════════════════════ -->
+<div class="week-panel" id="week-4">
+
+<div class="cs-paste-label">Canvas Page — Week 5 Overview</div>
+<div class="dp-wrapper">
+  <div class="cs-week-header">
+    <div class="cs-unit-badge">Unit 3 · Interpretation — Week 1 of 2</div>
+    <div class="cs-week-title">Learning to Interpret: Connecting Headlines to Knowledge</div>
+    <div class="cs-week-subtitle">Interpretation asks what it means — and uses your disciplinary knowledge to answer that question.</div>
+  </div>
+  <div class="cs-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt" aria-hidden="true"></i>Overview and Purpose</h3>
+    <div class="cs-meta">
+      <div class="cs-meta-item">Unit: <span>3 of 5 — Interpretation</span></div>
+      <div class="cs-meta-item">Week: <span>5 of 10</span></div>
+      <div class="cs-meta-item">Rhythm: <span>Reading · Journal · Discussion</span></div>
+    </div>
+    <div class="cs-pull">"Interpretation is where the scholar enters. You are not just a reader of the news — you have disciplinary knowledge, theoretical frameworks, and specialized vocabulary that allow you to say something about what a story means that a general audience cannot."</div>
+    <p>Interpretation is the third step of the critical process, and it is where your academic training becomes directly relevant to public life. To interpret a news story is to use what you know — from your courses, your field's literature, your professional preparation — to explain what it means in a way that goes beyond what the story itself says.</p>
+    <p>Interpretation is distinct from evaluation. You are not yet judging whether the coverage is good or whether the situation is right or wrong. You are bringing knowledge to bear on meaning. A chemistry student who can connect a news story about industrial pollution to the specific molecular mechanisms their coursework covers is interpreting. An accounting student who can explain the structural logic behind a corporate financial failure using classroom frameworks is interpreting. A student of any discipline who can translate technical jargon into precise, accessible language for a general audience is practicing the most civic form of interpretation there is.</p>
+    <div class="cs-outcomes-grid">
+      <div class="cs-outcome"><strong>Define Interpretation</strong>Distinguish interpretation from both description/analysis and evaluation; explain why disciplinary knowledge is required for genuine interpretation.</div>
+      <div class="cs-outcome"><strong>Apply Knowledge</strong>Use at least one concept, framework, or body of knowledge from your discipline to interpret a current item in your beat thread.</div>
+      <div class="cs-outcome"><strong>Translate</strong>Restate a piece of technical or specialized content from your beat in language accessible to a general reader without losing accuracy.</div>
+      <div class="cs-outcome"><strong>Distinguish Meaning from Judgment</strong>Produce an interpretation of your thread that makes claims about meaning without yet making claims about right and wrong.</div>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 5 Readings and Materials</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Readings and Instructional Materials</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon icon-courses" aria-hidden="true"></i>Readings</h3>
+    <div class="cs-reading">
+      <div class="cs-reading-title">Campbell, Media &amp; Culture — The Meaning-Making Function of Media <span class="cs-reading-tag">Course Text</span></div>
+      <div class="cs-reading-meta"><em>How media frames meaning for audiences; the role of context, background, and expert knowledge in interpretation</em></div>
+    </div>
+    <div class="cs-reading">
+      <div class="cs-reading-title">Instructor-Curated: Decoding the Jargon — A Current Example <span class="cs-reading-tag">Instructor-Curated</span></div>
+      <div class="cs-reading-meta"><em>One current story that requires disciplinary knowledge to interpret accurately. The instructor provides both the news item and a brief interpretive guide showing what specialist knowledge adds to a general reader's understanding.</em></div>
+    </div>
+    <p>&nbsp;</p>
+    <h3 class="dp-has-icon"><i class="dp-icon fas fa-film" aria-hidden="true"></i>Instructional Video</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Lecture — What Does It Mean? Bringing Disciplinary Knowledge to the News</div>
+      <p><em>[Instructor video, ~12 min. Cover: interpretation as the scholar's contribution to public understanding; how to identify what disciplinary knowledge is relevant to a news item; the difference between technical accuracy and accessible interpretation; how translation for public audiences is an intellectual act, not a simplification; examples from multiple fields of what genuine interpretation looks like in practice.]</em></p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 5 Beat Journal</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Beat Journal — Week 5</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Week 5 Journal Prompt</h3>
+    <div class="cs-journal-prompt">
+      <div class="cs-callout-label">Journal Entry — 200–300 words</div>
+      <p>Find one piece of jargon, one technical term, or one specialized concept in your beat thread's coverage this week. Write two versions of what it means: first, the specialist definition from your field or coursework; second, a precise, accessible explanation for a general reader who has no background in your discipline. Then reflect: what does interpreting this term add to a general reader's understanding of the news story? What would they miss without it?</p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 5 Discussion</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Discussion — Week 5</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments" aria-hidden="true"></i>Discussion Prompt</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Prompt</div>
+      <p>Share one interpretive claim about your beat thread — something you understand about what this story means that the mainstream coverage does not explain. Make the claim clearly and connect it to the disciplinary knowledge that supports it. In your reply, tell a classmate whether their interpretation raised a question for you — and what that question is.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /week-4 -->
+
+
+<!-- ═══════════════════════════════════════════
+     WEEK 6 — Interpretation Applied
+════════════════════════════════════════════════ -->
+<div class="week-panel" id="week-5">
+
+<div class="cs-paste-label">Canvas Page — Week 6 Overview</div>
+<div class="dp-wrapper">
+  <div class="cs-week-header">
+    <div class="cs-unit-badge">Unit 3 · Interpretation — Week 2 of 2</div>
+    <div class="cs-week-title">Interpretation Applied: Bridging Theory to the Thread</div>
+    <div class="cs-week-subtitle">Your disciplinary knowledge is not background — it is the lens through which the story becomes legible.</div>
+  </div>
+  <div class="cs-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt" aria-hidden="true"></i>Overview and Purpose</h3>
+    <div class="cs-meta">
+      <div class="cs-meta-item">Unit: <span>3 of 5 — Interpretation</span></div>
+      <div class="cs-meta-item">Week: <span>6 of 10</span></div>
+      <div class="cs-meta-item">Deliverable: <span>Unit 3 Assignment — Interpretive Brief</span></div>
+    </div>
+    <p>This week applies interpretive analysis to your beat thread. You will produce an Interpretive Brief — a document that explains what your thread means in light of the disciplinary knowledge, theoretical frameworks, or contextual understanding that general-audience coverage cannot supply. This is your first substantial act of original scholarly contribution in the course.</p>
+    <div class="cs-outcomes-grid">
+      <div class="cs-outcome"><strong>Interpret</strong>Produce a sustained interpretive account of your beat thread that brings disciplinary knowledge to bear on its meaning.</div>
+      <div class="cs-outcome"><strong>Translate</strong>Explain at least one specialized concept from your field to a general audience with accuracy and clarity.</div>
+      <div class="cs-outcome"><strong>Connect</strong>Show the explicit connection between a concept from your coursework or field and a specific development in your thread.</div>
+      <div class="cs-outcome"><strong>Situate</strong>Place your thread in a broader context — historical, scientific, economic, cultural, or political — that the coverage itself does not provide.</div>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 6 Beat Journal</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Beat Journal — Week 6</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Week 6 Journal Prompt</h3>
+    <div class="cs-journal-prompt">
+      <div class="cs-callout-label">Journal Entry — 200–300 words</div>
+      <p>Identify the single most important thing your disciplinary training helps you understand about your beat thread that a general reader would miss. Write it out as an interpretive claim: "What this story is really about, when you understand [concept or framework], is…" Then ask: how would you explain this to someone with no background in your field — without losing the precision that makes it true?</p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Unit 3 Assignment (Due End of Week 6)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Unit 3 Assignment — Interpretive Brief</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle" aria-hidden="true"></i>Purpose</h3>
+    <p>The Interpretive Brief is a document that explains your beat thread to a general, intelligent audience — not by summarizing the news, but by bringing to bear the specialized knowledge that makes the story legible in a way general coverage cannot. Think of it as what a genuine expert would add to a public conversation: not opinion, not evaluation, but the precise application of knowledge to meaning.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Instructions</h3>
+    <p>Write an Interpretive Brief of 450–550 words addressed to a general, intelligent reader — a curious non-specialist. It should explain what your beat thread means in light of disciplinary or contextual knowledge the mainstream coverage does not provide. It is not an opinion piece. It is not a summary. It is a work of interpretation: precise, accessible, and grounded in evidence.</p>
+    <div class="cs-step">
+      <div class="cs-step-num">1</div>
+      <div class="cs-step-body"><strong>The Story's Surface:</strong> In one paragraph, describe what the mainstream coverage says your thread is about (using description, not evaluation).</div>
+    </div>
+    <div class="cs-step">
+      <div class="cs-step-num">2</div>
+      <div class="cs-step-body"><strong>What the Coverage Misses:</strong> In one to two paragraphs, explain what disciplinary knowledge or broader context is required to understand what the story actually means. Name the concept, framework, or body of knowledge and explain it clearly.</div>
+    </div>
+    <div class="cs-step">
+      <div class="cs-step-num">3</div>
+      <div class="cs-step-body"><strong>The Interpretive Claim:</strong> In one paragraph, make your interpretive argument: what does your thread actually mean, in light of what you now know? This is your scholarly contribution.</div>
+    </div>
+    <table class="cs-rubric">
+      <tr><th>Criterion</th><th>Expectations</th><th>Points</th></tr>
+      <tr><td>Surface Description</td><td>Accurate, concise account of what the mainstream coverage presents</td><td class="pts">20 pts</td></tr>
+      <tr><td>Disciplinary Knowledge</td><td>At least one concept or framework named and explained accurately and accessibly</td><td class="pts">30 pts</td></tr>
+      <tr><td>Interpretive Claim</td><td>Specific, arguable claim about meaning — distinct from both description and evaluation</td><td class="pts">30 pts</td></tr>
+      <tr><td>Accessibility and Precision</td><td>Written for a general reader without sacrificing accuracy; no unnecessary jargon</td><td class="pts">20 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+  </div>
+</div>
+
+</div><!-- /week-5 -->
+
+
+<!-- ═══════════════════════════════════════════
+     WEEK 7 — Learning to Evaluate
+════════════════════════════════════════════════ -->
+<div class="week-panel" id="week-6">
+
+<div class="cs-paste-label">Canvas Page — Week 7 Overview</div>
+<div class="dp-wrapper">
+  <div class="cs-week-header">
+    <div class="cs-unit-badge">Unit 4 · Evaluation — Week 1 of 2</div>
+    <div class="cs-week-title">Learning to Evaluate: Ethics, Equity, and the Human Stakes</div>
+    <div class="cs-week-subtitle">Evaluation asks who wins, who loses, and who pays — and uses evidence, not just feeling, to answer.</div>
+  </div>
+  <div class="cs-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt" aria-hidden="true"></i>Overview and Purpose</h3>
+    <div class="cs-meta">
+      <div class="cs-meta-item">Unit: <span>4 of 5 — Evaluation</span></div>
+      <div class="cs-meta-item">Week: <span>7 of 10</span></div>
+      <div class="cs-meta-item">Rhythm: <span>Reading · Journal · Discussion</span></div>
+    </div>
+    <div class="cs-pull">"Evaluation is where the citizen enters fully. You are no longer only a student of the news — you are a person with values, responsibilities, and a stake in what happens next. Evaluation means saying, carefully and with evidence, what is right and what is wrong."</div>
+    <p>Evaluation is the fourth step of the critical process and the most morally demanding. It asks you to make judgments — about the news coverage itself, about the events the news describes, and about the implications for real people's lives. But evaluation in the scholarly sense is not the same as having a reaction. It requires the foundation that description, analysis, and interpretation have built: you can only evaluate well what you have seen clearly, tracked across time, and understood in context.</p>
+    <p>This week introduces two forms of evaluation that run throughout the course: ethical evaluation (what is right or wrong, fair or unfair, about what is happening or how it is covered?) and equity evaluation (who bears the costs and who captures the benefits when events unfold in your beat's field?). Both require looking beyond the story's protagonists — the named institutions, officials, and experts — to the communities and individuals at the margins of the coverage.</p>
+    <div class="cs-outcomes-grid">
+      <div class="cs-outcome"><strong>Define Evaluation</strong>Distinguish evaluation from reaction and from interpretation; explain what makes a scholarly evaluation different from an opinion.</div>
+      <div class="cs-outcome"><strong>Ethical Evaluation</strong>Apply an ethical framework to a specific development in your beat thread, making a judgment supported by evidence.</div>
+      <div class="cs-outcome"><strong>Equity Analysis</strong>Identify who bears costs and who captures benefits in a specific news development, using concrete evidence rather than generalization.</div>
+      <div class="cs-outcome"><strong>Evaluate Coverage</strong>Make a specific evaluative claim about the adequacy of your beat's coverage — not whether you like it, but whether it serves public understanding.</div>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 7 Readings and Materials</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Readings and Instructional Materials</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon icon-courses" aria-hidden="true"></i>Readings</h3>
+    <div class="cs-reading">
+      <div class="cs-reading-title">Campbell, Media &amp; Culture — Ethics and Responsibility in Media <span class="cs-reading-tag">Course Text</span></div>
+      <div class="cs-reading-meta"><em>Frameworks for evaluating media coverage on ethical grounds; the relationship between journalism ethics and democratic responsibility</em></div>
+    </div>
+    <div class="cs-reading">
+      <div class="cs-reading-title">Instructor-Curated: Who Pays the Price? — A Current Case <span class="cs-reading-tag">Instructor-Curated</span></div>
+      <div class="cs-reading-meta"><em>One current story where the equity and ethical dimensions are visible — where cost and benefit are distributed unevenly across communities. Instructor selects each quarter. Could be environmental, economic, medical, or cultural.</em></div>
+    </div>
+    <p>&nbsp;</p>
+    <h3 class="dp-has-icon"><i class="dp-icon fas fa-film" aria-hidden="true"></i>Instructional Video</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Lecture — How to Evaluate: From Reaction to Reasoned Judgment</div>
+      <p><em>[Instructor video, ~12 min. Cover: what distinguishes evaluation from opinion and from analysis; the structure of an evidence-based ethical argument; equity as an evaluative lens — following the costs to communities not centered in the coverage; how to evaluate the coverage itself, not just the events it describes; the relationship between evaluative thinking and democratic citizenship.]</em></p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 7 Beat Journal</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Beat Journal — Week 7</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Week 7 Journal Prompt</h3>
+    <div class="cs-journal-prompt">
+      <div class="cs-callout-label">Journal Entry — 200–300 words</div>
+      <p>Identify one development in your beat thread — an event, a policy change, a discovery, a decision — and ask: who bears the costs of this, and who captures the benefits? Be as specific as you can. Name the communities, institutions, or individuals involved. Then make one evaluative claim: is this distribution fair, according to a principle or standard you can name and defend? What evidence supports your claim?</p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 7 Discussion</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Discussion — Week 7</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments" aria-hidden="true"></i>Discussion Prompt</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Prompt</div>
+      <p>Share one evaluative claim about your beat thread. State the claim, the principle or standard it is based on, and the evidence that supports it. Be specific enough that someone could disagree with you. In your reply, engage with the substance of a classmate's evaluative argument — do you share their standard? Do you weigh the evidence differently? Say so, with reasons.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /week-6 -->
+
+
+<!-- ═══════════════════════════════════════════
+     WEEK 8 — Evaluation Applied
+════════════════════════════════════════════════ -->
+<div class="week-panel" id="week-7">
+
+<div class="cs-paste-label">Canvas Page — Week 8 Overview</div>
+<div class="dp-wrapper">
+  <div class="cs-week-header">
+    <div class="cs-unit-badge">Unit 4 · Evaluation — Week 2 of 2</div>
+    <div class="cs-week-title">Evaluation Applied: The Human Stakes of Your Beat</div>
+    <div class="cs-week-subtitle">Grounded judgment about what is actually at stake for real people in your thread.</div>
+  </div>
+  <div class="cs-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt" aria-hidden="true"></i>Overview and Purpose</h3>
+    <div class="cs-meta">
+      <div class="cs-meta-item">Unit: <span>4 of 5 — Evaluation</span></div>
+      <div class="cs-meta-item">Week: <span>8 of 10</span></div>
+      <div class="cs-meta-item">Deliverable: <span>Unit 4 Assignment — Equity and Ethics Assessment</span></div>
+    </div>
+    <p>You have now described, analyzed, and interpreted your beat thread. This week you evaluate it: you make a reasoned, evidence-based judgment about the ethical and equity dimensions of what is happening in your thread and how it is being covered. This is not an opinion piece. It is a scholarly evaluation — one that names the standard it applies, cites the evidence it relies on, and acknowledges what a reasonable counterargument would say.</p>
+    <div class="cs-outcomes-grid">
+      <div class="cs-outcome"><strong>Ethical Argument</strong>Construct a structured ethical argument about a development in your beat thread, naming standard, evidence, and conclusion.</div>
+      <div class="cs-outcome"><strong>Equity Account</strong>Produce a specific account of who bears costs and who captures benefits in your thread, with named evidence.</div>
+      <div class="cs-outcome"><strong>Coverage Evaluation</strong>Evaluate the adequacy of your beat's coverage of the equity and ethical dimensions you have identified.</div>
+      <div class="cs-outcome"><strong>Counterargument</strong>Acknowledge and engage with the strongest reasonable objection to your evaluative claims.</div>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 8 Beat Journal</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Beat Journal — Week 8</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Week 8 Journal Prompt</h3>
+    <div class="cs-journal-prompt">
+      <div class="cs-callout-label">Journal Entry — 200–300 words</div>
+      <p>What is the strongest argument against your evaluative position on your beat thread? State it as clearly and fairly as you can — not as a straw man, but as a serious objection that someone reasonable could hold. Then respond to it. Does it weaken your evaluation? Does it add nuance? Does it change what you are willing to claim? What does engaging with this objection add to your thinking?</p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Unit 4 Assignment (Due End of Week 8)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Unit 4 Assignment — Equity and Ethics Assessment</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle" aria-hidden="true"></i>Purpose</h3>
+    <p>The Equity and Ethics Assessment is a structured evaluative argument about your beat thread. It asks you to move beyond description, analysis, and interpretation to make a reasoned judgment — about what is at stake for real people, whether the distribution of costs and benefits is fair, and whether the coverage adequately serves public understanding of those stakes.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Instructions</h3>
+    <p>Write an Equity and Ethics Assessment of 500–600 words. It should make two central evaluative claims: one about the events or developments in your thread, and one about the adequacy of the coverage. Each claim must be supported by specific evidence and grounded in a named principle or standard. The assessment must also engage with a significant counterargument.</p>
+    <div class="cs-step">
+      <div class="cs-step-num">1</div>
+      <div class="cs-step-body"><strong>The Stakes:</strong> Who is affected by the developments in your thread? Name them specifically. What do they stand to gain or lose?</div>
+    </div>
+    <div class="cs-step">
+      <div class="cs-step-num">2</div>
+      <div class="cs-step-body"><strong>The Evaluative Claim:</strong> Is the distribution of costs and benefits in your thread fair or unfair, according to a principle you can name and defend? Support your claim with specific evidence.</div>
+    </div>
+    <div class="cs-step">
+      <div class="cs-step-num">3</div>
+      <div class="cs-step-body"><strong>Coverage Evaluation:</strong> Does your beat's coverage adequately represent the equity and ethical dimensions you have identified? If not, what is missing and why might it be absent?</div>
+    </div>
+    <div class="cs-step">
+      <div class="cs-step-num">4</div>
+      <div class="cs-step-body"><strong>The Counterargument:</strong> State the strongest objection to your evaluation and respond to it substantively.</div>
+    </div>
+    <table class="cs-rubric">
+      <tr><th>Criterion</th><th>Expectations</th><th>Points</th></tr>
+      <tr><td>Stakes Account</td><td>Specific, named affected parties; concrete account of what is at stake for them</td><td class="pts">20 pts</td></tr>
+      <tr><td>Evaluative Claim</td><td>Clear claim, named principle, specific evidence — arguable and falsifiable</td><td class="pts">30 pts</td></tr>
+      <tr><td>Coverage Evaluation</td><td>Specific evaluative claim about coverage adequacy, with evidence</td><td class="pts">25 pts</td></tr>
+      <tr><td>Counterargument</td><td>Fairly stated objection and substantive response that does not simply dismiss it</td><td class="pts">25 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+  </div>
+</div>
+
+</div><!-- /week-7 -->
+
+
+<!-- ═══════════════════════════════════════════
+     WEEK 9 — Learning to Engage
+════════════════════════════════════════════════ -->
+<div class="week-panel" id="week-8">
+
+<div class="cs-paste-label">Canvas Page — Week 9 Overview</div>
+<div class="dp-wrapper">
+  <div class="cs-week-header">
+    <div class="cs-unit-badge">Unit 5 · Engagement — Week 1 of 2</div>
+    <div class="cs-week-title">Learning to Engage: From Scholar to Citizen</div>
+    <div class="cs-week-subtitle">Knowledge without action is a private luxury. Engagement is where it becomes a public good.</div>
+  </div>
+  <div class="cs-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt" aria-hidden="true"></i>Overview and Purpose</h3>
+    <div class="cs-meta">
+      <div class="cs-meta-item">Unit: <span>5 of 5 — Engagement</span></div>
+      <div class="cs-meta-item">Week: <span>9 of 10</span></div>
+      <div class="cs-meta-item">Rhythm: <span>Reading · Journal · Discussion</span></div>
+    </div>
+    <div class="cs-pull">"Every field has a public. The question is whether the people who know the most are willing to speak clearly enough for that public to hear them — and to act."</div>
+    <p>Engagement is the final and most ambitious step of the critical process. Having described, analyzed, interpreted, and evaluated, you now ask: what do I do with what I know? How do I use my disciplinary knowledge and my understanding of this beat to contribute to a smarter, more informed public conversation?</p>
+    <p>This does not mean simply having an opinion. It means producing something — a piece of writing, a public explanation, a civic argument — that carries your scholarly knowledge into the world in a form that other people can actually use. It means writing with enough clarity and conviction that someone outside the university would find it worth reading. And it means committing to the idea that citizens who understand things deeply have a responsibility to share that understanding.</p>
+    <p>This week introduces the form your engagement will take: a public-facing piece about your beat thread. You will practice the specific challenges of writing for a general audience without sacrificing the precision that makes your contribution valuable.</p>
+    <div class="cs-outcomes-grid">
+      <div class="cs-outcome"><strong>Define Engagement</strong>Explain the difference between civic engagement as a practice and civic engagement as a performance; articulate what genuine scholarly contribution to public discourse looks like.</div>
+      <div class="cs-outcome"><strong>Identify Your Audience</strong>Name a specific, realistic audience for your public-facing piece and describe what they need to know and why they should care.</div>
+      <div class="cs-outcome"><strong>Practice Public Writing</strong>Draft an opening that earns a general reader's attention without sacrificing accuracy or intellectual seriousness.</div>
+      <div class="cs-outcome"><strong>Connect Scholarship to Civic Life</strong>Articulate the specific contribution your disciplinary knowledge makes to public understanding of your beat thread.</div>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 9 Readings and Materials</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Readings and Instructional Materials</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon icon-courses" aria-hidden="true"></i>Readings</h3>
+    <div class="cs-reading">
+      <div class="cs-reading-title">Campbell, Media &amp; Culture — Citizens, Democracy, and the Public Sphere <span class="cs-reading-tag">Course Text</span></div>
+      <div class="cs-reading-meta"><em>The relationship between an informed public and democratic function; the role of media literacy in civic participation</em></div>
+    </div>
+    <div class="cs-reading">
+      <div class="cs-reading-title">Instructor-Curated: A Model of Public Scholarly Writing <span class="cs-reading-tag">Instructor-Curated</span></div>
+      <div class="cs-reading-meta"><em>One example of an expert writing accessibly about a technical subject for a general audience — an op-ed, a public explainer, or a letter to the editor. Instructor selects each quarter for currency and clarity of craft.</em></div>
+    </div>
+    <p>&nbsp;</p>
+    <h3 class="dp-has-icon"><i class="dp-icon fas fa-film" aria-hidden="true"></i>Instructional Video</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Lecture — Writing for a Public: The Craft of Civic Engagement</div>
+      <p><em>[Instructor video, ~12 min. Cover: what makes public writing different from academic writing — and what it shares; how to identify and address a specific audience; the opening line as an argument for why this matters right now; how to carry precision into accessible prose; the ethical dimension of public writing — accuracy, fairness, transparency about what you do and do not know; examples of the form the capstone piece can take.]</em></p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 9 Beat Journal</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Beat Journal — Week 9</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Week 9 Journal Prompt</h3>
+    <div class="cs-journal-prompt">
+      <div class="cs-callout-label">Journal Entry — 200–300 words</div>
+      <p>Who is your audience for your public-facing piece? Name them as specifically as you can — not "a general reader" but a particular kind of person in a particular situation. What do they already know, and what do they need to understand? What is the one thing you most want them to take away? Then write the opening sentence of your piece. Just one sentence — but make it one that earns a stranger's attention.</p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 9 Discussion</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Discussion — Week 9</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments" aria-hidden="true"></i>Discussion Prompt</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Prompt</div>
+      <p>Share your opening sentence and your audience description. In your reply to a classmate, answer honestly: would you read this piece if you encountered it outside a classroom? What would make you stop reading after the first paragraph — and what would make you keep going? Be as specific as you can. The goal is not encouragement but genuine feedback about what earns public attention.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /week-8 -->
+
+
+<!-- ═══════════════════════════════════════════
+     WEEK 10 — The Capstone
+════════════════════════════════════════════════ -->
+<div class="week-panel" id="week-9">
+
+<div class="cs-paste-label">Canvas Page — Week 10 Overview</div>
+<div class="dp-wrapper">
+  <div class="cs-week-header">
+    <div class="cs-unit-badge">Unit 5 · Engagement — Week 2 of 2 · Capstone</div>
+    <div class="cs-week-title">The Citizen Scholar: Bringing Your Beat to the Public</div>
+    <div class="cs-week-subtitle">Ten weeks of looking carefully at one corner of the world. Now you have something to say.</div>
+  </div>
+  <div class="cs-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt" aria-hidden="true"></i>Overview and Purpose</h3>
+    <div class="cs-meta">
+      <div class="cs-meta-item">Unit: <span>5 of 5 — Engagement</span></div>
+      <div class="cs-meta-item">Week: <span>10 of 10</span></div>
+      <div class="cs-meta-item">Deliverable: <span>Capstone — The Public Piece</span></div>
+    </div>
+    <div class="cs-pull">"The citizen scholar is not someone who knows a great deal. It is someone who uses what they know in the service of a public that needs it. You have spent ten weeks building the right to say something. Now say it."</div>
+    <p>This is the final week of The Citizen Scholar. You have now followed your beat for eight weeks, applying each step of the critical process to produce a description of your field's news ecosystem, an analysis of how a specific thread has developed, an interpretation of what it means in light of your disciplinary knowledge, and an evaluation of its ethical and equity dimensions.</p>
+    <p>The capstone is a public-facing piece that synthesizes this work into something a general audience can actually use: an op-ed, an explainer, a letter to the editor, or a short public essay. It should carry the weight of everything you have learned about this thread — but wear that weight lightly enough that a non-specialist finds it worth reading.</p>
+    <p>Selected capstone pieces will be shared in our final session as examples of what it looks like to bring scholarly attention to the news cycle. Students who wish to submit their piece for publication — in the student newspaper, a community outlet, or a public forum — are encouraged to do so. The instructor will provide feedback for publication-ready revisions.</p>
+    <div class="cs-outcomes-grid">
+      <div class="cs-outcome"><strong>Synthesize</strong>Draw on work from all five units to produce a coherent, substantive public piece about your beat thread.</div>
+      <div class="cs-outcome"><strong>Engage Publicly</strong>Write in a form and voice that earns the attention of a reader with no prior knowledge of your thread.</div>
+      <div class="cs-outcome"><strong>Contribute</strong>Make a specific, original contribution to public understanding of your beat — something that would not exist without your quarter of attention.</div>
+      <div class="cs-outcome"><strong>Reflect</strong>Account for what has changed in how you think about news, about your field, and about your responsibilities as a scholar and citizen.</div>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Week 10 Beat Journal (Final Entry)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Beat Journal — Week 10 (Final Entry)</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Week 10 Journal Prompt</h3>
+    <div class="cs-journal-prompt">
+      <div class="cs-callout-label">Final Journal Entry — 300–400 words</div>
+      <p>Read back through your Beat Journal entries from Weeks 1 through 9. Then write: what has changed in how you see this beat? What did you understand at Week 1 that turned out to be wrong, incomplete, or insufficient? What question that you started with remains genuinely open? And what do you now know about the relationship between following a beat carefully over time and being a more capable citizen — in your field and beyond it?</p>
+    </div>
+    <div class="cs-callout" style="margin-top:16px">
+      <div class="cs-callout-label">Note on the Journal Archive</div>
+      <p>Your complete Beat Journal — all ten entries — is submitted alongside your capstone piece as a record of your intellectual development across the quarter. It is assessed holistically: not entry by entry, but as evidence that you were genuinely present to your beat each week, and that your thinking developed over time.</p>
+    </div>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Capstone Assignment (Due End of Week 10)</div>
+<div class="dp-wrapper">
+  <div class="dp-header" style="background-color:#8b2332"><h2 class="dp-heading"><span class="dp-header-title">Capstone Assignment — The Public Piece</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle" aria-hidden="true"></i>Purpose</h3>
+    <p>The Public Piece is the culminating work of The Citizen Scholar. It asks you to demonstrate that ten weeks of careful attention to a news beat produces something — a perspective, an argument, a contribution to public understanding — that would not exist without that sustained work. It is not a research paper. It is not a course reflection. It is a piece of public writing: addressed to a real audience, in a real form, about something that matters right now.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Instructions</h3>
+    <p>Write a public-facing piece of 600–800 words. Choose one of the following forms, based on what best fits your argument and your audience:</p>
+    <div class="cs-process-box">
+      <div class="cs-callout-label">Form Options</div>
+      <p><strong>Op-Ed:</strong> A first-person argument about your beat thread, addressed to a general readership and making a clear, debatable claim with supporting evidence.</p>
+      <p style="margin-top:10px"><strong>Public Explainer:</strong> A precise, accessible account of what your beat thread is actually about — for a reader who has seen the headlines but needs a scholarly guide to understanding them.</p>
+      <p style="margin-top:10px"><strong>Letter to the Editor:</strong> A specific, evidence-based response to a piece of coverage in your beat — correcting, deepening, or challenging a claim in the public record.</p>
+    </div>
+    <p>Regardless of form, your piece must: make an original contribution (not just summarize); carry evidence drawn from your quarter of beat work; be written in a voice appropriate for publication; and be specific enough that a reader knows exactly what you are talking about and why it matters.</p>
+    <p>&nbsp;</p>
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit" aria-hidden="true"></i>Submission</h3>
+    <p>Submit the following to Canvas:</p>
+    <ul>
+      <li>Your completed Public Piece (600–800 words)</li>
+      <li>Your complete Beat Journal (all ten entries, compiled into a single document)</li>
+      <li>A one-paragraph process note (not assessed for quality, only for completion): describe the form you chose, who your intended audience is, and one thing you would revise if you had more time.</li>
+    </ul>
+    <p>&nbsp;</p>
+    <table class="cs-rubric">
+      <tr><th>Criterion</th><th>Expectations</th><th>Points</th></tr>
+      <tr><td>Original Contribution</td><td>The piece adds something — an argument, an explanation, a corrective — that would not exist without the quarter's beat work</td><td class="pts">25 pts</td></tr>
+      <tr><td>Evidence and Specificity</td><td>Claims grounded in specific evidence from the beat; no vague generalities</td><td class="pts">20 pts</td></tr>
+      <tr><td>Public Voice and Form</td><td>Written in the chosen form with appropriate voice; a reader outside the course would find it worth reading</td><td class="pts">20 pts</td></tr>
+      <tr><td>Synthesis of Critical Process</td><td>The piece reflects all five steps — description, analysis, interpretation, evaluation, engagement — without making that structure visible</td><td class="pts">20 pts</td></tr>
+      <tr><td>Beat Journal (Holistic)</td><td>Ten entries submitted; evidence of genuine weekly engagement and developing thought across the quarter</td><td class="pts">15 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="cs-paste-label">Canvas Page — Final Discussion (Week 10)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading"><span class="dp-header-title">Discussion — Week 10</span></h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments" aria-hidden="true"></i>Final Discussion</h3>
+    <div class="cs-callout">
+      <div class="cs-callout-label">Prompt</div>
+      <p>Share one sentence from your Public Piece that you are proud of — one that says something specific and true that a general reader needs to hear. Then share one question your quarter of beat work left genuinely open — something you understand better now but have not resolved. In your reply to a classmate, respond to their open question: not to answer it, but to say whether it is a question you share, and why it matters that it remains open.</p>
+    </div>
+    <div class="cs-callout" style="margin-top:14px;border-left-color:#888">
+      <div class="cs-callout-label" style="color:#555">A Note on What You Have Done</div>
+      <p>You followed a corner of the world for ten weeks. You learned to see it clearly, to track how it moved, to understand what it meant, to judge what was at stake, and to say something about it that was worth saying. That is not a course requirement. It is a practice — one that democratic life needs more people to sustain. The beat does not end at Week 10. The question is whether you keep following it.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /week-9 -->
 
 <script>
-function toggleSize(id) {
-  const el = document.getElementById('size-' + id);
-  const isOpen = el.classList.contains('open');
-  document.querySelectorAll('.size').forEach(s => s.classList.remove('open'));
-  if (!isOpen) el.classList.add('open');
+function showWeek(idx) {
+  document.querySelectorAll('.week-panel').forEach((p,i) => p.classList.toggle('active', i === idx));
+  document.querySelectorAll('.week-nav button').forEach((b,i) => {
+    if(b.tagName === 'BUTTON') b.classList.remove('active');
+  });
+  const btns = document.querySelectorAll('.week-nav button');
+  btns[idx].classList.add('active');
+  window.scrollTo({top: 60});
 }
-
-// Open small by default
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('size-small').classList.add('open');
-});
 </script>
 </body>
 </html>
