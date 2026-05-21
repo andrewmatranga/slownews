@@ -1,0 +1,833 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slow News, Smart Citizens — README</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1a1a;--paper:#f7f4ef;--cream:#fffdf8;--white:#fff;
+  --crimson:#8b2332;--gold:#c9a96e;--rule:#d6d0c7;--rule-light:#ece7df;
+  --muted:#6b6560;
+  --mono:'DM Mono',monospace;
+  --serif:'Source Serif 4',Georgia,serif;
+  --display:'Playfair Display',Georgia,serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);font-family:var(--serif);color:var(--ink);font-size:16px;line-height:1.75}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--cream);border-bottom:1px solid var(--rule)}
+.nav-top-rule{height:3px;background:var(--crimson)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:stretch;height:46px;padding:0 28px}
+.nav-logo{font-family:var(--display);font-size:14px;font-weight:900;color:var(--ink);text-decoration:none;display:flex;align-items:center;padding-right:18px;border-right:1px solid var(--rule);flex-shrink:0}
+.nav-logo em{color:var(--crimson);font-style:italic}
+.nav-links{display:flex;align-items:stretch;flex:1;overflow-x:auto}
+.nav-links a{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:0 12px;display:flex;align-items:center;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s;white-space:nowrap;flex-shrink:0;cursor:pointer}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.active{color:var(--crimson);border-bottom-color:var(--crimson)}
+.nav-sep{width:1px;background:var(--rule);margin:12px 3px;flex-shrink:0}
+
+/* LAYOUT */
+.shell{display:flex;padding-top:49px;min-height:100vh}
+.sidebar{width:210px;flex-shrink:0;background:var(--ink);position:sticky;top:49px;height:calc(100vh - 49px);overflow-y:auto}
+.sb-label{padding:12px 0 4px 14px;font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:#555;border-top:1px solid #2a2a2a;margin-top:6px}
+.sb-label:first-child{border-top:none;margin-top:0}
+.sidebar button{display:block;width:100%;background:none;border:none;text-align:left;padding:6px 14px;font-family:var(--mono);font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:#666;cursor:pointer;transition:color .12s;line-height:1.4}
+.sidebar button:hover{color:#ccc}
+.sidebar button.active{color:#fff;border-left:2px solid var(--crimson);padding-left:12px}
+.main{flex:1;min-width:0}
+
+/* PANELS */
+.panel{display:none;max-width:780px;margin:0 auto;padding:0 0 80px}
+.panel.active{display:block}
+
+/* PAGE COMPONENTS */
+.page-flag{border-bottom:3px solid var(--ink);padding:28px 32px 20px;background:var(--cream)}
+.page-eyebrow{font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--crimson);margin-bottom:10px}
+.page-title{font-family:var(--display);font-size:clamp(24px,4vw,40px);font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:8px}
+.page-deck{font-family:var(--display);font-size:17px;font-style:italic;color:var(--muted);line-height:1.4;max-width:560px}
+.page-rule{height:3px;background:var(--crimson)}
+
+.block{padding:26px 32px;background:var(--white);border-bottom:1px solid var(--rule-light)}
+.block:last-child{border-bottom:none}
+.block h3{font-family:var(--display);font-size:18px;font-weight:700;color:var(--ink);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
+.block h4{font-family:var(--display);font-size:15px;font-weight:700;color:var(--ink);margin-bottom:8px;margin-top:18px}
+.block h4:first-child{margin-top:0}
+.block p{font-size:15.5px;line-height:1.78;color:#3a3a3a;margin-bottom:14px}
+.block p:last-child{margin-bottom:0}
+.block ul,.block ol{padding-left:22px;margin-bottom:14px}
+.block li{font-size:15px;line-height:1.72;color:#3a3a3a;margin-bottom:6px}
+.block li:last-child{margin-bottom:0}
+
+.pull{border-left:3px solid var(--crimson);padding:12px 18px;background:var(--paper);margin:16px 0;font-family:var(--display);font-size:17px;font-style:italic;line-height:1.5;color:var(--ink)}
+
+.callout{background:var(--paper);border:1px solid var(--rule);padding:14px 18px;margin:12px 0}
+.callout-label{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--crimson);margin-bottom:8px}
+.callout p{font-size:14px;margin:0;color:#444;line-height:1.65}
+.callout p+p{margin-top:8px}
+.callout ul{padding-left:16px;margin-top:6px;margin-bottom:0}
+.callout li{font-size:14px;line-height:1.65;color:#444;margin-bottom:4px}
+
+.dark{background:var(--ink);padding:22px 26px;margin:14px 0}
+.dark-label{font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.dark p{font-size:15px;line-height:1.75;color:#bbb;margin-bottom:12px}
+.dark p:last-child{margin-bottom:0}
+.dark strong{color:#fff}
+.dark em{color:var(--gold);font-style:normal}
+.dark ul{padding-left:20px;margin-bottom:0}
+.dark li{font-size:14.5px;line-height:1.7;color:#bbb;margin-bottom:6px}
+.dark li:last-child{margin-bottom:0}
+
+/* FILE INDEX */
+.file-index{display:flex;flex-direction:column;gap:3px;margin:14px 0}
+.file-row{display:flex;align-items:stretch;background:var(--white);border:1px solid var(--rule)}
+.file-row.current{border-color:var(--crimson)}
+.file-icon{background:var(--crimson);color:#fff;font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:12px 14px;flex-shrink:0;width:68px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.3}
+.file-icon.gray{background:#777}
+.file-icon.gold{background:#8a6a2a}
+.file-body{padding:12px 16px;flex:1}
+.file-name{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--ink);margin-bottom:3px;letter-spacing:.03em}
+.file-desc{font-size:13.5px;color:var(--muted);line-height:1.5}
+.file-tag{display:inline-block;font-family:var(--mono);font-size:7.5px;font-weight:500;letter-spacing:.09em;text-transform:uppercase;border:1px solid var(--crimson);color:var(--crimson);padding:1px 5px;margin-left:6px;vertical-align:middle}
+.file-tag.gray{border-color:#aaa;color:#aaa}
+
+/* DECISION TABLE */
+.dec-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+.dec-table th{background:var(--ink);color:var(--gold);font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;text-align:left;font-weight:500}
+.dec-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light);vertical-align:top;line-height:1.55;color:#333}
+.dec-table tr:last-child td{border-bottom:none}
+.dec-table tr:nth-child(even) td{background:var(--paper)}
+.dec-table .q{font-weight:600;color:var(--ink);font-size:13.5px}
+.dec-table .a{color:#555;font-size:13px}
+
+/* STEP LIST */
+.steps{display:flex;flex-direction:column;gap:2px;margin:12px 0}
+.step{display:flex;align-items:stretch;background:var(--white);border:1px solid var(--rule)}
+.step-n{background:var(--crimson);color:#fff;font-family:var(--display);font-size:20px;font-weight:900;padding:14px 16px;flex-shrink:0;width:52px;display:flex;align-items:center;justify-content:center;line-height:1}
+.step-body{padding:14px 18px;flex:1}
+.step-title{font-family:var(--display);font-size:15px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.step-desc{font-size:14px;color:var(--muted);line-height:1.6}
+
+/* SIZE CARDS */
+.size-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin:12px 0}
+@media(max-width:620px){.size-grid{grid-template-columns:1fr}}
+.size-card{background:var(--white);border:1px solid var(--rule);padding:16px 18px}
+.size-card-badge{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;border:1.5px solid var(--crimson);color:var(--crimson);padding:2px 6px;display:inline-block;margin-bottom:10px}
+.size-card h4{font-family:var(--display);font-size:16px;font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.2}
+.size-card p{font-size:13.5px;line-height:1.6;color:#444;margin-bottom:6px}
+.size-card p:last-child{margin-bottom:0}
+.size-card ul{padding-left:16px;margin-bottom:0}
+.size-card li{font-size:13px;line-height:1.6;color:#555;margin-bottom:3px}
+
+/* ARC */
+.arc{display:flex;flex-direction:column;gap:2px;margin:12px 0}
+.arc-row{display:flex;align-items:stretch}
+.arc-wk{font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:#fff;padding:9px 10px;flex-shrink:0;width:80px;display:flex;align-items:center;background:#777}
+.arc-wk.c1{background:#777}
+.arc-wk.c2{background:var(--crimson)}
+.arc-wk.c3{background:var(--ink)}
+.arc-content{background:var(--white);border:1px solid var(--rule);border-left:none;padding:9px 14px;flex:1}
+.arc-title{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.arc-sub{font-size:12px;color:var(--muted)}
+
+@media(max-width:500px){
+  .block,.page-flag{padding-left:20px;padding-right:20px}
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-top-rule"></div>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Slow News, <em>Smart Citizens</em></a>
+    <div class="nav-links">
+      <div class="nav-sep"></div>
+      <a onclick="show('start')" class="active">Start Here</a>
+      <a onclick="show('thesis')">The Thesis</a>
+      <a onclick="show('files')">File Index</a>
+      <a onclick="show('sizes')">S / M / L</a>
+      <a onclick="show('analog')">The Analog Layer</a>
+      <a onclick="show('canvas')">Canvas Setup</a>
+      <a onclick="show('adapt')">Adapting for Your Discipline</a>
+      <a onclick="show('maintain')">Maintenance</a>
+    </div>
+  </div>
+</nav>
+
+<div class="shell">
+<div class="sidebar">
+  <div class="sb-label">Orientation</div>
+  <button class="active" onclick="show('start')">Start Here</button>
+  <button onclick="show('thesis')">The Thesis</button>
+  <button onclick="show('files')">File Index</button>
+  <div class="sb-label">The Curriculum</div>
+  <button onclick="show('sizes')">S / M / L Explained</button>
+  <button onclick="show('analog')">The Analog Layer</button>
+  <button onclick="show('canvas')">Canvas Setup</button>
+  <div class="sb-label">For Instructors</div>
+  <button onclick="show('adapt')">Adapting for Your Discipline</button>
+  <button onclick="show('maintain')">Maintenance + Updates</button>
+</div>
+
+<div class="main">
+
+<!-- START HERE -->
+<div class="panel active" id="p-start">
+<div class="page-flag">
+  <div class="page-eyebrow">Slow News, Smart Citizens · Instructor README</div>
+  <h1 class="page-title">Start Here</h1>
+  <p class="page-deck">What this project is, what it includes, and the fastest path to using it in your course.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>What This Project Is</h3>
+  <p>Slow News, Smart Citizens is a modular media literacy curriculum built around a five-step critical process. It was developed at the University of Denver in spring 2026, with support from the Center for Ethical Artificial Intelligence, for use in media, film, and journalism courses at the undergraduate level. It is designed to be taught by one instructor, adapted by many others, and used across disciplines from journalism to the sciences to the humanities.</p>
+  <p>The curriculum has two layers that work together. The first is digital: a reading list, discussion boards, and written assignments that develop students' capacity to read the information environment critically. The second is analog: a hand-kept notebook, weekly observations made with pen and paper, and a final physical publication assembled by the class together. Neither layer is optional. Both are the point.</p>
+  <p>The project is organized around three sizes: Small, Medium, and Large. Those sizes describe the scope of the module an instructor chooses, not the physical format of anything. The Large version is designed for a journalism course at the quarter or semester level. The Medium and Small versions are designed to drop into any course, in any discipline, without restructuring the existing syllabus.</p>
+  <div class="pull">"Technology changes the conditions. Human beings determine what they do inside them. This curriculum is practice for making those determinations deliberately."</div>
+</div>
+
+<div class="block">
+  <h3>The Fastest Path to Your First Session</h3>
+  <p>If you want to use this curriculum and you have one class session available, here is the minimum viable path:</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <div class="step-title">Read the thesis page</div>
+        <div class="step-desc">Open this README to "The Thesis" tab. Read it. It is two pages. It tells you what this curriculum is for and why the analog layer exists. Understanding the argument makes the implementation make sense.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <div class="step-title">Choose your size</div>
+        <div class="step-desc">Open "S / M / L Explained." One table. Read it. Pick the version that fits your course. If you have one to three sessions available, use Small. Five weeks, use Medium. A full quarter layer, use Large.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <div class="step-title">Open the project site</div>
+        <div class="step-desc">Open SNSC_Site.html in a browser. This is the front door for both faculty and students. Read the Overview section. It explains the five critical moves, the AI and source chain argument, and the slow news framing in about fifteen minutes of reading.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">4</div>
+      <div class="step-body">
+        <div class="step-title">Open your Canvas shell</div>
+        <div class="step-desc">For Small: SNSC_Small_Canvas_v2.html. For Medium: SNSC_Medium_Canvas.html. For Large: SNSC_Canvas_10Week.html. Each file contains every Canvas page you need, in order, with paste instructions at the top of each panel. Copy each page into your LMS.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">5</div>
+      <div class="step-body">
+        <div class="step-title">Make three decisions</div>
+        <div class="step-desc">What will you call the notebook? What format will the physical publication take? What is the minimum page count? Fill in the bracketed fields in the Canvas shell pages. Everything else is ready to go as written.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">6</div>
+      <div class="step-body">
+        <div class="step-title">Assign the reading for Week 1</div>
+        <div class="step-desc">Lippmann, <em>Public Opinion</em>, Chapters 1 and 2. Public domain. Free online. Short. Assign it. Students arrive to the first session having read the founding argument of the field. The conversation starts there.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="block">
+  <h3>What This README Contains</h3>
+  <ul>
+    <li><strong>The Thesis</strong> — the intellectual argument behind the curriculum, in plain language. Read this before anything else if you have time.</li>
+    <li><strong>File Index</strong> — every file in the project with a plain-language description of what it is and when to use it.</li>
+    <li><strong>S / M / L Explained</strong> — what each size is, who it is for, what it requires of instructor and student, and how to choose.</li>
+    <li><strong>The Analog Layer</strong> — why the notebook and the physical publication exist, what the research says, and how to implement both without getting lost in the logistics.</li>
+    <li><strong>Canvas Setup</strong> — a step-by-step guide to getting the Canvas pages into your LMS, what to pin, what to name things, and how the AI thread works.</li>
+    <li><strong>Adapting for Your Discipline</strong> — how to swap the journalism examples for your field, what stays the same, what changes, and what to look for when updating Tier 2 readings each term.</li>
+    <li><strong>Maintenance and Updates</strong> — what needs updating each term, what is stable, and how to keep the curriculum current without rebuilding it from scratch.</li>
+  </ul>
+</div>
+</div>
+
+<!-- THE THESIS -->
+<div class="panel" id="p-thesis">
+<div class="page-flag">
+  <div class="page-eyebrow">The Argument</div>
+  <h1 class="page-title">The Thesis</h1>
+  <p class="page-deck">What this curriculum is for, why the analog layer exists, and what the slow news practice is trying to build.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Problem This Curriculum Addresses</h3>
+  <p>The information environment has been changing in ways that make careful, engaged reading more difficult and more important at the same time. Social media optimized for engagement rather than accuracy or civic value. The feed replaced the editor. The algorithm replaced the front page. And now generative AI has introduced something different again: a synthesis layer that produces answers without sources, collapsing the chain from claim to origin that journalists and careful readers have always used to evaluate what they read.</p>
+  <p>At the same time, the default mode of information consumption has shifted from opt-in to opt-out. Earlier media technologies required some active choice on the reader's part: you bought the newspaper, you turned on the television, you searched for something. The emerging model of AI-generated summaries and agentic overviews arrives without being sought. You are opting out of it, increasingly, rather than opting in. That shift is worth naming as a structural fact, not a complaint.</p>
+  <p>Media literacy education has been addressing a version of this problem since the 1970s. The questions it has always asked are still the right questions: Who made this? For whom? What is left out? What does it assume? What would a different perspective reveal? The new conditions make those questions harder to apply — because the source is hidden, the author is unclear, and the volume of content is so large that careful reading of any individual piece feels like a luxury. Slow News, Smart Citizens is a response to those conditions. It does not try to reverse them. It tries to build the practice of reading carefully inside them.</p>
+</div>
+
+<div class="block">
+  <h3>The Two-Layer Structure</h3>
+  <p>The curriculum has two layers because one layer is not enough. A purely digital media literacy curriculum teaches the critical process but operates entirely inside the medium that is accelerating past it. A purely analog curriculum teaches slowing down but disconnects students from the environment they actually need to navigate. Both layers are required, and they serve different functions.</p>
+  <p>The digital layer (the Canvas pages, the reading list, the discussion boards, the written assignments) develops the cognitive habits that media literacy requires: tracing sources, naming structures, applying disciplinary knowledge, making accountable judgments. This is the work students do at a screen, submitted digitally, assessed with rubrics.</p>
+  <p>The analog layer, which includes the hand-kept notebook, weekly observations written with pen on paper, and the physical publication assembled at the end, develops the embodied habits that the digital layer cannot. Writing by hand slows the recording process in a way that forces synthesis. You cannot write down everything, so you decide what matters. That decision is, in a small way, the same act as the critical process. The physical publication makes the work real in a way that a Canvas submission does not: it exists in the room, it can be held, it was made by hand by a specific group of people at a specific moment.</p>
+  <div class="pull">"The physical publication is not a nostalgia exercise. It is a direct, hand-made counterargument to the feed — which is what survived when the iPad failed to save the magazine."</div>
+  <p>Those two layers are not in tension with each other. They are the same project from different angles. The digital work trains students to notice things. The analog work gives them a place to record what they notice, slow down with it, and make something from it that will outlast the course.</p>
+</div>
+
+<div class="block">
+  <h3>The Coffee Klatch</h3>
+  <p>There is a form of conversation that predates every media technology: people sitting down together, having read something, to talk about what they noticed. A coffee klatch. A reading group. A newsroom morning meeting. A kitchen table argument about something in the paper. The form is ancient, and in some ways it is the most durable thing journalism has ever produced, more durable than any format or platform or delivery mechanism.</p>
+  <p>Every session of this module opens with something like that conversation. Students arrive having followed their beat for another week, having written something by hand about what they noticed. They sit down with their classmates and talk about it. The five critical moves give the conversation structure. The notebook gives it memory. The physical publication gives it a form that lasts beyond the quarter.</p>
+  <p>That conversation is the antidote this curriculum is trying to build. Not a technology, not a platform, not an app. A practice of sitting down, reading carefully, writing by hand, and talking to another person about what you found. The hot take culture, the sensationalist headline, the AI-generated summary — none of those require you to slow down. This course does. That is the whole point.</p>
+</div>
+
+<div class="block">
+  <h3>On Technology and Determinism</h3>
+  <p>This curriculum does not take the position that AI is destroying journalism or saving it. It takes the position that technology changes the conditions, and that human beings, individually and collectively, still determine what they do inside those conditions. That is not technological determinism, which holds that the technology writes the outcome. It is the more complicated and more honest position: the outcome is contested and made, not given.</p>
+  <p>That position has a practical implication for instruction. Students tend to arrive at this curriculum with one of two default views. Either technology is destiny (resistance is futile, just learn to use the tools), or technology is a choice (we could simply opt out, if we wanted to). Both are wrong in ways that matter for media literacy. The first produces fatalism. The second produces denial. The position this curriculum trains is the one in between: change the conditions does not mean write the outcome. Pay attention. Apply the moves. Contribute what only you can contribute. That is where the agency lives.</p>
+  <div class="callout">
+    <div class="callout-label">A note on the moment this was built</div>
+    <p>This curriculum was developed in spring 2026, at a moment when public attitudes toward AI were shifting measurably and fast. The specific controversies of that moment will have changed by the time you are reading this. The argument the curriculum makes does not depend on those controversies. It depends on a structural condition that will persist: AI is a force in the information environment. It is not the only force. Understanding how information is made, distributed, evaluated, and believed — and practicing that understanding deliberately — is what media literacy has always been about. The AI moment makes it more urgent. It does not make it different in kind.</p>
+  </div>
+</div>
+</div>
+
+<!-- FILE INDEX -->
+<div class="panel" id="p-files">
+<div class="page-flag">
+  <div class="page-eyebrow">Project Files</div>
+  <h1 class="page-title">File Index</h1>
+  <p class="page-deck">Every file in the project, what it is, and when to use it. Open in a browser — all files are standalone HTML.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>Start With These</h3>
+  <div class="file-index">
+    <div class="file-row current">
+      <div class="file-icon">You are here</div>
+      <div class="file-body">
+        <div class="file-name">SNSC_README.html <span class="file-tag">Start</span></div>
+        <div class="file-desc">This file. Instructor orientation to the whole project. Read before anything else. Contains the thesis, file index, size guide, analog layer spec, Canvas setup instructions, and discipline adaptation guidance.</div>
+      </div>
+    </div>
+    <div class="file-row">
+      <div class="file-icon">Site</div>
+      <div class="file-body">
+        <div class="file-name">SNSC_Site.html <span class="file-tag">Share with students</span></div>
+        <div class="file-desc">The project website. Five sections: Home, Overview, Small, Medium, Large. This is the front door for both faculty and students. Share this link before the first session. The Overview section explains the five moves, the AI and source chain argument, and the slow news framing. Students can read it before class. Faculty can read it before setting up Canvas.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="block">
+  <h3>Canvas Shells — Choose One</h3>
+  <p>Each shell contains every Canvas page for that version of the course, in order, with paste instructions at the top of each panel. Open in a browser, use the sidebar to navigate, and copy each page into your LMS one at a time. All bracketed fields are instructor-fillable.</p>
+  <div class="file-index">
+    <div class="file-row">
+      <div class="file-icon">Large</div>
+      <div class="file-body">
+        <div class="file-name">SNSC_Canvas_10Week.html <span class="file-tag">L · Ten weeks</span></div>
+        <div class="file-desc">The complete ten-week Canvas shell. 28 panels: 6 permanent course pages, 5 modules with 4 pages each (overview, notebook prompts, discussion board, assignment), plus the AI Observation Thread and Publication Guide. Designed for a journalism course at the quarter level. Journalism is the home base; every field-specific element is marked for swap-out. Use this file if you are running the full Slow News module.</div>
+      </div>
+    </div>
+    <div class="file-row">
+      <div class="file-icon gray">Medium</div>
+      <div class="file-body">
+        <div class="file-name">SNSC_Medium_Canvas.html <span class="file-tag">M · Five weeks</span></div>
+        <div class="file-desc">The five-week Canvas shell. Students follow one live news story across the full critical process, producing a Source Map, an Interpretive Note, and a Short Public Piece. Use this file if you want five weeks of structured media literacy in any course. Analog layer included: notebook entries and a shorter physical publication deliverable.</div>
+      </div>
+    </div>
+    <div class="file-row">
+      <div class="file-icon gray">Small</div>
+      <div class="file-body">
+        <div class="file-name">SNSC_Small_Canvas_v2.html <span class="file-tag">S · 1–3 sessions</span></div>
+        <div class="file-desc">The small Canvas shell. A recurring ritual or stand-alone session using the first three critical moves. Designed to drop into any existing course without restructuring anything. The most flexible version. Works at grades 9 through 16 in any discipline. Analog layer included: notebook entries and a single-session physical output.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="block">
+  <h3>Supplementary Pages</h3>
+  <p>These files contain additional Canvas pages, concept overviews, and reading lists that can be added to any version of the course. They are not required; each Canvas shell is complete on its own. But they extend and enrich the curriculum for instructors who want more depth in specific areas.</p>
+  <div class="file-index">
+    <div class="file-row">
+      <div class="file-icon gold">Add-ons</div>
+      <div class="file-body">
+        <div class="file-name">SNSC_Additions.html <span class="file-tag">Supplementary</span></div>
+        <div class="file-desc">Six additional Canvas pages: Trust and Authority in the AI Era (a standalone concept overview on credibility and the authorship problem), AI in the Field (written from journalism with swap-out notes for twelve other disciplines), Reading Lists for all three sizes with full annotations and update flags, and the Course Introduction update with the "A Note on the Moment" section for spring 2026 and beyond. Drop any of these into your LMS alongside the main Canvas shell.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="block">
+  <h3>Older Versions</h3>
+  <p>These files were produced earlier in the project. They are functional but predate some of the decisions finalized in the current build, including the analog layer spec, the iPad moment in the evolution of news page, and the three-decision instructor framework. Use the current versions above. Keep these only if you have already begun adapting them for your course.</p>
+  <div class="file-index">
+    <div class="file-row">
+      <div class="file-icon gray">Archive</div>
+      <div class="file-body">
+        <div class="file-name">SNSC_Large_Canvas.html <span class="file-tag gray">Superseded</span></div>
+        <div class="file-desc">Earlier large Canvas shell. Use SNSC_Canvas_10Week.html instead.</div>
+      </div>
+    </div>
+    <div class="file-row">
+      <div class="file-icon gray">Archive</div>
+      <div class="file-body">
+        <div class="file-name">SNSC_CompleteBuild.html <span class="file-tag gray">Archive</span></div>
+        <div class="file-desc">Earlier complete build. Use the individual canvas shells above.</div>
+      </div>
+    </div>
+    <div class="file-row">
+      <div class="file-icon gray">Archive</div>
+      <div class="file-body">
+        <div class="file-name">SNSC_InstructorGuide_Simple.html <span class="file-tag gray">Archive</span></div>
+        <div class="file-desc">Earlier instructor guide. The current README (this file) replaces it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- S/M/L EXPLAINED -->
+<div class="panel" id="p-sizes">
+<div class="page-flag">
+  <div class="page-eyebrow">Choosing Your Version</div>
+  <h1 class="page-title">S / M / L Explained</h1>
+  <p class="page-deck">Three versions of the same curriculum. The size describes the scope you choose for your course, not the physical format of any deliverable.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Key Distinction</h3>
+  <p>Small, Medium, and Large are not about how much content there is. They are about how much of the full critical process your course has room to practice. The Large version runs all five moves across ten weeks and produces a collective capstone. The Medium version runs all five moves across five weeks and produces an individual public piece. The Small version runs the first three moves in as little as one session and produces a reading reflection. Each contains the previous: a Small session inside a Medium course is the same practice, just compressed.</p>
+  <div class="size-grid">
+    <div class="size-card">
+      <div class="size-card-badge">S · Small</div>
+      <h4>Any course. Any discipline. Any level.</h4>
+      <p>One to three sessions, or a recurring weekly ritual. Three critical moves: Description, Analysis, Interpretation.</p>
+      <ul>
+        <li>Fits inside an existing course without restructuring anything</li>
+        <li>Works at grades 9 through 16</li>
+        <li>15 minutes per session or 1–2 dedicated sessions</li>
+        <li>One notebook entry per session, one Reading Reflection, one Self-Assessment</li>
+        <li>Physical deliverable: one page or one spread</li>
+      </ul>
+    </div>
+    <div class="size-card">
+      <div class="size-card-badge">M · Medium</div>
+      <h4>Any course with five weeks of available thread.</h4>
+      <p>Five weeks, all five moves, one live news story followed from Description to Engagement.</p>
+      <ul>
+        <li>Designed for other disciplines adapting the journalism framework</li>
+        <li>One story, followed weekly, five assignments building on each other</li>
+        <li>Notebook entries plus a Short Public Piece</li>
+        <li>Physical deliverable: four to six pages</li>
+        <li>No cluster formation — individual arc throughout</li>
+      </ul>
+    </div>
+    <div class="size-card">
+      <div class="size-card-badge">L · Large</div>
+      <h4>A journalism course. One quarter of the grade.</h4>
+      <p>Ten weeks, all five moves in three cycles, cluster formation, collective State of the World capstone.</p>
+      <ul>
+        <li>Designed for journalism courses at the quarter or semester level</li>
+        <li>One beat followed for ten weeks</li>
+        <li>Notebook runs all ten weeks, assessed holistically</li>
+        <li>Clusters form at Week 5, produce the State of the World entry</li>
+        <li>Physical deliverable: 20 pages assembled at the assembly session</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="block">
+  <h3>Choosing the Right Size</h3>
+  <table class="dec-table">
+    <tr>
+      <th>Question</th>
+      <th>If your answer is...</th>
+      <th>Use</th>
+    </tr>
+    <tr>
+      <td class="q">How much course time do you have?</td>
+      <td class="a">One to three sessions, or a recurring 15-minute ritual</td>
+      <td><strong>Small</strong></td>
+    </tr>
+    <tr>
+      <td class="q">How much course time do you have?</td>
+      <td class="a">Five weeks of available thread in an existing course</td>
+      <td><strong>Medium</strong></td>
+    </tr>
+    <tr>
+      <td class="q">How much course time do you have?</td>
+      <td class="a">Ten weeks, with this module as roughly 25% of the course grade</td>
+      <td><strong>Large</strong></td>
+    </tr>
+    <tr>
+      <td class="q">What discipline are you teaching?</td>
+      <td class="a">Journalism or a closely related media field</td>
+      <td><strong>Large or Medium</strong></td>
+    </tr>
+    <tr>
+      <td class="q">What discipline are you teaching?</td>
+      <td class="a">Any other field — sciences, social sciences, humanities, arts, business</td>
+      <td><strong>Medium or Small</strong></td>
+    </tr>
+    <tr>
+      <td class="q">What grade level are you teaching?</td>
+      <td class="a">Grades 9–12 or introductory undergraduate</td>
+      <td><strong>Small or Medium</strong></td>
+    </tr>
+    <tr>
+      <td class="q">What grade level are you teaching?</td>
+      <td class="a">Upper-division undergraduate or graduate</td>
+      <td><strong>Medium or Large</strong></td>
+    </tr>
+    <tr>
+      <td class="q">Do you want a collective capstone?</td>
+      <td class="a">Yes — I want the class to make something together</td>
+      <td><strong>Large</strong></td>
+    </tr>
+    <tr>
+      <td class="q">Do you want a collective capstone?</td>
+      <td class="a">No — individual arc is enough for this course</td>
+      <td><strong>Medium or Small</strong></td>
+    </tr>
+    <tr>
+      <td class="q">Is this your first time using this curriculum?</td>
+      <td class="a">Yes, and I want to try it before committing to a full version</td>
+      <td><strong>Small</strong></td>
+    </tr>
+  </table>
+</div>
+
+<div class="block">
+  <h3>The Ten-Week Arc (Large)</h3>
+  <p>For instructors considering the Large version, here is the full arc across all five modules:</p>
+  <div class="arc">
+    <div class="arc-row"><div class="arc-wk c1">Module 1</div><div class="arc-content"><div class="arc-title">Description (Weeks 1–2)</div><div class="arc-sub">Students choose a beat, describe what it says, and map its source architecture. Beat Source Map due.</div></div></div>
+    <div class="arc-row"><div class="arc-wk c1">Module 2</div><div class="arc-content"><div class="arc-title">Analysis (Weeks 3–4)</div><div class="arc-sub">Students track how coverage works and moves. AI footprint traced. Story Arc Analysis due.</div></div></div>
+    <div class="arc-row"><div class="arc-wk c2">Module 3</div><div class="arc-content"><div class="arc-title">Interpretation (Weeks 5–6)</div><div class="arc-sub">Students apply disciplinary knowledge. Clusters form around shared underlying questions. Interpretive Brief due.</div></div></div>
+    <div class="arc-row"><div class="arc-wk c2">Module 4</div><div class="arc-content"><div class="arc-title">Evaluation (Weeks 7–8)</div><div class="arc-sub">Students make evaluative arguments. Clusters plan their State of the World entry. Equity Assessment and Cluster Proposal due.</div></div></div>
+    <div class="arc-row"><div class="arc-wk c3">Module 5</div><div class="arc-content"><div class="arc-title">Engagement (Weeks 9–10)</div><div class="arc-sub">Clusters draft, peer review, revise. Assembly session in Week 10. State of the World entry and physical publication due.</div></div></div>
+  </div>
+</div>
+</div>
+
+<!-- ANALOG LAYER -->
+<div class="panel" id="p-analog">
+<div class="page-flag">
+  <div class="page-eyebrow">The Physical Practice</div>
+  <h1 class="page-title">The Analog Layer</h1>
+  <p class="page-deck">Why the notebook is kept by hand, what the physical publication is for, and what instructors need to decide before Week 1.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>Why It Exists</h3>
+  <p>The analog layer is not arts and crafts. It is grounded in a well-established body of research on handwriting and embodied cognition, confirmed by a 2024 study from the Norwegian University of Science and Technology, showing that writing by hand engages the brain differently from typing. It slows the process of recording in a way that forces synthesis: you cannot write down everything, so you decide what matters. That decision is the same act as the critical process, practiced at smaller scale, every week.</p>
+  <p>There is also a pedagogical argument that goes beyond the research. The physical publication exists because the iPad failed to save the magazine in 2010 — not because tablets were technically insufficient, but because the economic and behavioral logic of the screen favored the feed over the magazine's form. The publication this course produces is a deliberate response to that outcome: a hand-assembled, room-specific object that exists because a specific group of people made it, at a specific moment, about what they were actually watching in the world. It is not designed to look like the publications that feed-based distribution replaced. It is designed to be something different: specific, physical, made.</p>
+</div>
+
+<div class="block">
+  <h3>The Three Decisions You Make Before Week 1</h3>
+  <p>Every Canvas shell has three bracketed fields that you fill in before deploying it. These are the only instructor-specific decisions the analog layer requires. Everything else is specified in the curriculum.</p>
+  <table class="dec-table">
+    <tr>
+      <th>Decision</th>
+      <th>What to Consider</th>
+      <th>Examples</th>
+    </tr>
+    <tr>
+      <td class="q">What will you call the notebook?</td>
+      <td class="a">Choose a name that connects to your discipline's culture. The name signals what kind of practitioner you are training students to be.</td>
+      <td class="a">Reporter's notebook (journalism) · Field journal (sciences, social sciences) · Researcher's log (graduate courses) · Observer's record (humanities) · Sketchbook (arts and design)</td>
+    </tr>
+    <tr>
+      <td class="q">What format will the publication take?</td>
+      <td class="a">Consider what your classroom can support. 11×17 requires access to a wide-format printer or students working at tabloid size. 8.5×11 is universal. Both work.</td>
+      <td class="a">11×17 folded to tabloid (ideal for Large) · 8.5×11 booklet, saddle-stapled · Landscape broadsheet, unfolded · Any format the instructor specifies</td>
+    </tr>
+    <tr>
+      <td class="q">What is the minimum page count?</td>
+      <td class="a">For Large: 20 pages is one per class session in a ten-week DU quarter. For Medium: 4–6 pages. For Small: one spread (4 sides of a folded sheet) is sufficient.</td>
+      <td class="a">Large: 20 pages · Medium: 4–6 pages · Small: one spread or four pages</td>
+    </tr>
+  </table>
+</div>
+
+<div class="block">
+  <h3>The Notebook Specification</h3>
+  <p>Any physical notebook with unlined or lightly lined pages works. Minimum 40 pages for Large, 20 for Medium, no minimum for Small beyond enough to work in. A three-dollar composition book with blank pages is as good as a twenty-dollar Leuchtturm. What matters is that it is physical, it is theirs, and it is kept by hand throughout the module.</p>
+  <p>Weekly entries follow a consistent three-part structure regardless of which module is active: <strong>What I noticed</strong> (one specific observation, not a summary), <strong>What moved</strong> (one thing that changed and what drove it), and <strong>What I'm sitting with</strong> (the question the student cannot yet answer, as specific as possible). Students photograph their entry and upload the photo to Canvas before class. The instructor reads the photos, not the handwriting. Assessment is holistic, at the end of the module, as an arc.</p>
+</div>
+
+<div class="block">
+  <h3>The Assembly Session</h3>
+  <p>The assembly session is the final class meeting of the module for the Large version. It has three phases: assembly (approximately 30 minutes, clusters working at tables with their materials), reading aloud (approximately 15 minutes, one passage per cluster and one open question), and distribution (approximately 5 minutes, physical copies to the class, the opening read aloud). After distribution, the session ends.</p>
+  <p>Two things matter most about running the assembly well. First, protect the session: it is not a presentation, not a workshop, not a regular class. It is the thing itself. Students who miss it miss the culminating event of the module. Second, let the room be loud during assembly: the sound of people making things together in a physical space is exactly what the session is supposed to produce. Resist the impulse to quiet it.</p>
+  <div class="callout">
+    <div class="callout-label">The publication is submitted as photographs</div>
+    <p>After the assembly session, students photograph the complete publication with care and upload the image set to Canvas. The physical object is theirs to keep. The photograph set is the formal submission record. High-quality phone photos in good light are sufficient — a dedicated scan session produces better archival quality but is not required.</p>
+  </div>
+</div>
+</div>
+
+<!-- CANVAS SETUP -->
+<div class="panel" id="p-canvas">
+<div class="page-flag">
+  <div class="page-eyebrow">LMS Implementation</div>
+  <h1 class="page-title">Canvas Setup</h1>
+  <p class="page-deck">How to get the curriculum pages into your LMS, what to pin, what to name, and how the persistent threads work.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>General Approach</h3>
+  <p>Each Canvas shell file contains every page you need, organized in order. Open the file in a browser. Use the sidebar to navigate to each panel. At the top of every panel, a black bar marked "Canvas Page" tells you what the page is and what to name it in your LMS. Copy the content of the panel into a new Canvas page in your course. Repeat for each panel you want to deploy.</p>
+  <p>You do not need to deploy every page. The minimum viable deployment for each size is:</p>
+  <ul>
+    <li><strong>Small:</strong> Course Home, The Critical Process, and the Module 1 Overview. Everything else can be added as the module progresses.</li>
+    <li><strong>Medium:</strong> Course Home, The Critical Process, The Slow News Practice, and all five Module Overview pages. Add assignment pages when each module opens.</li>
+    <li><strong>Large:</strong> All six permanent pages plus Module 1 pages before Week 1. Add subsequent module pages as you open each module. Post the AI Thread before Week 1 and leave it open all term.</li>
+  </ul>
+</div>
+
+<div class="block">
+  <h3>What to Pin</h3>
+  <p>In Canvas, you can pin pages to the course home. For the Large version, pin these five pages in this order:</p>
+  <ol>
+    <li>Course Home / Welcome — the entry point for new students</li>
+    <li>The Five Critical Moves — the permanent reference students return to all term</li>
+    <li>The Slow News Practice — the notebook spec and publication guide</li>
+    <li>The AI Observation Thread — the persistent discussion thread</li>
+    <li>Reading List — the two-tier reading list for all ten weeks</li>
+  </ol>
+  <p>For Small and Medium, pin Course Home and The Critical Process. Everything else can live in the module structure.</p>
+</div>
+
+<div class="block">
+  <h3>The AI Observation Thread</h3>
+  <p>The AI Observation Thread is one discussion thread that runs across all ten weeks of the Large version. Create it before Week 1 and do not create a new one each week. Students add one observation any time they encounter AI's visible role in how a news item was generated, summarized, recommended, or distributed. One sentence on what they found; one sentence on how they knew or how they were not sure.</p>
+  <p>The thread's value accumulates over time. By Week 8 or 9, it contains a specific, varied, first-hand record of how AI is operating in the information environment the class navigates. The instructor reads it and brings observations from it into class discussion — not as a lesson, but as a contribution that the thread made possible. Point students back to it when reviewing for the State of the World entry.</p>
+</div>
+
+<div class="block">
+  <h3>Bracketed Fields to Fill In</h3>
+  <p>Search your deployed Canvas pages for square brackets before the first session. Every bracketed field is an instructor decision. The main ones:</p>
+  <ul>
+    <li><strong>[Instructor fills in — reporter's notebook / field journal / researcher's log / observer's record]</strong> — the name of the notebook for your course</li>
+    <li><strong>[Instructor fills in — 11x17 tabloid folded / 8.5x11 booklet / landscape broadsheet / other]</strong> — the publication format</li>
+    <li><strong>[Instructor fills in — e.g., one spread per cluster plus a cover / four pages minimum / twenty pages for the full version]</strong> — the publication minimum</li>
+    <li><strong>[X]%</strong> in the Syllabus — the percentage of the course grade this module represents</li>
+  </ul>
+  <p>All other content is complete as written. You can adjust tone, add examples from your field, or modify assignment word counts — but the framework, the rubrics, and the discussion prompts are ready to deploy without changes.</p>
+</div>
+</div>
+
+<!-- ADAPTING FOR YOUR DISCIPLINE -->
+<div class="panel" id="p-adapt">
+<div class="page-flag">
+  <div class="page-eyebrow">For Non-Journalism Instructors</div>
+  <h1 class="page-title">Adapting for Your Discipline</h1>
+  <p class="page-deck">What journalism is the home base for, what stays the same in any field, and how to swap the examples without rebuilding the curriculum.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>What Stays the Same</h3>
+  <p>The critical process, all five moves of it, works in any discipline without modification. Description, Analysis, Interpretation, Evaluation, and Engagement are not journalism-specific operations. They are ways of reading carefully, tracing how things work, bringing knowledge to bear, making accountable judgments, and contributing to a public conversation. A biology professor and a journalism professor teach the same five moves. The beats their students follow are different. The framework is the same.</p>
+  <p>The following elements require no adaptation: the five moves themselves, the notebook structure and submission process, the physical publication format and assembly session, the discussion board structure and AI thread, the rubrics for all five major assignments, and the cluster formation process in the Large version. These are designed to work across any subject area.</p>
+</div>
+
+<div class="block">
+  <h3>What Changes by Discipline</h3>
+  <p>Two things change when you adapt the curriculum for a field other than journalism. The first is the Tier 2 reading — the field example that shows AI operating in your discipline, calibrated to that module's critical move. The second is the entry point for the Interpretation move, which asks students to bring disciplinary knowledge to bear. In journalism courses, the disciplinary lens is press theory, platform economics, and editorial standards. In other fields, the lens is whatever your discipline's specific framework is for understanding what your beat is about.</p>
+  <table class="dec-table">
+    <tr>
+      <th>Module</th>
+      <th>Journalism example (home base)</th>
+      <th>What to look for in your field</th>
+    </tr>
+    <tr>
+      <td class="q">Module 1 · Description</td>
+      <td class="a">AP's public disclosure of how it uses automated journalism tools</td>
+      <td class="a">A leading institution in your field's public disclosure of AI use — a hospital, a law firm, a research university, a financial institution. Run Description on it: what does it say, what does it not say?</td>
+    </tr>
+    <tr>
+      <td class="q">Module 2 · Analysis</td>
+      <td class="a">Nieman Lab's annual synthesis of how AI changed newsroom practice</td>
+      <td class="a">The annual industry AI adoption report for your field — McKinsey, Deloitte, or the relevant professional association's annual technology report</td>
+    </tr>
+    <tr>
+      <td class="q">Module 3 · Interpretation</td>
+      <td class="a">ProPublica data journalism methodology note — the reporter's judgment made explicit</td>
+      <td class="a">A recent example from your field where expert interpretation of AI-assisted output changed the meaning of results — a researcher who identified what the model got wrong, a clinician who added context the diagnostic AI missed</td>
+    </tr>
+    <tr>
+      <td class="q">Module 4 · Evaluation</td>
+      <td class="a">A local news AI case study where the equity stakes are concrete and named</td>
+      <td class="a">A specific AI equity case in your field with named affected parties, concrete stakes, and a contested outcome — not a general argument about AI and labor, but a specific case</td>
+    </tr>
+    <tr>
+      <td class="q">Module 5 · Engagement</td>
+      <td class="a">A newsroom's public AI standards document — an accountability statement directed at a public audience</td>
+      <td class="a">A professional association's ethics statement or standards document about AI in your field — AMA, ABA, AIA, IEEE, SAG-AFTRA. Run Description and Evaluation on it.</td>
+    </tr>
+  </table>
+</div>
+
+<div class="block">
+  <h3>The Interpretation Entry Point by Discipline</h3>
+  <p>The Interpretation move asks students to complete this sentence: "What this beat is really about, when you understand [something from my field or training], is..." The bracketed phrase is the entry point, and it differs by discipline. Here are starting points by field. The specific version is always the instructor's and the student's to name:</p>
+  <ul>
+    <li><strong>Sciences and engineering:</strong> "When you understand the methodology of the underlying study..." or "When you understand what a p-value actually means and what it does not mean..."</li>
+    <li><strong>Social sciences:</strong> "When you understand the structural conditions that produced this situation..." or "When you understand whose interests the policy is designed to serve..."</li>
+    <li><strong>Humanities:</strong> "When you understand the historical precedent for this moment..." or "When you understand how this story is being rhetorically framed and what that framing excludes..."</li>
+    <li><strong>Business, law, and policy:</strong> "When you understand how decisions like this are actually made inside institutions..." or "When you understand the economic incentive structure driving this outcome..."</li>
+    <li><strong>Arts and design:</strong> "When you understand the formal conventions being invoked or broken here..." or "When you understand what this kind of coverage has historically done to subjects like this one..."</li>
+    <li><strong>Health and medicine:</strong> "When you understand the difference between statistical significance and clinical significance..." or "When you understand how the research pipeline between laboratory and public actually works..."</li>
+  </ul>
+</div>
+
+<div class="block">
+  <h3>The Beat in Non-Journalism Courses</h3>
+  <p>Students in non-journalism courses sometimes struggle to identify a beat that is both live and connected to their discipline. The assignment works best when instructors offer one or two examples from their own field before asking students to choose. The beat criteria remain the same in any discipline: live, traceable to a primary source, connected to the student's training or experience. What changes is the pool of examples.</p>
+  <div class="callout">
+    <div class="callout-label">A reliable fallback for any discipline</div>
+    <p>If students are struggling to find a beat, offer this: follow how your field's research or practice is being covered by mainstream media right now. Every discipline has coverage — some of it accurate, some of it partial, some of it seriously wrong. Following that coverage and applying the critical process to it uses both the discipline knowledge the student already has and the media literacy the module is building. It is always live, always traceable, always connected to training, and almost always produces a meaningful Interpretive Brief.</p>
+  </div>
+</div>
+</div>
+
+<!-- MAINTENANCE -->
+<div class="panel" id="p-maintain">
+<div class="page-flag">
+  <div class="page-eyebrow">Keeping It Current</div>
+  <h1 class="page-title">Maintenance and Updates</h1>
+  <p class="page-deck">What needs updating each term, what is stable indefinitely, and how long the annual update actually takes.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>What Is Stable</h3>
+  <p>The following elements of this curriculum are written to hold across time without updating. They do not depend on current events, current technology, or current poll numbers. They depend on enduring questions about how information is made and evaluated:</p>
+  <ul>
+    <li>The five critical moves and their definitions</li>
+    <li>The notebook structure and three-part weekly prompt</li>
+    <li>The physical publication format, assembly session structure, and submission process</li>
+    <li>The rubrics for all five major assignments</li>
+    <li>The discussion board structure and AI thread format</li>
+    <li>The Tier 1 spine readings: Lippmann, Campbell, Kovach and Rosenstiel, Bell and Owen</li>
+    <li>The "A Note on the Moment" framing (written to acknowledge that its specific examples will date, while the argument holds)</li>
+    <li>The evolution of news page up through generative AI (the structural history, not the current controversy)</li>
+    <li>The thesis, the coffee klatch framing, and the two-layer structure argument</li>
+  </ul>
+</div>
+
+<div class="block">
+  <h3>What Needs Annual Updating</h3>
+  <p>These elements should be reviewed before each term. The update is typically light — one link check and one replacement reading per module. The total time for a full annual update is approximately two to three hours:</p>
+  <table class="dec-table">
+    <tr>
+      <th>Element</th>
+      <th>What to check</th>
+      <th>Where it lives</th>
+    </tr>
+    <tr>
+      <td class="q">Reuters Institute Digital News Report</td>
+      <td class="a">Update to current year's edition. The executive summary and AI chapter. Free online at reutersinstitute.politics.ox.ac.uk.</td>
+      <td class="a">Reading List, Module 2</td>
+    </tr>
+    <tr>
+      <td class="q">Edelman Trust Barometer</td>
+      <td class="a">Update to current year's edition. Media and technology sections. Free online at edelman.com/trust.</td>
+      <td class="a">Reading List, Module 4</td>
+    </tr>
+    <tr>
+      <td class="q">Nieman Lab annual synthesis</td>
+      <td class="a">Select the current year's AI-in-journalism synthesis. The URL structure is consistent year to year.</td>
+      <td class="a">Reading List, Module 2</td>
+    </tr>
+    <tr>
+      <td class="q">Tier 2 field examples</td>
+      <td class="a">Verify links still work. Check whether a better or more current example is available for each module. Replace as needed.</td>
+      <td class="a">Reading List, all modules</td>
+    </tr>
+    <tr>
+      <td class="q">AP's AI disclosure statement</td>
+      <td class="a">AP updates its AI standards periodically. Verify the URL and confirm the current statement is still the Week 1 shared text you want.</td>
+      <td class="a">Reading List, Module 1</td>
+    </tr>
+    <tr>
+      <td class="q">"A Note on the Moment" first paragraph</td>
+      <td class="a">Update the spring 2026 examples with whatever the equivalent live examples are in the current term. The rest of the section holds without updating.</td>
+      <td class="a">Course Introduction, all shells</td>
+    </tr>
+    <tr>
+      <td class="q">Campbell, Media and Culture</td>
+      <td class="a">A new edition appears periodically. Verify the edition in use at your institution matches the chapter structure referenced in the reading list.</td>
+      <td class="a">Reading List, all modules</td>
+    </tr>
+  </table>
+</div>
+
+<div class="block">
+  <h3>What the Annual Update Takes</h3>
+  <p>In practice, the annual update for the Large version takes about two to three hours the first time and about one hour in subsequent years. The update is:</p>
+  <ol>
+    <li>Check five links (Reuters Institute, Edelman, Nieman Lab, AP disclosure, any Tier 2 examples that change)</li>
+    <li>Update three annual publications to current year editions</li>
+    <li>Replace the first paragraph of "A Note on the Moment" with current examples</li>
+    <li>Scan the Tier 2 slot for each module and ask: is there a better current example from this field? Replace if yes.</li>
+  </ol>
+  <p>The Small and Medium versions require the same link checks but fewer replacements, since they use fewer total readings. Both can be updated in under an hour.</p>
+  <div class="callout">
+    <div class="callout-label">The simplest maintenance practice</div>
+    <p>Keep a running note in your course files with the URLs for the five annual publications and the date you last checked them. At the start of each term, spend thirty minutes on link verification before you deploy the Canvas pages. That thirty minutes protects the whole term from broken links and outdated data.</p>
+  </div>
+</div>
+
+<div class="block">
+  <h3>Sharing and Attribution</h3>
+  <p>This curriculum was developed at the University of Denver, Department of Media, Film and Journalism Studies, with support from the Center for Ethical Artificial Intelligence. Principal Investigator: Andrew J. Matranga, EdD. Project period: March 30 to June 1, 2026.</p>
+  <p>Faculty who adapt this curriculum for their own courses are encouraged to share their adaptations with colleagues and to attribute the original project when doing so. If you teach the Medium or Small version in a field other than journalism and develop strong Tier 2 examples for your discipline, consider sharing those examples so instructors in your field can benefit from your work. The goal of the project is reuse and adaptation, not proprietary control.</p>
+  <p>For questions about the curriculum, adaptations, or the long-term project, contact the Department of Media, Film and Journalism Studies at the University of Denver.</p>
+</div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+function show(id){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.sidebar button').forEach(function(b){b.classList.remove('active')});
+  document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('active')});
+  var panel = document.getElementById('p-'+id);
+  if(panel) panel.classList.add('active');
+  document.querySelectorAll('.sidebar button').forEach(function(b){
+    var oc = b.getAttribute('onclick');
+    if(oc && oc.indexOf("'"+id+"'")>=0) b.classList.add('active');
+  });
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    var oc = a.getAttribute('onclick');
+    if(oc && oc.indexOf("'"+id+"'")>=0) a.classList.add('active');
+  });
+  window.scrollTo(0,49);
+}
+</script>
+</body>
+</html>
