@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slow News, Smart Citizens — Small</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f0ede8;font-family:'Source Serif 4',Georgia,serif;color:#1a1a1a;font-size:16px}
+.top{background:#1a1a1a;position:sticky;top:0;z-index:200;border-bottom:3px solid #8b2332}
+.top-inner{display:flex;align-items:center;overflow-x:auto;padding:0 20px}
+.top-brand{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#555;padding:13px 16px 13px 0;border-right:1px solid #333;margin-right:2px;white-space:nowrap;flex-shrink:0}
+.top-brand span{color:#c9a96e}
+.top-sep{font-family:'DM Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:#333;padding:0 12px;white-space:nowrap;flex-shrink:0;border-right:1px solid #333;line-height:1.3;text-align:center}
+.top button{background:none;border:none;color:#555;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:13px 13px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .15s;flex-shrink:0}
+.top button.active{color:#fff;border-bottom-color:#8b2332}
+.top button:hover:not(.active){color:#ccc}
+.panel{display:none;max-width:860px;margin:0 auto;padding:0 0 80px}
+.panel.active{display:block}
+.dp-wrapper{background:#fff;margin-bottom:3px}
+.dp-header{background:#8b2332;padding:16px 28px 14px}
+.dp-heading{margin:0;padding:0;border-top:none;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#fff}
+.dp-content-block{padding:26px 32px 24px;border-bottom:1px solid #ede9e3}
+.dp-content-block:last-child{border-bottom:none}
+.dp-has-icon{display:flex;align-items:flex-start;gap:11px;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:#8b2332;margin-bottom:14px;font-weight:500;line-height:1.4}
+.dp-icon{font-size:16px;margin-top:1px;flex-shrink:0}
+.dp-content-block p{font-size:15.5px;line-height:1.78;color:#2c2c2c;margin-bottom:14px}
+.dp-content-block p:last-child{margin-bottom:0}
+.dp-content-block ul,.dp-content-block ol{padding-left:22px;margin-bottom:14px}
+.dp-content-block li{font-size:15.5px;line-height:1.75;color:#2c2c2c;margin-bottom:8px}
+.paste{background:#111;border-left:3px solid #8b2332;padding:7px 14px;margin:2px 0;font-family:'DM Mono',monospace;font-size:9px;color:#555;letter-spacing:.08em;text-transform:uppercase}
+.pull{border-left:4px solid #8b2332;padding:14px 20px;background:#faf7f4;margin:16px 0;font-size:17px;line-height:1.65;font-style:italic;color:#2a1818}
+.callout{background:#faf7f4;border:1px solid #e0dbd4;padding:15px 19px;margin:14px 0}
+.callout-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8b2332;margin-bottom:8px;font-weight:500}
+.callout p{font-size:14.5px;margin:0;color:#3a3a3a;line-height:1.65}
+.callout p+p{margin-top:8px}
+.dark{background:#1a1a1a;padding:24px 28px;margin:14px 0}
+.dark-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#c9a96e;margin-bottom:10px}
+.dark p{font-size:15px;line-height:1.75;color:#bbb;margin-bottom:12px}
+.dark p:last-child{margin-bottom:0}
+.dark strong{color:#fff}
+.dark em{color:#c9a96e;font-style:normal}
+.moves-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin:16px 0}
+@media(max-width:600px){.moves-three{grid-template-columns:1fr}}
+.move-card{background:#fff;border:1px solid #e0dbd3;overflow:hidden}
+.move-card-stripe{height:4px;background:#8b2332}
+.move-card-body{padding:16px 18px}
+.move-card-num{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#8b2332;margin-bottom:6px}
+.move-card-title{font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:#1a1a1a;margin-bottom:8px}
+.move-card-q{font-size:14px;font-style:italic;color:#666;line-height:1.55;margin-bottom:8px}
+.move-card-desc{font-size:13.5px;line-height:1.6;color:#444}
+.three-q{display:flex;flex-direction:column;gap:3px;margin:16px 0}
+.q-item{display:flex;gap:0;background:#fff;border:1px solid #e8e3dc}
+.q-num{background:#8b2332;color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;padding:14px 16px;flex-shrink:0;width:44px;display:flex;align-items:center;justify-content:center}
+.q-text{padding:14px 18px;font-size:15.5px;line-height:1.6;color:#1a1a1a;font-style:italic}
+.rubric{width:100%;border-collapse:collapse;margin-top:14px;font-size:14px}
+.rubric th{background:#8b2332;color:#fff;padding:9px 13px;text-align:left;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+.rubric td{padding:9px 13px;vertical-align:top;border-bottom:1px solid #ede9e3;line-height:1.55;color:#2c2c2c}
+.rubric tr:nth-child(even) td{background:#faf7f4}
+.rubric .pts{font-family:'DM Mono',monospace;font-size:12px;color:#8b2332;font-weight:500;white-space:nowrap}
+.journal{border:2px dashed #d4cfc8;padding:18px 22px;margin:14px 0;background:#fdfcfa}
+.journal .callout-label{color:#6b5c5c}
+.journal p{font-size:15px;line-height:1.7;color:#3a3a3a;margin:0}
+.journal p+p{margin-top:10px}
+.week-header{padding:20px 32px 0;background:#fff}
+.week-badge{display:inline-block;background:#8b2332;color:#fff;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;margin-bottom:10px}
+.week-title{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.2;margin-bottom:5px}
+.week-sub{font-size:14px;font-style:italic;color:#888}
+.week-rule{height:3px;background:#8b2332;margin:0}
+.meta{display:flex;gap:24px;flex-wrap:wrap;margin:6px 0 18px}
+.meta-item{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#999}
+.meta-item span{color:#8b2332;font-weight:500}
+a{color:#8b2332;text-decoration:underline;text-underline-offset:2px}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+<div class="top">
+  <div class="top-inner">
+    <div class="top-brand"><span>Slow News, Smart Citizens</span> — Small</div>
+    <button onclick="show(0)">Introduction</button><div class="top-sep">Instructor<br>Facing</div>
+    <button class="active" onclick="show(1)">Course Overview</button>
+    <button onclick="show(2)">How to Run It</button>
+    <button onclick="show(3)">The AI Conversation</button>
+    <button onclick="show(4)">Adapt for Your Course</button>
+    <div class="top-sep">Student<br>Facing</div>
+    <button onclick="show(5)">Welcome</button>
+    <button onclick="show(6)">The Three Moves</button>
+    <button onclick="show(7)">What to Bring</button>
+    <div class="top-sep">Weekly<br>Template</div>
+    <button onclick="show(8)">Session Page</button>
+    <button onclick="show(9)">Reading Log</button>
+    <button onclick="show(10)">Discussion Board</button>
+    <div class="top-sep">Assessment</div>
+    <button onclick="show(11)">Reading Reflection</button>
+    <button onclick="show(12)">Self-Assessment</button>
+  </div>
+</div>
+
+
+<div class="panel active" id="p0">
+<div class="paste">Course Introduction — First page for all users · Student-facing and Instructor-facing · Pin to top</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Slow News, Smart Citizens · Small · Course Introduction</div>
+    <div class="week-title">Media Literacy: Where It Came From, Where We Are, and Why It Matters More Than Ever</div>
+    <div class="week-sub">A brief history of reading carefully in public — and what generative AI has changed about that project.</div>
+  </div>
+  <div class="week-rule"></div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Old Problem</h3>
+    <p>In 1922, the journalist and political philosopher Walter Lippmann wrote that there is an unavoidable gap between "the world outside and the pictures in our heads." He was writing about newspapers, but the insight has never stopped being true: the representations of events that reach us through media are never the events themselves. They are shaped by who covered them, who published them, what got left out, who the audience was assumed to be, and what the economics of the medium required.</p>
+    <p>Media literacy — the practice of reading those representations critically rather than transparently — emerged as a formal educational project in the 1970s and 1980s, largely in response to television. Researchers and educators in the UK, Canada, Australia, and the United States began developing frameworks for helping students understand that media texts are constructed, that they carry values and assumptions, that they represent the world in particular ways for particular purposes.</p>
+    <p>The core questions those frameworks asked are still the right questions: Who made this? For whom? What is left out? What does it assume about its audience? What is it asking of me as a reader or viewer?</p>
+    <div class="pull">"The goal of media literacy has never been suspicion. It has been the capacity to ask the next question."</div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Critical Process</h3>
+    <p>This course is built around a five-step critical process developed in media studies education: Description, Analysis, Interpretation, Evaluation, and Engagement. The process draws on a long tradition of media literacy scholarship and its logic is sequential — each move requires the one before it.</p>
+    <p>Description asks you to account for what is actually there, without reaction or judgment. Analysis asks how it works and how it got to be that way — the structural forces shaping what you are reading. Interpretation asks what it means in light of what you know. Evaluation asks whether it is fair, adequate, and who pays its costs. Engagement asks what you do with what you have learned.</p>
+    <p>The sequence is the pedagogy. A reader who jumps to Evaluation without first doing Description tends to evaluate their prior assumptions rather than the evidence. The moves slow down what fast news culture speeds up — and that slowing down is the whole point.</p>
+    <p>This version of the course — the Small version — practices the first three moves: Description, Analysis, and Interpretation. That is enough to change how you read. The Medium and Large versions extend the practice through all five.</p>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What Changed — And What It Means</h3>
+    <p>For most of the internet era, information literacy had a workable shape. You searched for something, found a page, read it, evaluated the source. The chain was visible: here is the claim, here is who made it, here is the publication, here is whether I can verify it against something else. Librarians, teachers, and fact-checkers built curricula around that chain. It was imperfect — search results could be gamed, sources could be misleading — but the structure was navigable.</p>
+    <p>Generative AI search is collapsing that chain. When you ask a question and receive an answer generated by a large language model, the source disappears. There is no page to evaluate. There is no byline to check. There is no publication whose reputation is on the line. There is a plausible-sounding answer, synthesized from sources you cannot see, presented with a confidence that is often indistinguishable from accuracy.</p>
+    <div class="dark">
+      <div class="dark-label">What generative AI search does to the information chain</div>
+      <p>Traditional search: query → list of pages → you choose → you read → you evaluate the source → you decide what to trust.</p>
+      <p>Generative AI search: query → synthesized answer → source chain hidden → evaluation made difficult by design → you receive, rather than decide.</p>
+      <p><strong>The critical process is a direct response to this collapse.</strong> Description forces the chain back into view: what does this actually say, and what is it based on? Analysis asks where it came from and how it reached you — including what AI did to it along the way. Interpretation asks what it means in light of knowledge the AI cannot supply: your field, your training, your educated attention to a specific corner of the world.</p>
+      <p><em>The moves that media literacy has always taught are exactly the moves that generative AI makes harder to practice. That is not a coincidence. It is a reason to practice them more deliberately.</em></p>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Broader Picture — What Is Happening to Information</h3>
+    <p>The shift from traditional search to AI-generated answers is part of a larger structural change in how information is produced, distributed, and encountered. A few things worth naming plainly:</p>
+    <p><strong>Volume:</strong> Estimates vary, but a significant and growing proportion of online text is now generated in whole or in part by AI systems. The pace of content production has accelerated far beyond the capacity of any editorial or fact-checking system to keep up with it.</p>
+    <p><strong>Recommendation:</strong> Most people encounter most information not by seeking it but by receiving it — served by algorithms optimizing for engagement rather than accuracy, depth, or civic value. What the algorithm decides to show you is not a neutral sample of what exists; it is a selection shaped by your past behavior, your demographics, and what the platform has learned keeps you on the page.</p>
+    <p><strong>The economic paradox:</strong> The companies building the AI systems that are reshaping the information environment are also among the most heavily capitalized in history. The same tools making it harder to know what is true are driving significant economic growth. This is not a technology problem with a technology solution. It is a structural condition that citizens, educators, journalists, and policymakers are still working out how to navigate.</p>
+    <p><strong>What has not changed:</strong> The questions. Who made this? Where did it come from? What does my knowledge add? What is at stake, and for whom? What do I do with what I know? Those questions were the foundation of media literacy in 1980. They are the foundation of this course in 2026. The answers are harder to find. The practice of asking is more essential than ever.</p>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>How This Course Is Organized</h3>
+    <p>The Small version of Slow News, Smart Citizens introduces the first three moves of the critical process — Description, Analysis, and Interpretation — through a recurring practice: bringing something you read, spending fifteen minutes with it together using the three moves, and noticing what careful attention produces that fast reading does not.</p>
+    <p>It asks very little of you in terms of prior knowledge. It asks a great deal in terms of attention. The practice is designed to be repeated — in this course, and after it. The three moves are tools you carry, not content you learn once and forget.</p>
+    <p>If this version of the course leaves you wanting more — more time with the critical process, a sustained story to follow, a collective document to produce — the Medium and Large versions extend the same framework across five and ten weeks respectively. Each version is complete in itself. Each one builds on the last.</p>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p1">
+<div class="paste">Instructor Page — Course Overview (pin to course top; not student-facing)</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Slow News, Smart Citizens · Small · Instructor Overview</div>
+    <div class="week-title">Reading the News Together, on Purpose</div>
+    <div class="week-sub">Three moves. Any story. Fifteen minutes. Fits in any course.</div>
+  </div>
+  <div class="week-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What This Is</h3>
+    <p>Slow News, Smart Citizens (Small) is a media literacy module built around three critical moves — Description, Analysis, and Interpretation — drawn from a framework with deep roots in media education scholarship. It drops into any existing course without requiring the instructor to redesign their syllabus or become an expert in media studies or AI.</p>
+    <p>The central practice is simple: students bring something they read, the class spends fifteen minutes with it using the three moves, and over time that practice builds something — a room that arrives prepared, notices more, and reads the news as curious people rather than passive consumers.</p>
+    <div class="pull">"You do not need a new course. You need fifteen minutes and students who brought something to read."</div>
+    <p>The AI conversation enters naturally through the second move. Analysis asks where a story came from and how it traveled to the reader. In 2026 that question almost always opens onto algorithmic recommendation, AI summarization, or synthetic content — and students recognize it immediately as describing their own experience.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Three Moves</h3>
+    <div class="moves-three">
+      <div class="move-card"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-num">Move 1</div>
+        <div class="move-card-title">Description</div>
+        <div class="move-card-q">"What does this story actually say?"</div>
+        <div class="move-card-desc">Account for what is in the story — evidence cited, claims made, who is named — without reacting, interpreting, or evaluating. The move most news reading skips entirely.</div>
+      </div></div>
+      <div class="move-card"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-num">Move 2</div>
+        <div class="move-card-title">Analysis</div>
+        <div class="move-card-q">"Where did it come from, and how did it reach you?"</div>
+        <div class="move-card-desc">Trace the story's path from origin to screen. Who is speaking? Who is absent? Did AI shape what the reader saw, summarized, or recommended? This is where the information environment becomes visible.</div>
+      </div></div>
+      <div class="move-card"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-num">Move 3</div>
+        <div class="move-card-title">Interpretation</div>
+        <div class="move-card-q">"What does your knowledge add?"</div>
+        <div class="move-card-desc">Students bring disciplinary training and field-specific context to the story. What does it mean in light of what they know? What is the coverage missing? What would a specialist say?</div>
+      </div></div>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Two Ways to Run It</h3>
+    <p><strong>The recurring ritual:</strong> Fifteen minutes at the start of every class, all semester. One student brings one item. The class runs the three moves. No formal assignment required — the practice is the point.</p>
+    <p><strong>The stand-alone session:</strong> One or two dedicated class periods that introduce the three moves, practice them on a shared example, and open the AI conversation explicitly. The Reading Reflection assignment (see Assessment) makes this version gradable.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What Students Produce</h3>
+    <div class="meta">
+      <div class="meta-item">Recurring ritual: <span>Reading Log (completion-graded)</span></div>
+      <div class="meta-item">Stand-alone: <span>Reading Reflection (300–400 words)</span></div>
+      <div class="meta-item">Both: <span>Self-Assessment at close</span></div>
+    </div>
+    <p>All assessment is lightweight by design. The Reading Log is a brief pre-class post, completion-graded. The Reading Reflection applies the three moves to one chosen item in writing. The Self-Assessment asks students to name what changed in how they read. None require substantial grading time.</p>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p2">
+<div class="paste">Instructor Page — How to Run the Session</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">How to Run the Session</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>The Fifteen-Minute Recurring Ritual</h3>
+    <p>This runs at the start of any class, any week. One student brings one item. The instructor's role is to participate, not facilitate — bring your own answers to the three questions.</p>
+    <div class="callout"><div class="callout-label">Opening — 2 minutes</div><p>One student reads or describes what they brought. The class listens. Then: "What does this story actually say, according to the evidence it cites?" Thirty seconds of silence before anyone speaks.</p></div>
+    <div class="callout"><div class="callout-label">Move 1 · Description · 4 minutes</div><p>The class accounts for what is in the story. What happened? Who is named? What evidence is cited? Does the body of the story support the headline? The instructor's job: slow the room down. "Wait — does the story actually say that, or are we inferring it?"</p></div>
+    <div class="callout"><div class="callout-label">Move 2 · Analysis · 5 minutes</div><p>Where did this come from? Who reported it? What is the primary source? How did the student find it? Did an AI system summarize or route it? Who is speaking in the story, and who is not? Keep this factual and curious, not accusatory.</p></div>
+    <div class="callout"><div class="callout-label">Move 3 · Interpretation · 4 minutes</div><p>What does your field know about this that the story does not say? What context or knowledge would change how a reader understands it? Close with: "What question does this story leave open that a careful reader would still have?"</p></div>
+    <div class="callout" style="background:#fff8f5;border-color:#e8d0d0"><div class="callout-label">If the session runs long</div><p>Cut from Analysis, not Interpretation. Description and Interpretation are the moves students practice least in everyday reading. Analysis can continue in the Reading Log or Discussion Board.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>The Stand-Alone Session (50–75 minutes)</h3>
+    <p>The instructor selects the shared reading in advance — one current news item related to the course's field.</p>
+    <div class="callout"><div class="callout-label">Part 1 · Setup · 10 min</div><p>Ask students where they got their news this week. List sources. Do not evaluate them. Ask: how did those sources find you — did you seek them out, or did they appear? This surfaces the algorithmic recommendation question before the reading begins.</p></div>
+    <div class="callout"><div class="callout-label">Part 2 · Shared Read · 5 min</div><p>Distribute or display the item. Students read in silence. No discussion yet.</p></div>
+    <div class="callout"><div class="callout-label">Part 3 · Three Moves · 30 min</div><p>Run Description (10 min), Analysis (10 min), and Interpretation (10 min) using the format above, expanded. With more time, each move goes deeper: in Analysis, students can look up the primary source in real time; in Interpretation, small groups bring their disciplinary knowledge before reporting back.</p></div>
+    <div class="callout"><div class="callout-label">Part 4 · The AI Conversation · 15 min</div><p>After the three moves, open the AI question explicitly — see the AI Conversation page for language. The question is not "is AI bad for news?" but "what does AI-mediated content ask of us as readers?"</p></div>
+    <div class="callout"><div class="callout-label">Part 5 · Close · 5–10 min</div><p>Students write for three minutes: one thing they noticed about this story that they would have missed reading it alone, and one question it left open. These notes seed the Reading Reflection assignment.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>What the Instructor Brings</h3>
+    <p>For the ritual: genuine curiosity about what the student brought, and your own answer to at least one of the three questions. For the stand-alone: one current news item from your field where the three moves yield something surprising. Stories that have traveled far from their primary source tend to work best — a study reported by a general outlet, a policy document covered as a human-interest story.</p>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p3">
+<div class="paste">Instructor Page — The AI Conversation</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">The AI Conversation</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Where It Lives</h3>
+    <p>The AI conversation lives inside Analysis — Move 2. When students trace a story from headline to primary source, they are already asking the questions that reveal AI's role: How did I find this? Was this summarized before I read it? Is this text written by a person? The instructor does not need to introduce AI as a separate subject. Stay curious when those questions surface and resist the urge to answer them definitively.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>A Plain Account — Adapt Freely</h3>
+    <div class="dark">
+      <div class="dark-label">Language you can use directly or adapt for your discipline</div>
+      <p>The information environment students navigate today is substantially shaped by AI systems — not in a futuristic sense, but right now. Recommendation algorithms decide what appears in their feeds. AI tools summarize articles before students read them. A growing portion of online content is generated, in whole or in part, by large language models. Some of that content is accurate. Some is fabricated. Most sits somewhere between — plausible on the surface, missing the sourcing and context that would let a reader evaluate it properly.</p>
+      <p>At the same time, the companies building these tools are among the most heavily capitalized in history. <em>The economy benefits from the same systems that are making it harder to know what is true.</em> Students generally recognize this as describing their own experience.</p>
+      <p><strong>The goal is not suspicion of everything.</strong> It is the practiced habit of asking: where did this come from, how did it reach me, and what would I need to know to trust it? Those questions have always been the foundation of good reading. The AI moment makes them more urgent, not different in kind.</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Three Things Worth Saying</h3>
+    <div class="callout"><div class="callout-label">On speed</div><p>The news cycle moves faster than understanding. Slowing down is not falling behind — it is the condition for knowing what you think.</p></div>
+    <div class="callout"><div class="callout-label">On AI-generated content</div><p>The threat to public information is not dramatic fabrication. It is ordinary noise — content that is not quite sourced, not quite accurate, not quite authored by anyone, present everywhere. Learning to notice it is a skill. The three moves are that practice.</p></div>
+    <div class="callout"><div class="callout-label">On their knowledge</div><p>Whatever students are studying, they know things about their field that most journalists covering it do not. That knowledge is a contribution. Interpretation is where they bring it in.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>When Students Push Back</h3>
+    <div class="callout"><div class="callout-label">"I already know how to spot fake news"</div><p>The challenge is not obvious fabrication — it is content that is mostly accurate but missing crucial context, or that was sourced from a legitimate outlet but summarized by AI in a way that changed its meaning. Ask: have you ever read a summary that was technically accurate but somehow off? That feeling is worth paying attention to.</p></div>
+    <div class="callout"><div class="callout-label">"This feels hopeless — how can anyone know what's true?"</div><p>The three moves are the answer. Description, Analysis, and Interpretation do not require certainty — they require attention. A reader who traces a story to its primary source, notices whose voices are absent, and brings their own knowledge to what it means is doing something real, regardless of what AI does to the surrounding environment.</p></div>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p4">
+<div class="paste">Instructor Page — Adapting for Your Course</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Adapting for Your Course</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Framework Is the Constant</h3>
+    <p>Description, Analysis, Interpretation — in that sequence, every session. Everything else flexes for your course context, discipline, class size, and available time.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>For Lecture-Heavy Courses</h3>
+    <p>The recurring ritual is the lower-lift option: fifteen minutes at the start of class, student brings the item, the room runs the three moves. The ritual is self-contained; the rest of the session is unchanged.</p>
+    <p>If even fifteen minutes feels tight, run the three moves on a news item directly related to that day's lecture topic. Three minutes each at the top of class — the lecture follows from a live example rather than an abstract setup.</p>
+    <div class="callout"><div class="callout-label">Rotation tip</div><p>Assign one student per session to bring the item and post a Description to the Reading Log before class. The room arrives having done Move 1 asynchronously; you spend your fifteen minutes on Analysis and Interpretation, where the richer conversation lives.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>For Large Enrollment Courses</h3>
+    <p>The three moves work in lecture halls. Description as call-and-response: "What does the story say? Someone give me one fact." Analysis in pairs for two minutes, then reports back. Interpretation open to the room — large classes often surface answers from across disciplines that smaller rooms cannot.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>For Online and Hybrid Sections</h3>
+    <p>The recurring ritual becomes an asynchronous Reading Log entry submitted before each session. The Discussion Board carries the conversation. The instructor drops one question per week into one or two threads — not an answer, a question. The three moves generate enough structure that discussion rarely needs prompting.</p>
+    <div class="callout"><div class="callout-label">For fully async courses</div><p>Run as a two-week module. Week 1: students post a Reading Log entry applying Description and Analysis. Week 2: students read each other's entries and post an Interpretation — what their field adds to a classmate's story. Reading Reflection due at end of Week 2.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Discipline Entry Points for Interpretation</h3>
+    <div class="callout"><div class="callout-label">Sciences and Engineering</div><p>"What does the methodology of the underlying study actually say — and what did the headline do to it?"</p></div>
+    <div class="callout"><div class="callout-label">Social Sciences and Humanities</div><p>"What historical, cultural, or structural context does this story assume the reader has?"</p></div>
+    <div class="callout"><div class="callout-label">Business, Law, and Policy</div><p>"What does this story leave out about how decisions actually get made in this area?"</p></div>
+    <div class="callout"><div class="callout-label">Arts and Design</div><p>"How is this story framed visually, structurally, rhetorically — and what would a different set of choices have produced?"</p></div>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p5">
+<div class="paste">Student Page — Welcome</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Slow News, Smart Citizens · Small</div>
+    <div class="week-title">Welcome to the Conversation</div>
+    <div class="week-sub">Three moves. Any news story. A practice you can use for the rest of your life.</div>
+  </div>
+  <div class="week-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What This Is</h3>
+    <p>Every session of this module opens the same way. One person brings something they read. The group spends fifteen minutes with it, using three questions. Then class goes on.</p>
+    <p>That is the practice. It sounds simple because it is — and because simple things done consistently produce results that complicated things done occasionally do not. By the end of this module you will read differently. Not more skeptically, not more anxiously — more carefully. With more of yourself in the room.</p>
+    <div class="pull">"The goal is not to distrust the news. The goal is to read it the way a person who knows something reads it."</div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>A Word About the Moment You Are Reading In</h3>
+    <p>A significant and growing portion of what you encounter online — news summaries, articles in your feed, posts about current events — is now generated, summarized, or routed by AI systems. Some of it is accurate. Some is not. Most sits somewhere between: plausible at the surface, missing the context that would let you evaluate it properly, shaped by systems optimizing for how long you look at them rather than how well you understand what you read.</p>
+    <p>This module does not ask you to be against any of that. It asks you to stay curious about what it means for how information works — and to practice reading in a way that serves you as a citizen rather than just a user. The three moves are that practice.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What You Will Do</h3>
+    <p>Bring something you read — from any source, on any topic, in any format. Show up ready to say what it says, where it came from, and what you know about it. Post a brief Reading Log entry before each session. At the end of the module, write a short Reading Reflection. That is everything this module asks of you. The conversation does the rest.</p>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p6">
+<div class="paste">Student Page — The Three Moves (reference page; students return throughout)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">The Three Moves</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Description · Analysis · Interpretation</h3>
+    <p>Every session runs on the same three moves, in the same order. The order matters — each move requires the previous one. A reader who tries to interpret before they have described tends to interpret their own assumptions rather than what the story actually says.</p>
+    <div class="moves-three">
+      <div class="move-card"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-num">Move 1</div>
+        <div class="move-card-title">Description</div>
+        <div class="move-card-q">"What does this story actually say?"</div>
+        <div class="move-card-desc">Account for what is in the story without reacting to it. What happened? Who is named? What evidence is cited? Does the headline match the body? Description means setting aside how you feel about the topic long enough to see what is actually there. It is harder than it sounds and more useful than it seems.</div>
+      </div></div>
+      <div class="move-card"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-num">Move 2</div>
+        <div class="move-card-title">Analysis</div>
+        <div class="move-card-q">"Where did it come from, and how did it reach you?"</div>
+        <div class="move-card-desc">Trace the story's path from origin to your screen. Who reported it? What is the primary source — the original study, document, or event? How did it find you? Did an AI system summarize, recommend, or generate any part of what you read? Who is speaking, and who is not?</div>
+      </div></div>
+      <div class="move-card"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-num">Move 3</div>
+        <div class="move-card-title">Interpretation</div>
+        <div class="move-card-q">"What does your knowledge add?"</div>
+        <div class="move-card-desc">Bring what you know. Your major, your background, your field, your experience — what does it let you see in this story that a general reader would miss? What is the coverage assuming readers understand? What would change if they understood it differently? This is not opinion — it is the contribution that comes from knowing something about the subject.</div>
+      </div></div>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Three Questions</h3>
+    <div class="three-q">
+      <div class="q-item"><div class="q-num">1</div><div class="q-text">What does this story actually say, according to the evidence it cites?</div></div>
+      <div class="q-item"><div class="q-num">2</div><div class="q-text">Where did it come from, and how did it reach you?</div></div>
+      <div class="q-item"><div class="q-num">3</div><div class="q-text">What does your knowledge add — and what question does the story leave open?</div></div>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Where AI Enters</h3>
+    <p>Move 2 — Analysis — is where the AI conversation naturally lives. When you ask "how did this reach me?" you are already asking about the systems that decided to show it to you. Some things worth noticing:</p>
+    <ul>
+      <li>Was there an AI-generated summary before the article — in a search result, news aggregator, or app? How did the summary differ from the piece itself?</li>
+      <li>Did a recommendation algorithm surface this, or did you seek it out? What does that difference mean for what you are likely to see over time?</li>
+      <li>Is the text AI-generated or AI-assisted? Sometimes you can tell. Sometimes you cannot. The habit of asking is the point.</li>
+      <li>Does the story cite a primary source you can verify — a study, a document, a named person — or does it cite other coverage?</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p7">
+<div class="paste">Student Page — What to Bring</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">What to Bring</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Finding Something Worth Bringing</h3>
+    <p>When it is your turn, bring a news item — from any source, any topic — that you actually read past the headline. It does not need to be important or prestigious. It needs to be something you genuinely read and have a question about.</p>
+    <div class="callout"><div class="callout-label">Good items</div><p>Something that surprised you. Something that contradicted what you thought you knew. Something from your field where the technical language felt off. Something that appeared everywhere in your feed at once. Something where you could not immediately identify who reported it. Something where the headline and the body seemed to make different claims.</p></div>
+    <div class="callout" style="background:#fff8f5;border-color:#e8d0d0"><div class="callout-label">What not to bring</div><p>Opinion columns or social posts that are primarily someone's reaction to news rather than reporting. The three moves work best on content making factual claims and citing evidence.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Before You Bring It — Run the Three Moves First</h3>
+    <p>Spend five minutes with your item using the three moves before class. This is also how you complete your Reading Log entry.</p>
+    <div class="callout"><div class="callout-label">Description · 2 minutes</div><p>Two or three sentences on what the story actually says. What happened? What evidence is cited? What is the main claim? No interpretation yet — just describe.</p></div>
+    <div class="callout"><div class="callout-label">Analysis · 2 minutes</div><p>One sentence on where the story came from and one sentence on how you found it. Did AI touch it anywhere along the way?</p></div>
+    <div class="callout"><div class="callout-label">Interpretation · 1 minute</div><p>One sentence on what your field or background adds to this story, and one sentence on the question the story leaves open for you.</p></div>
+    <p>Post these notes as your Reading Log entry before class. Then bring the item and be ready to share what you found.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>When Someone Else Brings the Item</h3>
+    <p>Listen as a careful reader. Run the three moves in your head as you listen. When you respond, add something — not agree with something. In Move 1, add a detail or question about the headline-body gap. In Move 2, add a source layer or an absent voice. In Move 3, bring what your own discipline adds that the presenter's interpretation did not include.</p>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p8">
+<div class="paste">Weekly Template — Session Page (duplicate each week; fill in [N], [student name], and [field question])</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Slow News, Smart Citizens · Session [N]</div>
+    <div class="week-title">This Week's Conversation</div>
+    <div class="week-sub">Description · Analysis · Interpretation</div>
+  </div>
+  <div class="week-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Session</h3>
+    <div class="meta">
+      <div class="meta-item">Bringing the item: <span>[Student name or Instructor]</span></div>
+      <div class="meta-item">Field question this week: <span>[Instructor fills in]</span></div>
+    </div>
+    <p>Post your Reading Log entry before class begins. The session runs the three moves together on the item brought today; your log entry is your preparation for that conversation.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>How the Session Runs</h3>
+    <div class="callout"><div class="callout-label">Move 1 · Description · ~4 minutes</div><p>The presenter shares the item. The room accounts for what it says: the main claim, the evidence cited, what the headline promises and whether the body delivers. No reactions — just what is there.</p></div>
+    <div class="callout"><div class="callout-label">Move 2 · Analysis · ~5 minutes</div><p>Where did this come from? Who reported it? What is the primary source? How did the presenter find it — and did AI play any role in surfacing, summarizing, or generating it? Who is speaking, and who is not?</p></div>
+    <div class="callout"><div class="callout-label">Move 3 · Interpretation · ~4 minutes</div><p>[FIELD QUESTION — instructor fills in here each week.] Close: what question does this story leave open for a careful reader?</p></div>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p9">
+<div class="paste">Weekly Template — Reading Log (completion-graded; due before each session)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Reading Log — Session [N]</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Before Class — Your Three-Move Account</h3>
+    <p>Before this session, post your Reading Log entry. This is your account of the news item you found this week, run through the three moves. It takes about five minutes. It is how you show up to the conversation prepared.</p>
+    <div class="journal">
+      <div class="callout-label">Reading Log · Session [N] · Due before class</div>
+      <p><strong>Description:</strong> In two or three sentences, describe what your item actually says. What happened? What evidence is cited? What is the main claim?</p>
+      <p><strong>Analysis:</strong> In one or two sentences, describe where it came from and how you found it. Name the outlet and what appears to be the primary source. Note if AI played any role in how you encountered or read it.</p>
+      <p><strong>Interpretation:</strong> In one sentence, name what your field, major, or background adds to this story. In one sentence, name the question the story leaves open for you.</p>
+    </div>
+    <div class="callout"><div class="callout-label">Grading</div><p>Reading Log entries are graded on completion. A complete entry addresses all three moves with at least one sentence each. An entry missing a move or submitted after class begins is incomplete.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>After Class — Optional</h3>
+    <p>You are welcome to add one sentence after the session: something from the conversation that changed or sharpened how you read the item. Not graded — but students who do this consistently report the log becomes a useful record of how their reading changed across the module.</p>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p10">
+<div class="paste">Weekly Template — Discussion Board (async version; online/hybrid or to extend in-person conversation)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Discussion Board — Session [N]</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>This Week's Discussion</h3>
+    <p>Post your three-move account of what you read this week. Then reply to one classmate using the move they found hardest — add something to their Description, complicate their Analysis, or extend their Interpretation with what your own background adds.</p>
+    <div class="callout"><div class="callout-label">Your Post · 150–250 words</div><p>Share what you brought using the three moves. Description first — what does the story say. Then Analysis — where it came from and how you found it, including any AI footprint you noticed. Then Interpretation — what your field adds and the open question you are sitting with. End with a question for the room.</p></div>
+    <div class="callout"><div class="callout-label">Your Reply · 75–100 words</div><p>Choose one classmate's post and respond to the move that could go further. If their Description was strong, push on their Analysis. If their Analysis was thorough, push on their Interpretation. Replies should add to the conversation, not just agree with it.</p></div>
+    <div class="callout"><div class="callout-label">The AI Thread — ongoing</div><p>If you encounter a news item where AI played a visible role — in generation, summarization, recommendation, or distribution — add it to the ongoing AI thread. One sentence on what you found, one on how you knew (or weren't sure). No conclusion required — just the observation.</p></div>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p11">
+<div class="paste">Assessment — Reading Reflection (primary individual assignment; due at end of module)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Assessment — Reading Reflection</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle"></i>Purpose</h3>
+    <p>The Reading Reflection is a short piece of writing — 300 to 400 words — that asks you to apply the three moves to one news item you chose and to say what the process revealed. It is not a summary of what you read and not a report on the module. It is your account of what careful reading produces when you slow down and do it on purpose.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Instructions</h3>
+    <p>Choose one news item from the past two weeks — on any topic, from any source. Run it through the three moves in writing. Your reflection should read as a single piece of writing, not three labeled sections — though you may use the move names as light headers if it helps.</p>
+    <div class="callout"><div class="callout-label">Move 1 · Description · ~75–100 words</div><p>What does this story actually say? Describe the main claim, the evidence cited, and the gap (if any) between headline and body. Write this as if explaining the story to someone who has not read it — accurately, without editorializing.</p></div>
+    <div class="callout"><div class="callout-label">Move 2 · Analysis · ~75–100 words</div><p>Where did this story come from and how did it reach you? Name the outlet, the reporter (if there is one), and the primary source. Note how you found the story and any AI role in how it was surfaced, summarized, or produced. Name one voice present and one absent.</p></div>
+    <div class="callout"><div class="callout-label">Move 3 · Interpretation · ~75–100 words</div><p>What does your knowledge add? Use your major, your field, your background, or your experience to say something about what this story means that the coverage itself does not say. Name the question the story leaves open — the real question a careful reader would still have after finishing it.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Rubric</h3>
+    <table class="rubric">
+      <tr><th>Move</th><th>What We Are Looking For</th><th>Points</th></tr>
+      <tr><td><strong>Description</strong></td><td>Accurate, specific account of what the story says. The main claim and the evidence cited. No editorializing. Gap between headline and body noted if present.</td><td class="pts">30 pts</td></tr>
+      <tr><td><strong>Analysis</strong></td><td>Primary source identified or attempted. Distribution path noted. AI role considered. One present voice and one absent voice named specifically.</td><td class="pts">35 pts</td></tr>
+      <tr><td><strong>Interpretation</strong></td><td>A genuine contribution from the student's own knowledge or background — something specific, not "this story is important." Open question named and real.</td><td class="pts">35 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+    <div class="callout" style="margin-top:16px"><div class="callout-label">Note on grading</div><p>The reflection is graded on the quality of attention, not the sophistication of the story chosen. A student who applies the three moves carefully to a local news item will score as well as one who chose an international investigation. What matters is that the moves are genuine.</p></div>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p12">
+<div class="paste">Assessment — Self-Assessment (closing assignment; completion-graded)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Assessment — Self-Assessment</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle"></i>Purpose</h3>
+    <p>The Self-Assessment is the last thing you do in this module. It asks you to look back across the sessions and name what changed — in how you read, what you notice, and what questions you now carry that you did not have before. It is completion-graded: submit it honestly and you receive full credit.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Three Questions</h3>
+    <div class="callout"><div class="callout-label">Question 1 · Description</div><p>What did you read during this module that you would not have noticed — or noticed differently — before you practiced the three moves? Be specific: name the item and what the move revealed.</p></div>
+    <div class="callout"><div class="callout-label">Question 2 · Analysis</div><p>Where did you find AI in the information you encountered during this module — in recommendation, summarization, generation, or distribution? What did noticing it change about how you read?</p></div>
+    <div class="callout"><div class="callout-label">Question 3 · Interpretation</div><p>What question are you leaving this module with — something the sessions raised that you have not resolved? It can be about the news, about AI, about your field, or about how you want to read going forward.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Practice Continues</h3>
+    <p>Description, Analysis, Interpretation — usable on any news item, any time, in any field. The habit builds with repetition. A reader who asks "where did this come from?" every time they read something develops, over months and years, a fundamentally different relationship with the information they encounter.</p>
+    <p>The next time you read something that surprises you, or something that seems off, run the three moves. It takes five minutes. It almost always produces something worth knowing.</p>
+    <div class="dark"><div class="dark-label">For instructors — on receiving self-assessments</div><p>Read them. They tell you which moves stuck, where the AI conversation landed, and what questions students are leaving with. A brief anonymous summary shared with the class at the next session — "here is what your peers noticed" — closes the loop and models the interpretive move one more time. Self-assessments also tell you directly whether to extend to the Medium version next time you run this.</p></div>
+  </div>
+</div>
+</div>
+
+<script>
+function show(n){
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.top button').forEach((b,i)=>b.classList.toggle('active',i===n));
+  window.scrollTo({top:0});
+}
+</script>
+</body>
+</html>
