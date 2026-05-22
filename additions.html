@@ -1,0 +1,1340 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNSC — New Concept Pages + Reading Lists</title>
+<style>
+/* ═══════════════════════════════════════════
+   SNSC SHARED DESIGN SYSTEM v2
+   Newspaper website aesthetic throughout
+   No heavy black backgrounds in content areas
+═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@300;400;500&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  /* Palette */
+  --ink:#1c1c1c;
+  --ink-soft:#2e2e2e;
+  --paper:#f5f1ea;
+  --cream:#fffdf7;
+  --white:#ffffff;
+  --crimson:#8b2332;
+  --crimson-dark:#6d1a27;
+  --gold:#b8924a;
+  --gold-light:#c9a96e;
+  --rule:#d4cdc3;
+  --rule-light:#e8e2d8;
+  --muted:#6a6259;
+  --sidebar-bg:#23201c;
+  --sidebar-active:#fff;
+  --sidebar-text:#8a8278;
+  --sidebar-hover:#ccc;
+
+  /* Type */
+  --mono:'DM Mono',monospace;
+  --serif:'Source Serif 4',Georgia,serif;
+  --display:'Playfair Display',Georgia,serif;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--paper);font-family:var(--serif);color:var(--ink);font-size:16px;line-height:1.75}
+
+/* ── NAVIGATION ─────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:var(--cream);
+  border-bottom:1px solid var(--rule);
+}
+.nav-rule{height:3px;background:var(--crimson)}
+.nav-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:stretch;height:46px;padding:0 24px;
+}
+.nav-logo{
+  font-family:var(--display);font-size:14px;font-weight:900;
+  color:var(--ink);text-decoration:none;
+  display:flex;align-items:center;
+  padding-right:20px;border-right:1px solid var(--rule);flex-shrink:0;
+}
+.nav-logo em{color:var(--crimson);font-style:italic}
+.nav-links{display:flex;align-items:stretch;flex:1;overflow-x:auto}
+.nav-links a{
+  font-family:var(--mono);font-size:9px;font-weight:500;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  padding:0 12px;display:flex;align-items:center;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:color .15s;white-space:nowrap;flex-shrink:0;cursor:pointer;
+  background:none;border-top:none;border-left:none;border-right:none;
+}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.active{color:var(--crimson);border-bottom-color:var(--crimson)}
+.nav-sep{width:1px;background:var(--rule);margin:12px 3px;flex-shrink:0}
+.nav-date{
+  margin-left:auto;padding-left:16px;border-left:1px solid var(--rule);
+  font-family:var(--mono);font-size:9px;color:var(--muted);
+  display:flex;align-items:center;flex-shrink:0;
+}
+
+/* ── SHELL LAYOUT ────────────────────────────────── */
+.shell{display:flex;padding-top:49px;min-height:100vh}
+
+/* Sidebar — ink background, this is the LMS chrome, intentionally dark */
+.sidebar{
+  width:210px;flex-shrink:0;
+  background:var(--sidebar-bg);
+  position:sticky;top:49px;
+  height:calc(100vh - 49px);overflow-y:auto;
+}
+.sb-section{
+  padding:10px 0 3px 14px;
+  font-family:var(--mono);font-size:7.5px;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:#4a4540;
+  border-top:1px solid #2e2b27;margin-top:6px;
+}
+.sb-section:first-child{border-top:none;margin-top:0}
+.sidebar button{
+  display:block;width:100%;background:none;border:none;
+  text-align:left;padding:6px 14px;
+  font-family:var(--mono);font-size:9px;
+  letter-spacing:.04em;text-transform:uppercase;
+  color:var(--sidebar-text);cursor:pointer;
+  transition:color .12s;line-height:1.4;
+}
+.sidebar button:hover{color:var(--sidebar-hover)}
+.sidebar button.active{
+  color:var(--sidebar-active);
+  border-left:2px solid var(--crimson);padding-left:12px;
+}
+
+/* Main content */
+.main{flex:1;min-width:0}
+
+/* ── PANELS ──────────────────────────────────────── */
+.panel{display:none;max-width:800px;margin:0 auto;padding:0 0 80px}
+.panel.active{display:block}
+
+/* ── PAGE STRUCTURE ──────────────────────────────── */
+.page-flag{
+  border-bottom:3px solid var(--ink);
+  padding:24px 32px 18px;
+  background:var(--cream);
+}
+.page-eyebrow{
+  font-family:var(--mono);font-size:8.5px;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:10px;
+}
+.page-title{
+  font-family:var(--display);font-size:clamp(22px,4vw,36px);
+  font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:8px;
+}
+.page-deck{
+  font-family:var(--display);font-size:16px;font-style:italic;
+  color:var(--muted);line-height:1.4;max-width:580px;
+}
+.page-rule{height:3px;background:var(--crimson)}
+
+/* Content blocks — white on cream paper, newspaper column feel */
+.block{
+  padding:26px 32px;
+  background:var(--white);
+  border-bottom:1px solid var(--rule-light);
+}
+.block:last-child{border-bottom:none}
+.block h3{
+  font-family:var(--display);font-size:18px;font-weight:700;
+  color:var(--ink);margin-bottom:12px;
+  padding-bottom:8px;border-bottom:1px solid var(--rule);
+}
+.block h4{
+  font-family:var(--display);font-size:15px;font-weight:700;
+  color:var(--ink);margin-bottom:8px;margin-top:18px;
+}
+.block h4:first-child{margin-top:0}
+.block p{font-size:15.5px;line-height:1.78;color:#363230;margin-bottom:14px}
+.block p:last-child{margin-bottom:0}
+.block ul,.block ol{padding-left:22px;margin-bottom:14px}
+.block li{font-size:15px;line-height:1.72;color:#363230;margin-bottom:6px}
+.block li:last-child{margin-bottom:0}
+
+/* ── INLINE ELEMENTS ─────────────────────────────── */
+.pull{
+  border-left:3px solid var(--crimson);
+  padding:12px 18px;
+  background:var(--paper);
+  margin:16px 0;
+  font-family:var(--display);font-size:17px;font-style:italic;
+  line-height:1.5;color:var(--ink);
+}
+
+.callout{
+  background:var(--paper);border:1px solid var(--rule);
+  padding:13px 17px;margin:12px 0;
+}
+.callout-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:7px;
+}
+.callout p{font-size:14px;margin:0;color:#444;line-height:1.65}
+.callout p+p{margin-top:8px}
+.callout ul{padding-left:16px;margin-top:6px;margin-bottom:0}
+.callout li{font-size:14px;line-height:1.65;color:#444;margin-bottom:4px}
+
+/* Accent box — replaces the heavy dark boxes, uses crimson rule instead */
+.accent{
+  background:var(--cream);
+  border-left:4px solid var(--crimson);
+  border:1px solid var(--rule);
+  border-left:4px solid var(--crimson);
+  padding:16px 20px;margin:14px 0;
+}
+.accent-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:10px;
+}
+.accent p{font-size:14.5px;line-height:1.72;color:#363230;margin-bottom:10px}
+.accent p:last-child{margin-bottom:0}
+.accent strong{color:var(--ink)}
+.accent em{color:var(--crimson);font-style:normal}
+.accent ul{padding-left:18px;margin-bottom:0}
+.accent li{font-size:14px;line-height:1.68;color:#444;margin-bottom:5px}
+
+/* Note box — for instructor-facing guidance, slightly warmer */
+.note{
+  background:#fdf8f0;
+  border:1px solid #e0d4ba;
+  border-left:4px solid var(--gold);
+  padding:14px 18px;margin:12px 0;
+}
+.note-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:7px;
+}
+.note p{font-size:14px;line-height:1.65;color:#4a3e28;margin:0}
+.note p+p{margin-top:8px}
+.note strong{color:#2e2416}
+
+/* Swap-out box — for discipline adaptation notes */
+.swap{
+  background:#f8f6f0;border:1px solid #ddd5c0;
+  border-left:3px solid var(--gold-light);
+  padding:10px 14px;margin-top:8px;
+}
+.swap-label{
+  font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:#a07c40;margin-bottom:4px;
+}
+.swap p{font-size:13px;line-height:1.6;color:#5a4e38;margin:0}
+
+/* ── MODULE HEADER ─────────────────────────────────── */
+/* This one keeps the dark ink — it's structural chrome, not content */
+.mod-header{background:var(--sidebar-bg);padding:26px 32px}
+.mod-badge{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold-light);margin-bottom:10px;
+}
+.mod-title{
+  font-family:var(--display);font-size:clamp(22px,4vw,34px);
+  font-weight:900;color:#fff;line-height:1.1;margin-bottom:6px;
+}
+.mod-sub{
+  font-family:var(--display);font-size:15px;
+  font-style:italic;color:#9a9088;margin-bottom:16px;
+}
+.mod-meta{
+  display:flex;gap:20px;flex-wrap:wrap;
+  border-top:1px solid #3a3530;padding-top:14px;
+}
+.mod-meta-item{
+  font-family:var(--mono);font-size:8.5px;font-weight:400;
+  letter-spacing:.05em;text-transform:uppercase;color:#6a6258;
+}
+.mod-meta-item span{
+  color:var(--gold-light);display:block;
+  font-size:11px;margin-top:2px;letter-spacing:.02em;font-weight:300;
+}
+
+/* ── CRITICAL MOVES ─────────────────────────────────── */
+.move-row{
+  display:flex;align-items:stretch;
+  background:var(--white);border:1px solid var(--rule);margin-bottom:2px;
+}
+.move-n{
+  background:var(--crimson);color:#fff;
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  padding:14px 16px;flex-shrink:0;width:42px;
+  display:flex;align-items:center;justify-content:center;
+}
+.move-body{padding:14px 18px;flex:1}
+.move-title{
+  font-family:var(--display);font-size:15px;font-weight:700;
+  color:var(--ink);margin-bottom:3px;
+}
+.move-q{font-size:14px;font-style:italic;color:var(--muted)}
+
+/* ── ARC / SCHEDULE VISUAL ─────────────────────────── */
+.arc{display:flex;flex-direction:column;gap:2px;margin:12px 0}
+.arc-row{display:flex;align-items:stretch}
+.arc-wk{
+  font-family:var(--mono);font-size:8.5px;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;color:#fff;
+  padding:9px 10px;flex-shrink:0;width:74px;
+  display:flex;align-items:center;
+}
+.arc-wk.c0{background:#888}
+.arc-wk.c1{background:#6a7d8a}
+.arc-wk.c2{background:var(--crimson)}
+.arc-wk.c3{background:var(--sidebar-bg)}
+.arc-content{
+  background:var(--white);border:1px solid var(--rule);
+  border-left:none;padding:9px 14px;flex:1;
+}
+.arc-title{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.arc-sub{font-size:12px;color:var(--muted)}
+
+/* ── RUBRIC ─────────────────────────────────────────── */
+.rubric{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px}
+.rubric th{
+  background:var(--crimson);color:#fff;
+  padding:8px 12px;text-align:left;
+  font-family:var(--mono);font-size:8px;
+  letter-spacing:.08em;text-transform:uppercase;font-weight:500;
+}
+.rubric td{
+  padding:8px 12px;vertical-align:top;
+  border-bottom:1px solid var(--rule-light);
+  line-height:1.5;color:#333;
+}
+.rubric tr:nth-child(even) td{background:var(--paper)}
+.rubric .pts{
+  font-family:var(--mono);font-size:11px;
+  color:var(--crimson);font-weight:500;white-space:nowrap;
+}
+
+/* ── READING LIST ─────────────────────────────────── */
+.rl-tier-label{
+  font-family:var(--mono);font-size:7.5px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:8px;margin-top:14px;
+  border-bottom:1px solid var(--rule-light);padding-bottom:5px;
+}
+.rl-item{display:flex;gap:9px;margin-bottom:8px;align-items:flex-start}
+.rl-dot{
+  width:4px;height:4px;background:var(--crimson);
+  border-radius:50%;flex-shrink:0;margin-top:8px;
+}
+.rl-text{font-size:13.5px;line-height:1.6;color:#444}
+.rl-flag{
+  font-family:var(--mono);font-size:7px;letter-spacing:.07em;
+  text-transform:uppercase;background:var(--paper);
+  border:1px solid var(--rule);color:var(--crimson);
+  padding:1px 4px;margin-left:4px;vertical-align:middle;display:inline-block;
+}
+
+/* ── JOURNAL / NOTEBOOK ─────────────────────────────── */
+.journal{
+  border:2px dashed #c8c0b4;padding:16px 20px;
+  margin:12px 0;background:var(--cream);
+}
+.journal-label{
+  font-family:var(--mono);font-size:8px;letter-spacing:.1em;
+  text-transform:uppercase;color:#7a6a58;margin-bottom:10px;font-weight:500;
+}
+.journal p{font-size:15px;line-height:1.72;color:#363230;margin:0}
+.journal p+p{margin-top:10px}
+
+/* ── SPEC / FEATURE GRID ────────────────────────────── */
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:12px 0}
+@media(max-width:560px){.spec-grid{grid-template-columns:1fr}}
+.spec-card{background:var(--white);border:1px solid var(--rule);padding:14px 16px}
+.spec-card-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--crimson);margin-bottom:8px;
+}
+.spec-card p{font-size:13.5px;line-height:1.65;color:#444;margin:0}
+.spec-card p+p{margin-top:7px}
+.spec-card ul{padding-left:16px;margin-bottom:0}
+.spec-card li{font-size:13px;line-height:1.65;color:#555;margin-bottom:3px}
+
+/* ── INSTRUCTOR DECISIONS ────────────────────────────── */
+.decision{
+  background:var(--paper);
+  border:1px solid var(--rule);
+  border-left:4px solid var(--gold);
+  padding:16px 20px;margin:12px 0;
+}
+.decision-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px;
+}
+.d-row{display:flex;gap:10px;margin-bottom:7px;align-items:flex-start}
+.d-num{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  color:var(--gold);flex-shrink:0;width:16px;
+}
+.d-text{font-size:14px;line-height:1.6;color:#363230}
+.d-text strong{color:var(--ink)}
+
+/* ── DISCUSSION PROMPTS ───────────────────────────────── */
+.disc{
+  background:var(--paper);border:1px solid var(--rule);
+  padding:14px 18px;margin:10px 0;
+}
+.disc-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:8px;
+}
+.disc p{font-size:14.5px;color:#363230;margin:0;line-height:1.65}
+
+/* ── FILE/STEP LISTS ─────────────────────────────────── */
+.file-index{display:flex;flex-direction:column;gap:3px;margin:14px 0}
+.file-row{display:flex;align-items:stretch;background:var(--white);border:1px solid var(--rule)}
+.file-row.featured{border-color:var(--crimson)}
+.file-icon{
+  background:var(--crimson);color:#fff;
+  font-family:var(--mono);font-size:9px;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:12px 14px;flex-shrink:0;width:68px;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;line-height:1.3;
+}
+.file-icon.muted{background:#888}
+.file-icon.warm{background:#8a6a30}
+.file-body{padding:12px 16px;flex:1}
+.file-name{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  color:var(--ink);margin-bottom:3px;
+}
+.file-desc{font-size:13.5px;color:var(--muted);line-height:1.5}
+.file-tag{
+  display:inline-block;font-family:var(--mono);font-size:7.5px;
+  font-weight:500;letter-spacing:.09em;text-transform:uppercase;
+  border:1px solid var(--crimson);color:var(--crimson);
+  padding:1px 5px;margin-left:6px;vertical-align:middle;
+}
+.file-tag.muted{border-color:#aaa;color:#aaa}
+
+.steps{display:flex;flex-direction:column;gap:2px;margin:12px 0}
+.step{display:flex;align-items:stretch;background:var(--white);border:1px solid var(--rule)}
+.step-n{
+  background:var(--crimson);color:#fff;
+  font-family:var(--display);font-size:20px;font-weight:900;
+  padding:14px 16px;flex-shrink:0;width:52px;
+  display:flex;align-items:center;justify-content:center;line-height:1;
+}
+.step-body{padding:14px 18px;flex:1}
+.step-title{
+  font-family:var(--display);font-size:15px;font-weight:700;
+  color:var(--ink);margin-bottom:4px;
+}
+.step-desc{font-size:14px;color:var(--muted);line-height:1.6}
+
+/* ── SIZE CARDS ─────────────────────────────────────── */
+.size-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin:12px 0}
+@media(max-width:620px){.size-grid{grid-template-columns:1fr}}
+.size-card{background:var(--white);border:1px solid var(--rule);padding:16px 18px}
+.size-badge{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  border:1.5px solid var(--crimson);color:var(--crimson);
+  padding:2px 6px;display:inline-block;margin-bottom:10px;
+}
+.size-card h4{
+  font-family:var(--display);font-size:15px;font-weight:700;
+  color:var(--ink);margin-bottom:8px;line-height:1.2;margin-top:0;
+}
+.size-card p{font-size:13.5px;line-height:1.6;color:#444;margin-bottom:6px}
+.size-card p:last-child{margin-bottom:0}
+.size-card ul{padding-left:16px;margin-bottom:0}
+.size-card li{font-size:13px;line-height:1.6;color:#555;margin-bottom:3px}
+
+/* ── DECISION TABLE ─────────────────────────────────── */
+.dec-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+.dec-table th{
+  background:var(--ink-soft);color:var(--cream);
+  font-family:var(--mono);font-size:8px;letter-spacing:.1em;
+  text-transform:uppercase;padding:8px 12px;text-align:left;font-weight:500;
+}
+.dec-table td{
+  padding:9px 12px;border-bottom:1px solid var(--rule-light);
+  vertical-align:top;line-height:1.55;color:#333;
+}
+.dec-table tr:last-child td{border-bottom:none}
+.dec-table tr:nth-child(even) td{background:var(--paper)}
+.dec-table .q{font-weight:600;color:var(--ink);font-size:13.5px}
+.dec-table .a{color:#555;font-size:13px}
+
+/* ── PASTE BAR (Canvas copy instructions) ────────────── */
+.paste{
+  background:#f0ede6;
+  border-left:3px solid var(--crimson);
+  padding:6px 14px;margin:2px 0;
+  font-family:var(--mono);font-size:8px;
+  color:var(--muted);letter-spacing:.07em;text-transform:uppercase;
+}
+
+/* ── NOTEBOOK ARC ────────────────────────────────────── */
+.nb-arc{display:flex;flex-direction:column;gap:2px;margin:10px 0}
+.nb-row{display:flex;align-items:stretch}
+.nb-wk{
+  font-family:var(--mono);font-size:8.5px;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;
+  color:#fff;padding:8px 10px;flex-shrink:0;width:68px;
+  display:flex;align-items:center;background:#888;
+}
+.nb-wk.active{background:var(--crimson)}
+.nb-body{
+  background:var(--white);border:1px solid var(--rule);
+  border-left:none;padding:8px 13px;flex:1;
+}
+.nb-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.nb-sub{font-size:11.5px;color:var(--muted)}
+
+/* ── RESPONSIVE ─────────────────────────────────────── */
+@media(max-width:500px){
+  .block,.page-flag,.mod-header{padding-left:20px;padding-right:20px}
+  .nav-date{display:none}
+}
+
+
+/* ── OLD SHELL COMPATIBILITY: numeric show(), top-only nav ── */
+/* Convert top nav to match new system */
+.top{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:var(--cream);border-bottom:1px solid var(--rule);
+  border-top:3px solid var(--crimson);
+}
+.top-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:stretch;height:46px;
+  overflow-x:auto;padding:0 20px;gap:0;
+}
+.top-brand{
+  font-family:var(--display);font-size:13px;font-weight:900;
+  color:var(--ink);display:flex;align-items:center;
+  padding-right:16px;border-right:1px solid var(--rule);
+  flex-shrink:0;white-space:nowrap;
+}
+.top-brand span{color:var(--crimson);font-style:italic}
+.top button{
+  background:none;border:none;
+  font-family:var(--mono);font-size:9px;font-weight:500;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;
+  padding:0 11px;display:flex;align-items:center;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:color .15s;white-space:nowrap;flex-shrink:0;
+}
+.top button:hover{color:var(--ink)}
+.top button.active{color:var(--crimson);border-bottom-color:var(--crimson)}
+.top-sep{
+  font-family:var(--mono);font-size:7.5px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--rule);padding:0 8px;display:flex;align-items:center;
+  white-space:nowrap;flex-shrink:0;line-height:1.2;border-left:1px solid var(--rule);
+  margin:0 2px;
+}
+
+/* Panel layout for top-nav-only files */
+.panel{display:none;max-width:840px;margin:49px auto 0;padding:0 0 80px}
+.panel.active{display:block}
+
+/* Old panel components - remap to new system */
+.dp-wrapper{background:var(--white);margin-bottom:3px;border:1px solid var(--rule-light)}
+.dp-header{background:var(--crimson);padding:14px 26px 12px}
+.dp-heading{margin:0;font-size:10px;font-family:var(--mono);letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#fff}
+.dp-content-block{padding:24px 30px 22px;border-bottom:1px solid var(--rule-light)}
+.dp-content-block:last-child{border-bottom:none}
+.dp-has-icon{display:flex;align-items:flex-start;gap:10px;font-size:11px;font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--crimson);margin-bottom:12px;font-weight:500;line-height:1.4}
+.dp-icon{font-size:14px;margin-top:1px;flex-shrink:0}
+.dp-content-block p{font-size:15.5px;line-height:1.78;color:#363230;margin-bottom:13px}
+.dp-content-block p:last-child{margin-bottom:0}
+.dp-content-block ul,.dp-content-block ol{padding-left:20px;margin-bottom:13px}
+.dp-content-block li{font-size:15px;line-height:1.72;color:#363230;margin-bottom:6px}
+.week-header{padding:22px 30px 0;background:var(--white)}
+.week-badge{display:inline-block;background:var(--crimson);color:#fff;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;margin-bottom:9px}
+.week-title{font-family:var(--display);font-size:clamp(20px,3.5vw,30px);font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:4px}
+.week-sub{font-size:14px;font-style:italic;color:var(--muted);margin-bottom:0}
+.week-rule{height:3px;background:var(--crimson);margin:0}
+
+/* Old callout style */
+.callout{background:var(--paper);border:1px solid var(--rule);padding:13px 17px;margin:11px 0}
+.callout-label{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--crimson);margin-bottom:7px}
+.callout p{font-size:14px;margin:0;color:#444;line-height:1.65}
+.callout p+p{margin-top:8px}
+
+/* Old pull quote */
+.pull{border-left:3px solid var(--crimson);padding:12px 17px;background:var(--paper);margin:14px 0;font-family:var(--display);font-size:17px;font-style:italic;line-height:1.5;color:var(--ink)}
+
+/* Old dark box -> now accent/note */
+.dark{background:var(--paper);border:1px solid var(--rule);border-left:4px solid var(--gold);padding:18px 22px;margin:12px 0}
+.dark-label{font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+.dark p{font-size:15px;line-height:1.75;color:#363230;margin-bottom:11px}
+.dark p:last-child{margin-bottom:0}
+.dark strong{color:var(--ink)}
+.dark em{color:var(--gold);font-style:normal}
+.dark ul{padding-left:18px;margin-bottom:0}
+.dark li{font-size:14px;line-height:1.68;color:#444;margin-bottom:5px}
+
+/* Paste bar */
+.paste{background:#f0ede6;border-left:3px solid var(--crimson);padding:6px 13px;margin:2px 0;font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+
+/* Rubric */
+.rubric{width:100%;border-collapse:collapse;margin-top:11px;font-size:13.5px}
+.rubric th{background:var(--crimson);color:#fff;padding:8px 12px;text-align:left;font-family:var(--mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+.rubric td{padding:8px 12px;vertical-align:top;border-bottom:1px solid var(--rule-light);line-height:1.5;color:#333}
+.rubric tr:nth-child(even) td{background:var(--paper)}
+.rubric .pts{font-family:var(--mono);font-size:11px;color:var(--crimson);font-weight:500;white-space:nowrap}
+
+/* Reading list in old format */
+.rl-week{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--rule-light)}
+.rl-week:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.rl-tier{padding:12px 18px;border-bottom:1px solid var(--rule-light)}
+.rl-tier:last-child{border-bottom:none}
+.rl-tier-label{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--crimson);margin-bottom:9px;border-bottom:1px solid var(--rule-light);padding-bottom:5px}
+.rl-item{display:flex;gap:9px;margin-bottom:7px;align-items:flex-start}
+.rl-bullet{flex-shrink:0;width:5px;height:5px;background:var(--crimson);border-radius:50%;margin-top:7px}
+.rl-text{font-size:14px;line-height:1.6;color:#444}
+.rl-flag{font-family:var(--mono);font-size:7px;letter-spacing:.07em;text-transform:uppercase;background:var(--paper);border:1px solid var(--rule);color:var(--crimson);padding:1px 4px;margin-left:4px;vertical-align:middle;display:inline-block}
+.rl-swap{background:#fdf8f0;border:1px solid #e0d4ba;border-left:3px solid var(--gold);padding:9px 13px;margin-top:8px}
+.rl-swap-label{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:#a07c40;margin-bottom:4px}
+.rl-swap p{font-size:13px;line-height:1.6;color:#4a3e28;margin:0}
+
+/* Old spec grid and trust cards */
+.spec-grid,.trust-grid,.analog-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:11px 0}
+@media(max-width:560px){.spec-grid,.trust-grid,.analog-grid{grid-template-columns:1fr}}
+.spec-card,.trust-card,.analog-card{background:var(--white);border:1px solid var(--rule);padding:13px 15px}
+.spec-card-label,.trust-card-label,.analog-card-label{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--crimson);margin-bottom:7px}
+.spec-card p,.trust-card p,.analog-card p{font-size:13.5px;line-height:1.62;color:#444;margin:0}
+
+/* Move rows in old format */
+.moves-list{display:flex;flex-direction:column;gap:2px;margin:13px 0}
+.moves-list-item{display:flex;background:var(--white);border:1px solid var(--rule)}
+.moves-list-n{background:var(--crimson);color:#fff;font-family:var(--mono);font-size:10px;font-weight:500;padding:11px 13px;flex-shrink:0;width:38px;display:flex;align-items:center;justify-content:center}
+.moves-list-body{padding:11px 15px}
+.moves-list-title{font-family:var(--display);font-size:14.5px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.moves-list-q{font-size:13px;font-style:italic;color:var(--muted)}
+
+/* Arc in old format */
+.arc-visual{margin:13px 0;display:flex;flex-direction:column;gap:2px}
+.arc-row{display:flex;align-items:stretch}
+.arc-label{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#fff;padding:9px 11px;flex-shrink:0;width:72px;display:flex;align-items:center}
+.arc-label.c1{background:#888}
+.arc-label.c2{background:var(--crimson)}
+.arc-label.c3{background:var(--sidebar-bg)}
+.arc-content{background:var(--white);border:1px solid var(--rule);border-left:none;padding:9px 14px;flex:1}
+.arc-title{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.arc-sub{font-size:12px;color:var(--muted)}
+
+/* Decision box in new style */
+.decision-box{background:var(--paper);border:1px solid var(--rule);border-left:4px solid var(--gold);padding:15px 19px;margin:10px 0}
+.decision-box-label{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+.d-row{display:flex;gap:9px;margin-bottom:6px;align-items:flex-start}
+.d-num{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--gold);flex-shrink:0;width:14px}
+.d-txt{font-size:13.5px;line-height:1.6;color:#363230}
+.d-txt strong{color:var(--ink)}
+
+/* Notebook journal in old shell */
+.journal{border:2px dashed #c8c0b4;padding:14px 18px;margin:10px 0;background:var(--cream)}
+.journal-label{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#7a6a58;margin-bottom:9px;font-weight:500}
+.journal p{font-size:15px;line-height:1.72;color:#363230;margin:0}
+.journal p+p{margin-top:9px}
+
+/* Produces */
+.produces{display:flex;flex-direction:column;gap:2px}
+.prod-item{display:flex;align-items:stretch;background:var(--paper);border:1px solid var(--rule)}
+.prod-item.highlight{background:var(--cream)}
+.prod-wk{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--muted);padding:8px 10px;flex-shrink:0;width:64px;display:flex;align-items:center}
+.prod-item.highlight .prod-wk{background:var(--crimson)}
+.prod-body{padding:8px 12px}
+.prod-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.prod-desc{font-size:12px;color:var(--muted)}
+
+/* Week header arc */
+.nb-arc{display:flex;flex-direction:column;gap:2px;margin:10px 0}
+.nb-row{display:flex;align-items:stretch}
+.nb-wk{font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:#fff;padding:8px 10px;flex-shrink:0;width:68px;display:flex;align-items:center;background:#888}
+.nb-wk.c2{background:var(--crimson)}
+.nb-body{background:var(--white);border:1px solid var(--rule);border-left:none;padding:8px 13px;flex:1}
+.nb-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.nb-sub{font-size:11.5px;color:var(--muted)}
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <div class="top-brand"><span>SNSC Additions</span> — New Pages + Reading Lists</div>
+    <button class="active" onclick="show(0)">Trust + Authority</button>
+    <button onclick="show(1)">AI in the Field</button>
+    <button onclick="show(2)">Reading List — Small</button>
+    <button onclick="show(3)">Reading List — Medium</button>
+    <button onclick="show(4)">Reading List — Large</button>
+    <button onclick="show(5)">Course Intro Update</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     0 · TRUST AND AUTHORITY IN THE AI ERA
+══════════════════════════════════════════ -->
+<div class="panel active" id="p0">
+<div class="paste">Concept Overview — Trust and Authority in the AI Era · Standalone Canvas page · All versions · Shared</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Concept Overview</div>
+    <div class="week-title">Trust and Authority in the AI Era</div>
+    <div class="week-sub">Who gets to be believed, how that is being renegotiated, and what journalism has always had to say about it.</div>
+  </div>
+  <div class="week-rule"></div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Is Not a New Problem</h3>
+    <p>Journalism has always been in the business of credibility. The question of why anyone should believe a news report — rather than the person next to them, the pamphlet on the street corner, or the rumor circulating at work — is as old as the press itself. What changes across time is not the question but the answer: which institutions get trusted, on what grounds, and what it takes to lose that trust.</p>
+    <p>In the twentieth century, trust in journalism was largely institutional. You believed a report in part because of which newspaper carried it, which network broadcast it, which wire service filed it. That institutional trust was imperfect — it encoded assumptions about whose voice counted, whose experience was news, whose community warranted coverage. But it provided a shared reference point: a space where claims could be checked against a relatively legible set of standards.</p>
+    <p>That institutional framework has been eroding for decades, accelerated by the internet, social media, partisan media ecosystems, and now AI. The question of who gets to be believed has become both more urgent and more genuinely difficult to answer.</p>
+    <div class="pull">"Authority is not the same as accuracy. Credibility is not the same as truth. But in a functioning information environment, they need to be connected — and right now, that connection is under serious strain."</div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What AI Changes About Authority</h3>
+    <p>AI introduces at least three distinct challenges to the existing frameworks of journalistic authority — and they are worth keeping separate, because conflating them produces confusion rather than clarity.</p>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <div class="trust-card-label">The Authorship Problem</div>
+        <p>When text is generated by a large language model, the question of who is responsible for its claims becomes genuinely complicated. There is no reporter who made a judgment call about what to include. There is no editor who checked it against a standard. There is an output that may be accurate, inaccurate, or somewhere in between — with no clear accountability structure attached to it. Authorship has always been a proxy for accountability. AI severs that connection.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-card-label">The Provenance Problem</div>
+        <p>Generative AI search synthesizes answers from sources it does not fully disclose. Even when citations are provided, the relationship between the citation and the claim may be weak or misrepresented. The reader cannot trace the chain from answer to evidence in the way they can with a traditional reported article. This does not mean the answer is wrong — but it removes the reader's ability to evaluate it independently.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-card-label">The Volume Problem</div>
+        <p>When the cost of producing plausible content approaches zero, the information environment fills with it. Not because anyone intends harm — though sometimes they do — but because the economic incentives for producing content at scale no longer require the friction that quality journalism has always depended on. Verification takes time. Sourcing takes relationships. Editing takes judgment. These are costs that AI-generated content does not have to bear.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-card-label">The Backlash Problem</div>
+        <p>By spring 2026, public trust in AI had declined sharply and rapidly — faster than pollsters had seen with any comparable technology. This matters for journalism because AI tools are now embedded in newsroom workflows, search products, and content distribution. A public that distrusts AI may extend that distrust to journalism that uses it, accurately or not. The credibility of the tool and the credibility of the institution are becoming entangled, whether journalists want them to be or not.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What Journalism Has Always Known</h3>
+    <p>None of this makes the traditional journalistic answers to the authority question obsolete — it makes them more important. The practices that have always grounded credible journalism are exactly the practices that AI-generated content tends to lack: named sources, verifiable documents, transparent methodology, editorial accountability, correction culture, and the reporter's judgment about what matters and why.</p>
+    <p>These are not romantic attachments to an idealized past. They are functional responses to the problem of credibility. They exist because readers have always needed ways to evaluate whether to trust a claim — and journalism developed specific tools for making that evaluation possible. Those tools are worth understanding, defending, and practicing, especially in a moment when they are under pressure.</p>
+    <div class="callout">
+      <div class="callout-label">For journalism students specifically</div>
+      <p>Your authority as a journalist will not come from the institution you work for — at least not primarily. It will come from the quality of your sourcing, the transparency of your methods, the accuracy of your record, and your willingness to correct errors. Those are things an AI cannot fake and that a reader can actually evaluate. That is the ground you stand on.</p>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What This Means for the Critical Process</h3>
+    <p>The Analysis move — asking where a story came from and how it reached you — is fundamentally a question about authority. Who is making this claim? On what grounds? What accountability structure do they operate within? What happens if they are wrong?</p>
+    <p>The Interpretation move — bringing your own knowledge to bear — is an act of authority. You are not just receiving a claim; you are evaluating it against what you know. That evaluation is more valuable, not less, in an environment where authority is harder to establish from source alone.</p>
+    <p>The Engagement move — saying something in public, for a named audience — is an exercise of authority. It comes with responsibility. The Short Public Piece and the State of the World entry are not just assignments. They are practice for being the kind of voice the information environment actually needs: sourced, accountable, specific, and honest about what you do not know.</p>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>A Note on the Moment</h3>
+    <p>This curriculum was developed in spring 2026, at a moment when public attitudes toward AI shifted measurably and fast. Pollsters described the speed of the shift as unprecedented. By the time students are reading this, things may look different — the technology will have changed, the cultural conversation will have moved, the specific controversies that were live in May 2026 will have been replaced by new ones.</p>
+    <p>The questions this page is asking do not depend on the mood of any particular moment. They depend on paying attention to a structural condition that will persist regardless of whether AI is popular or unpopular in any given news cycle: the problem of who gets to be believed, and why, and what that means for the people doing journalism.</p>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     1 · AI IN THE FIELD
+══════════════════════════════════════════ -->
+<div class="panel" id="p1">
+<div class="paste">Concept Overview — AI in the Field · Standalone Canvas page · All versions · Written from journalism; swap-outs marked for other disciplines</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Concept Overview</div>
+    <div class="week-title">AI in the Field — What It Actually Does, and What That Asks of You</div>
+    <div class="week-sub">Written from journalism. The swap-out structure is explicit — if you teach a different field, the examples change; the questions do not.</div>
+  </div>
+  <div class="week-rule"></div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Range Is Wider Than the Debate Suggests</h3>
+    <p>The public conversation about AI in journalism tends to collapse into two positions: AI is destroying journalism, or AI is saving journalism. Both are wrong in the same way — they treat a set of specific, varied tools as a single phenomenon and then argue about the phenomenon rather than the tools.</p>
+    <p>AI is doing several distinct things in journalism right now, and they are worth keeping separate. Some are straightforward applications of automation to routine tasks. Some are genuine augmentations of investigative capacity. Some are serious threats to editorial integrity. And some are still being worked out by reporters, editors, and news organizations that are genuinely trying to figure out what responsible use looks like in practice.</p>
+    <p>This page introduces the range. The reading list for each week gives you a current example. Your job — in this course and after it — is to apply the critical process to each specific application rather than to the category.</p>
+    <div class="callout">
+      <div class="callout-label">If you teach a field other than journalism</div>
+      <p>This page is written from journalism, but the structure applies everywhere. AI is doing distinct things in your field too — some routine automation, some genuine augmentation, some genuine threat, some genuinely unresolved. The examples below are journalism examples. The questions at the end of each section are universal. Find the equivalent applications in your field and run the same questions on them.</p>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Automation of Routine Content — What It Is and What It Is Not</h3>
+    <p>The Associated Press has used automated writing tools to produce earnings reports and sports scores since 2014. Reuters has used similar tools for financial data. Local news organizations have experimented with AI-generated summaries of city council meetings, court filings, and weather alerts. This is a real and growing use of AI in journalism — and it is worth understanding clearly.</p>
+    <p>What automation does well: structured data converted to structured prose, at scale, faster than any human team could manage. Quarterly earnings for thousands of companies. Box scores for every minor league game. These are not stories — they are records, and AI can produce them more reliably and cheaply than humans can.</p>
+    <p>What automation does not do: judgment. Source selection. Context. The recognition that the numbers in this quarter's earnings report tell a different story if you know what happened to the company's workforce in the same period. Automated content handles the surface. Journalism handles everything underneath it.</p>
+    <div class="callout">
+      <div class="callout-label">The critical process question for automation</div>
+      <p>When you encounter a piece of content that may have been automated — a sports recap, a financial summary, a weather report — the Description move asks: what does it actually say? The Analysis move asks: who or what produced this, and what are the structural limits of that production method? What did the automation not have access to that a human reporter would?</p>
+    </div>
+    <div class="callout" style="background:#fff8f0;border-color:#e8d4b8">
+      <div class="callout-label">Swap-out · If you teach business or finance</div>
+      <p>AI is automating earnings analysis, risk assessment summaries, and regulatory filing digests at financial firms. The same questions apply: what does the automated output handle well, what does it miss, and what does a human analyst bring that the tool cannot?</p>
+    </div>
+    <div class="callout" style="background:#fff8f0;border-color:#e8d4b8">
+      <div class="callout-label">Swap-out · If you teach design or creative industries</div>
+      <p>AI is automating layout variations, image resizing, copy adaptation for different platforms, and A/B testing at scale. The questions are the same: what does the automation optimize for, what does it not have access to, and where does human judgment remain irreplaceable?</p>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Augmentation of Investigative Work — The More Interesting Cases</h3>
+    <p>Some of the most significant uses of AI in journalism are not in content production at all — they are in reporting. AI tools have been used to analyze hundreds of thousands of documents in public records investigations, to identify patterns in large datasets that no human team could process manually, and to surface sources and connections in complex financial networks.</p>
+    <p>ProPublica, The New York Times, and other investigative outlets have used machine learning to analyze data at scales that were previously impossible — satellite imagery, court filings, property records, campaign finance data. These are not stories AI wrote. They are stories AI made possible by handling the computational work that freed reporters to do the interpretive and relational work that only humans can do.</p>
+    <p>This is a genuinely different category from content automation, and it matters for how journalism students think about AI in their field. The tool is not replacing the reporter's judgment — it is expanding the reporter's capacity to apply that judgment to more evidence than any individual could previously access.</p>
+    <div class="callout">
+      <div class="callout-label">The critical process question for augmentation</div>
+      <p>When a story is based on AI-assisted data analysis, the Analysis move asks: what did the AI do, and what did the reporter do? What decisions were made by the tool, and what decisions were made by a human who is accountable for them? Transparency about method is part of what makes investigative journalism credible.</p>
+    </div>
+    <div class="callout" style="background:#fff8f0;border-color:#e8d4b8">
+      <div class="callout-label">Swap-out · If you teach sciences or social sciences</div>
+      <p>AI is augmenting research in every empirical field — literature review, pattern detection in large datasets, image analysis in medical imaging and remote sensing. The same distinction applies: augmentation of human capacity versus replacement of human judgment. That line is where the interesting questions live.</p>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Synthetic Media and Editorial Integrity</h3>
+    <p>AI-generated images, audio, and video have introduced a category of threat to journalism that is genuinely new in kind, even if misinformation is not new. The question is no longer just whether a claim is true — it is whether the evidence presented in support of it is real. A photograph used to be presumptive evidence that something happened. That presumption is no longer reliable.</p>
+    <p>News organizations are developing standards for disclosure, verification, and the use of AI-generated imagery. Some are prohibiting it entirely in news contexts. Some are using it with disclosure for illustration. The standards are still being written, and they vary significantly across organizations and contexts.</p>
+    <p>This matters for journalism students not because they will inevitably be producing synthetic media — most will not — but because they will be covering stories where synthetic media is a factor, and they need to be able to evaluate it, trace it, and report on it accurately.</p>
+    <div class="callout">
+      <div class="callout-label">The critical process question for synthetic media</div>
+      <p>Description asks: is this what it claims to be? Analysis asks: how was this produced, and by whom, and with what intent? These are not trick questions — they are the basic moves of verification applied to a new category of evidence. The tools for answering them are developing, imperfect, and worth knowing.</p>
+    </div>
+    <div class="callout" style="background:#fff8f0;border-color:#e8d4b8">
+      <div class="callout-label">Swap-out · If you teach film, music, or creative industries</div>
+      <p>AI-generated music, voice cloning, visual effects, and script drafting are live questions in every creative industry right now — about authorship, labor, compensation, and what it means to make something. The synthetic media questions in journalism have direct parallels in every creative field.</p>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Backlash as a Beat</h3>
+    <p>By spring 2026, the public response to AI — energy costs, data center siting, job displacement, children's safety concerns, the collapse of poll numbers — had itself become a major journalism story. This is worth naming in a journalism course because it illustrates something the critical process is designed to surface: the same technology that is being used to produce and distribute news is also the subject of some of the most significant news of the moment.</p>
+    <p>A journalism student following the AI beat is not just learning about a technology. They are learning to cover a story that involves: corporate interests and their relationships with government; community-level resistance with genuine local stakes; a scientific and technical domain most general journalists are underprepared to cover accurately; and a political realignment that is scrambling the usual partisan lines. That is a demanding beat — and a significant one.</p>
+    <p>The backlash story will look different by the time any given student is reading this. The specific controversies will have moved. The poll numbers will have shifted. The technology will have changed. What will not have changed is the need to cover it with the same discipline the critical process applies to any beat: describe what is actually there, analyze how it works and how coverage is shaping public understanding, interpret what it means in light of what you know, evaluate who bears the costs, and engage with what you have found.</p>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Questions That Hold Across Any Moment</h3>
+    <p>Whatever AI is doing in your field right now — and it will be doing something different in six months — these questions are the right ones to be asking:</p>
+    <ul>
+      <li>What decision is this tool making, and who is accountable for that decision?</li>
+      <li>What does this tool optimize for, and what does it not have access to?</li>
+      <li>Where does human judgment remain irreplaceable — and is it actually being applied there?</li>
+      <li>What is the transparency standard for disclosing AI's role to the audience?</li>
+      <li>Who bears the costs of this tool's deployment, and are those costs being covered in the public record?</li>
+    </ul>
+    <p>These are journalism questions. They are also media literacy questions. They are the same questions.</p>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     2 · READING LIST — SMALL
+══════════════════════════════════════════ -->
+<div class="panel" id="p2">
+<div class="paste">Reading List — Small Version · One module, recurring ritual · Tier 1 spine + Tier 2 field example · Journalism home base</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Reading List — Small Version</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-book-open"></i>How to Use This List</h3>
+    <p>The Small version is a recurring module, not a sequential course. The reading list is therefore organized as a menu rather than a week-by-week sequence. Instructors select from Tier 1 for conceptual grounding — these readings are stable and can be assigned in any order. Tier 2 gives one journalism example per critical move; instructors in other disciplines swap this for a field-specific equivalent.</p>
+    <p>For a one- or two-session stand-alone version of the module, assign one Tier 1 piece before class and use the Tier 2 example as the shared text for the session itself. For the recurring ritual version across a semester, distribute the Tier 1 readings across the first few weeks and return to them as touchstones throughout.</p>
+    <div class="dark">
+      <div class="dark-label">On keeping this list current</div>
+      <p>Tier 1 readings are relatively stable — foundational texts that hold across time. Tier 2 examples are field-specific and time-sensitive. <strong>Instructors should verify Tier 2 links each term and update the field example to reflect current practice.</strong> The slot is the constant; the content moves.</p>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-book-open"></i>Tier 1 — The Spine · Assign Before or During the Module</h3>
+
+    <div class="rl-tier">
+      <div class="rl-tier-label">Conceptual Foundation — Media Literacy and the Critical Process</div>
+      <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Lippmann, Walter.</strong> <em>Public Opinion</em>, Chapter 1: "The World Outside and the Pictures in Our Heads." 1922. Public domain; widely available online. <span class="rl-flag">Stable</span><br>The origin text. Short, readable, still startlingly accurate. Assign the first chapter only — five to seven pages.</div></div>
+      <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Campbell, Richard.</strong> <em>Media and Culture</em>, current edition. Bedford/St. Martin's. Chapter introducing the critical process (Description, Analysis, Interpretation, Evaluation, Engagement). <span class="rl-flag">Verify edition</span><br>The five-move framework this course is built on. Assign the critical process introduction — the rest of the chapter is useful background but not required for the Small version.</div></div>
+      <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Potter, W. James.</strong> <em>Media Literacy</em>, 9th ed. SAGE, 2019. Chapter 2: "What Is Media Literacy?" <span class="rl-flag">Stable</span><br>Broader context for why media literacy is a civic practice, not just a skill. Useful framing before students encounter the three moves for the first time.</div></div>
+    </div>
+
+    <div class="rl-tier">
+      <div class="rl-tier-label">The AI Layer — Current but Structurally Stable</div>
+      <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>UNESCO.</strong> <em>Guidance for Generative AI in Education and Research.</em> 2023. Available at unesco.org. <span class="rl-flag">Verify link</span><br>The clearest institutional framing of what generative AI does to learning and knowledge-making. Relevant to any discipline. The section on pedagogical risks is directly applicable to journalism education.</div></div>
+      <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Reuters Institute for the Study of Journalism.</strong> <em>Digital News Report.</em> Annual. reutersinstitute.politics.ox.ac.uk. <span class="rl-flag">Update annually</span><br>The most comprehensive ongoing survey of public attitudes to news and AI in news. Assign the executive summary. The data on trust, AI awareness, and news avoidance is directly relevant to the Analysis move.</div></div>
+    </div>
+
+    <div class="rl-tier">
+      <div class="rl-tier-label">Trust and Authority</div>
+      <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Kovach, Bill and Tom Rosenstiel.</strong> <em>The Elements of Journalism</em>, 4th ed. Three Rivers Press, 2021. Chapter 1: "What Is Journalism For?" <span class="rl-flag">Stable</span><br>The clearest statement of what journalism's authority is grounded in and why it matters. Assign as context for the Trust and Authority concept page.</div></div>
+      <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Edelman Trust Barometer.</strong> Annual. edelman.com/trust. <span class="rl-flag">Update annually</span><br>Global survey of trust in institutions, media, government, and technology. The media and technology sections are directly relevant. Useful data point for Discussion Board posts on Analysis.</div></div>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-book-open"></i>Tier 2 — Field Examples · One Per Move · Journalism Home Base</h3>
+    <div class="callout" style="background:#fff8f0;border-color:#e8d4b8">
+      <div class="callout-label">Instructor note — on Tier 2</div>
+      <p>Each example below shows AI operating in journalism for the move it is paired with. These are chosen because they are substantive, accessible, and model the kind of critical attention the move requires. Verify currency each term. If you teach a field other than journalism, the swap-out note tells you what to look for in your own field.</p>
+    </div>
+
+    <div class="rl-tier">
+      <div class="rl-tier-label">For Description — Seeing What Is Actually There</div>
+      <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Associated Press.</strong> "AP's Automated Journalism: How We Use Automation to Produce More Stories." ap.org/about/press-releases. <span class="rl-flag">Verify link · Update if AP publishes newer guidance</span><br>AP's own account of how it uses Wordsmith to automate earnings reports. The transparency here is unusually good — AP discloses what the tool does and what human editors still do. Useful for Description because it models what accounting for a production process actually looks like.</div></div>
+      <div class="rl-swap">
+        <div class="rl-swap-label">Swap-out by field</div>
+        <p><strong>Marketing/PR:</strong> Find your ad agency or platform's disclosure of how AI tools generate copy variants. <strong>Finance:</strong> Bloomberg's account of its AI-assisted reporting tools. <strong>Science:</strong> A journal's disclosure of AI use in literature review or data analysis. The question is always the same: what does the tool do, and what does the human still decide?</p>
+      </div>
+    </div>
+
+    <div class="rl-tier">
+      <div class="rl-tier-label">For Analysis — How It Works and How It Got Here</div>
+      <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Poynter Institute.</strong> "What newsrooms need to know about AI tools right now." poynter.org. <span class="rl-flag">Update annually — Poynter publishes AI guidance frequently</span><br>Practical overview of how AI tools are currently being used in newsrooms and what editorial questions they raise. Good for Analysis because it traces the structural decisions newsrooms are making about AI adoption — not just whether to use it, but how, under what standards, with what disclosure.</div></div>
+      <div class="rl-swap">
+        <div class="rl-swap-label">Swap-out by field</div>
+        <p>Find the professional association or trade publication in your field that is actively developing AI standards: AMA for marketing, AICPA for accounting, AIA for architecture, MPAA for film. The structural question — who is making the rules and what do they say — is the Analysis move applied to the field's governance of AI.</p>
+      </div>
+    </div>
+
+    <div class="rl-tier">
+      <div class="rl-tier-label">For Interpretation — What Your Knowledge Reveals</div>
+      <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Bell, Emily and Taylor Owen.</strong> "The Platform Press: How Silicon Valley Reengineered Journalism." Tow Center for Digital Journalism, Columbia University, 2017. Available at towcenter.org. <span class="rl-flag">Stable — structural analysis, not time-sensitive</span><br>The argument that platform distribution has changed what journalism can be, not just how it is delivered. Disciplinary knowledge for journalism students: what the shift from editorial to algorithmic distribution means for what gets covered and who decides. Pairs well with the Interpretation move's question: what does your training let you see that a general reader would miss?</div></div>
+      <div class="rl-swap">
+        <div class="rl-swap-label">Swap-out by field</div>
+        <p>Find the key scholarly or professional text in your field that explains what is structurally different about the AI moment — not hype, but a genuine account of what changed and why it matters for practitioners. This is the disciplinary knowledge that makes Interpretation possible.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     3 · READING LIST — MEDIUM
+══════════════════════════════════════════ -->
+<div class="panel" id="p3">
+<div class="paste">Reading List — Medium Version · Five weeks · Tier 1 spine + Tier 2 field example per week · Journalism home base</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Reading List — Medium Version</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-book-open"></i>How to Use This List</h3>
+    <p>One Tier 1 reading and one Tier 2 field example per week. Tier 1 provides the conceptual spine — stable texts that hold across time and disciplines. Tier 2 is the live journalism example: one piece showing AI operating in the field, calibrated to that week's critical move. Instructors verify Tier 2 links each term and swap for field-specific equivalents where needed.</p>
+    <p>Total reading load: approximately 30–50 pages per week across both tiers, depending on selections. The Tier 1 pieces are generally shorter conceptual or analytical texts; the Tier 2 examples are often shorter still — articles, reports, institutional disclosures.</p>
+  </div>
+
+  <div class="dp-content-block">
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 1</div>
+        <div class="rl-header-title">Description — What Does Your Story Actually Say?</div>
+        <div class="rl-header-move">Move 1</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Lippmann, Walter.</strong> <em>Public Opinion</em>, Chapter 1: "The World Outside and the Pictures in Our Heads." 1922. <span class="rl-flag">Stable · Public domain</span><br>Assign before Week 1. The foundational argument for why the gap between events and representations exists and why it matters. Five to seven pages. Students return to this text differently after they have tried Description on their own story.</div></div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Campbell, Richard.</strong> <em>Media and Culture</em>, current edition. The critical process introduction — Description and Analysis chapters. <span class="rl-flag">Verify edition</span><br>Grounds the first two moves in the framework students will apply all term. Assign the Description section specifically for Week 1; Analysis section carries into Week 2.</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Associated Press.</strong> "A Note to AP Readers About Our Use of Automation Technology." ap.org. <span class="rl-flag">Verify link · Update if AP publishes newer disclosure</span><br>AP's reader-facing disclosure of what automated journalism looks like and what human editors still do. Use this as the shared text for the first session — run the three moves on it. What does it actually say about how AP uses automation? What does it not say? What primary source (the automation system itself, its training data) is referenced but inaccessible?</div></div>
+          <div class="rl-swap">
+            <div class="rl-swap-label">Swap-out by field</div>
+            <p>Find a professional disclosure or transparency statement from a leading institution in your field about how it uses AI. Run the same Description exercise: what does it actually say, and what does it not say?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 2</div>
+        <div class="rl-header-title">Analysis — How Has Your Story Moved?</div>
+        <div class="rl-header-move">Move 2</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Campbell, Richard.</strong> <em>Media and Culture</em>, current edition. Analysis chapter — structural patterns in media, ownership, economics, distribution. <span class="rl-flag">Verify edition</span><br>The framework for asking how media works structurally — not just what it says but how it is produced, distributed, and economically sustained. Applies directly to the Analysis move this week.</div></div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Reuters Institute for the Study of Journalism.</strong> <em>Digital News Report</em>, current year. Executive summary and AI chapter. reutersinstitute.politics.ox.ac.uk. <span class="rl-flag">Update annually</span><br>Current data on how people find news, how much they trust AI in news, and what the structural patterns of news consumption look like across markets. The analysis chapter is the most relevant; the executive summary is sufficient for most courses.</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Poynter Institute.</strong> "How newsrooms are tracking AI-generated misinformation." poynter.org. <span class="rl-flag">Update annually — Poynter publishes on this regularly</span><br>A structural account of how misinformation travels through AI-assisted distribution channels and how newsroom fact-checkers are adapting their methods. Good for Analysis because it traces the distribution path rather than just the content — the how rather than the what.</div></div>
+          <div class="rl-swap">
+            <div class="rl-swap-label">Swap-out by field</div>
+            <p>Find a trade or industry publication account of how AI is changing the distribution or circulation of work in your field — how music reaches listeners, how financial products are recommended, how legal research is routed. The Analysis move is always about the path, not just the destination.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 3</div>
+        <div class="rl-header-title">Interpretation — What Does Your Knowledge Reveal?</div>
+        <div class="rl-header-move">Move 3</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Campbell, Richard.</strong> <em>Media and Culture</em>, current edition. Interpretation chapter — meaning-making, context, and what disciplinary knowledge adds. <span class="rl-flag">Verify edition</span><br>The framework for asking what your training lets you see. Assign before Week 3 so students arrive at the Interpretive Note with the conceptual vocabulary already in place.</div></div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Bell, Emily and Taylor Owen.</strong> "The Platform Press: How Silicon Valley Reengineered Journalism." Tow Center for Digital Journalism, 2017. towcenter.org. <span class="rl-flag">Stable</span><br>Structural analysis of what platform distribution changed about journalism — not the surface changes but the underlying economic and editorial logic. Journalism students read this as disciplinary knowledge that changes how they see their own field's news coverage. That is precisely the Interpretation move.</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>ProPublica.</strong> A recent data journalism investigation that uses AI or machine learning in its methodology. propublica.org/datastore. <span class="rl-flag">Instructor selects current example — update each term</span><br>ProPublica consistently publishes methodology notes alongside investigations that use computational tools. Assign the methodology note alongside a portion of the investigation itself. The Interpretation move asks: what did the AI tool make possible that the reporter then had to interpret? Where does the tool's work end and the journalist's judgment begin?</div></div>
+          <div class="rl-swap">
+            <div class="rl-swap-label">Swap-out by field</div>
+            <p>Find a recent example in your field where AI augmented rather than replaced expert judgment — a research paper that used machine learning to surface patterns, a design project that used generative tools to expand options, a financial model that used AI to process data the analyst then interpreted. The question is always: where does the tool's work end and the human's begin?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 4</div>
+        <div class="rl-header-title">Evaluation — What Is at Stake, and Who Is Paying?</div>
+        <div class="rl-header-move">Move 4</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Campbell, Richard.</strong> <em>Media and Culture</em>, current edition. Evaluation chapter — criteria, standards, and reasoned judgment. <span class="rl-flag">Verify edition</span><br>The framework for moving from description and analysis to evaluation — what a principled, evidence-based judgment looks like as distinct from a reaction. Assign before Week 4.</div></div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Edelman Trust Barometer.</strong> Current year. edelman.com/trust. Media and technology sections. <span class="rl-flag">Update annually</span><br>Current data on institutional trust, media trust, and technology trust. The evaluation move asks who bears costs — the Edelman data on which communities are losing trust fastest and why provides evidence for that analysis. Assign the media and technology sections; the full report is not necessary.</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Local news and AI — instructor selects a current example of AI's role in local news sustainability or failure.</strong> Nieman Lab (niemanlab.org) and Current (current.org) cover this consistently. <span class="rl-flag">Instructor selects · Update each term</span><br>Local journalism is where the equity stakes of AI in news are most visible: AI-generated content filling gaps left by newsroom closures, or AI tools allowing small newsrooms to cover more ground with fewer staff. The evaluation move asks: who benefits, who pays, and is that distribution fair? Local news is the most direct case for applying those questions to journalism itself.</div></div>
+          <div class="rl-swap">
+            <div class="rl-swap-label">Swap-out by field</div>
+            <p>Find a recent account of AI's equity implications in your field — who benefits from the efficiency gains, who loses work, who bears the costs of the infrastructure (energy, data labor, displaced workers). The evaluation move requires named affected parties and specific evidence, not general claims about winners and losers.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 5</div>
+        <div class="rl-header-title">Engagement — What Do You Say, and to Whom?</div>
+        <div class="rl-header-move">Move 5</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Campbell, Richard.</strong> <em>Media and Culture</em>, current edition. Engagement chapter — civic participation, voice, and the role of the informed citizen. <span class="rl-flag">Verify edition</span><br>The framework for Engagement as civic practice — not just producing content but contributing to the public conversation in a way that is grounded, accountable, and useful. Pairs with the Short Public Piece assignment.</div></div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Kovach, Bill and Tom Rosenstiel.</strong> <em>The Elements of Journalism</em>, 4th ed. Chapter on the journalist's obligation to citizens. <span class="rl-flag">Stable</span><br>The argument for journalism as a civic practice — what the obligation to the public actually requires. Assign as students are drafting the Short Public Piece: what does it mean to write something a public actually needs?</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>A newsroom AI ethics or editorial standards document.</strong> The New York Times, NPR, BBC, or Reuters have all published AI standards documents. <span class="rl-flag">Instructor selects current version · Update each term</span><br>A newsroom's public statement of how it handles AI is itself a piece of civic communication — it is an accountability document. The Engagement move asks: what does this organization say it will do, and is that sufficient? Students can apply Description and Evaluation to this document while writing their own Short Public Piece about AI in their story's context.</div></div>
+          <div class="rl-swap">
+            <div class="rl-swap-label">Swap-out by field</div>
+            <p>Find a professional association's ethics statement or standards document about AI in your field — AMA, ABA, AIA, SAG-AFTRA, IEEE. The engagement move applies the same standard to professional accountability documents that it applies to news: what does this actually say, who is accountable for it, and is it adequate?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     4 · READING LIST — LARGE
+══════════════════════════════════════════ -->
+<div class="panel" id="p4">
+<div class="paste">Reading List — Large Version · Ten weeks · Tier 1 spine + Tier 2 field example per week · Journalism home base</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Reading List — Large Version</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-book-open"></i>How to Use This List</h3>
+    <p>The Large version reading list runs ten weeks across three cycles. The spine readings (Tier 1) build across the term — students read Lippmann in Week 1 and return to what he said in Week 7 with eight weeks of beat work behind them. The field examples (Tier 2) move with the critical move each week, showing AI operating in journalism in ways calibrated to what the move requires students to notice. All Tier 2 items are flagged for annual update; instructors should verify links and currency each term.</p>
+    <div class="dark">
+      <div class="dark-label">Campbell throughout</div>
+      <p>The relevant <em>Media and Culture</em> chapter for each critical move is assigned the week that move is introduced and remains a reference throughout the cycle. Students who have not read Campbell before this course should read the critical process introduction in Week 1 alongside Lippmann. Students coming from the Small or Medium version will have seen it before — assign it again anyway. It reads differently after eight weeks on a beat.</p>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 1</div>
+        <div class="rl-header-title">Description — What Is Your Beat, What Does It Say?</div>
+        <div class="rl-header-move">Cycle 1 · Move 1</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Lippmann, Walter.</strong> <em>Public Opinion</em>, Chapters 1–2. 1922. Public domain. <span class="rl-flag">Stable</span><br>"The World Outside and the Pictures in Our Heads" and "Censorship and Privacy." Twelve to fifteen pages. The founding text of media literacy scholarship. Assign the first two chapters; students will encounter the argument again in Week 7 when Evaluation asks them to judge the coverage of their own beat.</div></div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Campbell, Richard.</strong> <em>Media and Culture</em>. Critical process introduction and Description chapter. <span class="rl-flag">Verify edition</span><br>The full five-move framework and the Description move in detail. Assign for Week 1; the subsequent chapters are assigned as each move is introduced.</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Associated Press.</strong> "AP's approach to artificial intelligence." ap.org. <span class="rl-flag">Verify link · Update if AP publishes newer guidance</span><br>AP's public account of how it uses AI tools — what they do, what human editors still do, and how AP discloses automated content to readers. Use this as the Week 1 shared text: run Description on it. What does this document actually say? What does it not say? Who is accountable for the claims it makes?</div></div>
+          <div class="rl-swap">
+            <div class="rl-swap-label">Swap-out by field</div>
+            <p>Find the leading institution in your field's public disclosure of AI use. Run Description on it the same way.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 2</div>
+        <div class="rl-header-title">Analysis — How Does This Beat's Coverage Work?</div>
+        <div class="rl-header-move">Cycle 1 · Move 2</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Campbell, Richard.</strong> <em>Media and Culture</em>. Analysis chapter. <span class="rl-flag">Verify edition</span><br>Structural patterns in media — ownership, economics, distribution, gatekeeping. The foundation for asking how coverage is produced, not just what it says.</div></div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Reuters Institute for the Study of Journalism.</strong> <em>Digital News Report</em>, current year. Executive summary and AI attitudes chapter. reutersinstitute.politics.ox.ac.uk. <span class="rl-flag">Update annually</span><br>Current structural data on news consumption, AI in news, and trust. Pairs with the Beat Source Map: students are mapping their beat's source architecture while reading a structural account of the industry's broader architecture.</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Nieman Lab.</strong> "The year in AI and journalism." niemanlab.org/year-in-ideas. <span class="rl-flag">Instructor selects current year's edition · Update annually</span><br>Nieman Lab's annual synthesis of how AI changed newsroom practice that year. The Analysis move asks how coverage works structurally — this piece gives a structural account of how the journalism industry itself is being restructured by AI adoption. Instructors should select the most recent edition and may supplement with individual Nieman Lab pieces on specific beat areas.</div></div>
+          <div class="rl-swap">
+            <div class="rl-swap-label">Swap-out by field</div>
+            <p>Find the annual industry report for your field that addresses AI adoption — McKinsey Global Institute, Deloitte Insights, or the relevant trade association's annual technology report. The Analysis move applied to your industry's own account of how it is changing.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 3</div>
+        <div class="rl-header-title">Interpretation — What Does Your Knowledge Reveal?</div>
+        <div class="rl-header-move">Cycle 2 · Move 3</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Campbell, Richard.</strong> <em>Media and Culture</em>. Interpretation chapter. <span class="rl-flag">Verify edition</span><br>What disciplinary knowledge adds to reading — the framework for the Interpretive Brief. Assign before the Brief is due.</div></div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Bell, Emily and Taylor Owen.</strong> "The Platform Press: How Silicon Valley Reengineered Journalism." Tow Center for Digital Journalism, Columbia University, 2017. towcenter.org. <span class="rl-flag">Stable — structural analysis</span><br>The argument that platform distribution changed journalism at a structural level — not just how stories are delivered but what gets covered, who decides, and what the economic logic of journalism has become. This is disciplinary knowledge for journalism students: what your training lets you see in any story about media and technology.</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>ProPublica or similar investigative outlet.</strong> A data journalism investigation with a published methodology note. propublica.org/datastore. <span class="rl-flag">Instructor selects current example · Update each term</span><br>The Interpretive Brief asks what your knowledge reveals that the coverage does not say. A data journalism methodology note is itself an act of interpretation made explicit — the reporter saying: here is what the data showed, here is what we did with it, here is the judgment we applied. Use it as a model for what the Interpretive Brief is trying to do.</div></div>
+          <div class="rl-swap">
+            <div class="rl-swap-label">Swap-out by field</div>
+            <p>Find a recent example from your field where an expert's interpretation of AI-assisted output changed the meaning of the results — a researcher who identified what the model got wrong, a designer who explained what the generative tool could not account for, a clinician who contextualized what the diagnostic AI missed. The Interpretive Brief is that kind of contribution, applied to a news beat.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 4</div>
+        <div class="rl-header-title">Evaluation — Who Bears the Costs?</div>
+        <div class="rl-header-move">Cycle 2 · Move 4</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Campbell, Richard.</strong> <em>Media and Culture</em>. Evaluation chapter. <span class="rl-flag">Verify edition</span><br>The framework for principled evaluative argument — naming the standard, citing the evidence, engaging the counterargument. Foundation for the Equity Assessment.</div></div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Edelman Trust Barometer.</strong> Current year, media and technology sections. edelman.com/trust. <span class="rl-flag">Update annually</span><br>Current trust data as evidence for evaluative claims. If students are arguing that coverage of their beat fails certain affected communities, the trust data provides structural evidence for why those communities may have reason to distrust that coverage.</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>A local news AI case study.</strong> Nieman Lab, Current, or Columbia Journalism Review coverage of a specific local news AI deployment — where it worked, where it failed, who it served and who it did not. <span class="rl-flag">Instructor selects · Update each term</span><br>Local journalism is where the equity evaluation of AI in news is most concrete and most human: specific communities, specific coverage decisions, specific people who either received or did not receive the journalism they needed. The Equity Assessment is this move applied to students' own beats.</div></div>
+          <div class="rl-swap">
+            <div class="rl-swap-label">Swap-out by field</div>
+            <p>Find a specific, recent case study of AI deployment in your field where the equity implications are concrete and nameable — not abstract claims about winners and losers, but a specific community, institution, or population and what happened to them. The Equity Assessment requires this level of specificity.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 5</div>
+        <div class="rl-header-title">Interpretation Deeper — What Connects Your Beat to Others?</div>
+        <div class="rl-header-move">Cycle 2 · Move 3 Returns</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>UNESCO.</strong> <em>Guidance for Generative AI in Education and Research.</em> 2023. unesco.org. <span class="rl-flag">Verify link · Update if UNESCO publishes revised guidance</span><br>The most comprehensive institutional framing of what generative AI does to knowledge-making across disciplines. Relevant to any beat that intersects with institutions — education, health, government, research. Students following beats in any of these areas will find direct connections to their thread. Students whose beats seem unrelated may find the structural argument about knowledge and authority is the connection.</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>A journalism review or academic article on AI and news credibility.</strong> Columbia Journalism Review (cjr.org), Journalism Practice, or Digital Journalism. <span class="rl-flag">Instructor selects · Update each term</span><br>An academic or long-form review account of how AI is affecting the credibility of news — not just accuracy but authority, provenance, and the public's ability to evaluate what they read. This is the deeper interpretation: not just what AI does to individual stories but what it is doing to the information environment as a system. Students are looking for the cluster connection this week — the shared question that their beat and others raise together.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 6</div>
+        <div class="rl-header-title">Analysis at Scale — Clusters Confirmed</div>
+        <div class="rl-header-move">Cycle 2 · Move 2 Returns</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Kovach, Bill and Tom Rosenstiel.</strong> <em>The Elements of Journalism</em>, 4th ed. Three Rivers Press, 2021. Chapters on verification and the journalist's obligation to citizens. <span class="rl-flag">Stable</span><br>The grounding for what journalism's authority claims require — what verification actually means in practice and what the obligation to the public actually demands. Assign as clusters are forming: what does this obligation look like when applied to the shared question your cluster is investigating?</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>A cross-beat investigation or collaborative journalism project.</strong> ProPublica's Local Reporting Network, the Pulitzer Center's collaborative projects, or Report for America. <span class="rl-flag">Instructor selects current example · Update each term</span><br>A collaborative journalism project that brought multiple reporters covering different beats to produce something none could have produced alone. This is the structural model for what your cluster is trying to do with the State of the World entry. The Analysis at scale this week asks: how did the collaboration work, and what did the collective produce that the individual reporters could not?</div></div>
+          <div class="rl-swap">
+            <div class="rl-swap-label">Swap-out by field</div>
+            <p>Find an interdisciplinary or cross-team project in your field that brought different specializations together to address a shared question. The cluster formation logic is the same: what does the collective see that no individual specialist could?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 7</div>
+        <div class="rl-header-title">Evaluation Returns — What Does Your Cluster Argue?</div>
+        <div class="rl-header-move">Cycle 3 · Move 4 Returns</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Lippmann, Walter.</strong> <em>Public Opinion</em>, Chapter 25: "The Problem of the Insider." 1922. Public domain. <span class="rl-flag">Stable</span><br>Lippmann on the limits of expertise and the problem of who gets to evaluate public affairs. Assign in Week 7 as students are making their evaluative arguments at cluster scale: whose judgment counts, on what grounds, and what the public is owed by those who claim to know something.</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>A journalism ethics case study involving AI.</strong> SPJ (Society of Professional Journalists) ethics committee materials, or a documented newsroom controversy over AI use. spj.org. <span class="rl-flag">Instructor selects current case · Update each term</span><br>A case where a newsroom made a specific evaluative judgment about AI use — and where that judgment was contested. The evaluation move at Week 7 is making a civic argument: what should be done, by whom, and why. A real newsroom ethics case gives students a specific, contested example to argue from and against.</div></div>
+          <div class="rl-swap">
+            <div class="rl-swap-label">Swap-out by field</div>
+            <p>Find a documented professional ethics controversy involving AI in your field — a case where the standards were contested, where someone made a judgment call that others disputed. The evaluative argument your cluster is building needs to engage with that kind of real, contested territory.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 8</div>
+        <div class="rl-header-title">Engagement Begins — What Does the Cluster Say?</div>
+        <div class="rl-header-move">Cycle 3 · Move 5 Begins</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Campbell, Richard.</strong> <em>Media and Culture</em>. Engagement chapter. <span class="rl-flag">Verify edition</span><br>The framework for Engagement as civic practice — not just producing content but contributing to the public conversation in a way that is grounded, accountable, and useful. Assign as the Cluster Proposal is due: what does it mean to engage a public audience with what you have found across eight weeks?</div></div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Kovach and Rosenstiel.</strong> <em>The Elements of Journalism</em>. Chapter on the journalist's obligation to engage citizens. <span class="rl-flag">Stable</span><br>The argument for journalism as a form of civic engagement — what it means to produce information a public actually needs. Assign alongside the Engagement chapter from Campbell: two accounts of the same obligation from different angles.</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>A newsroom's public AI standards document.</strong> NYT, NPR, BBC, Reuters, or AP. <span class="rl-flag">Instructor selects current version · Update each term</span><br>A newsroom's public statement of its AI standards is an act of engagement — it is an accountability document directed at a public audience. Run Description and Evaluation on it: what does it actually say, who is accountable for it, and is it adequate? This is also a model for the kind of public-facing engagement the State of the World entry is trying to achieve.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 9</div>
+        <div class="rl-header-title">Engagement Collective — Does the Draft Say What You Think?</div>
+        <div class="rl-header-move">Cycle 3 · Description Returns</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>No new spine reading this week.</strong> Students are in draft and peer review. Assign instead: re-read your Week 1 notebook entry. What has changed in how you see your beat? What does your Week 1 self not know that you know now? This is the Description move applied to your own thinking across time — and it is the material for the Self-Assessment.</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Instructor's choice: a recent peer-reviewed or long-form account of AI's effect on a specific journalism beat or community.</strong> CJR, NiemanLab, or Journalism Studies journal. <span class="rl-flag">Instructor selects · Update each term</span><br>A piece that models what careful, sustained, specific engagement with an AI-in-journalism question looks like — as distinct from a think piece or op-ed. Students are revising their cluster draft this week; a model of what rigorous engagement looks like in the field is useful before they submit.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rl-week">
+      <div class="rl-header">
+        <div class="rl-header-num">Week 10</div>
+        <div class="rl-header-title">Assembly — The State of the World</div>
+        <div class="rl-header-move">Cycle 3 · Description Returns + Engagement</div>
+      </div>
+      <div class="rl-body">
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 1 · Spine</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>Lippmann, Walter.</strong> <em>Public Opinion</em>, final chapter: "The Role of Force, Patronage, and Privilege." 1922. Public domain. <span class="rl-flag">Stable</span><br>Lippmann's conclusion: what an informed public requires, and what stands in the way. Assign before the assembly session. Students have now been following beats for ten weeks. They read Lippmann's conclusion differently than they would have in Week 1. The State of the World is, in a sense, a partial answer to the problem he named in 1922.</div></div>
+        </div>
+        <div class="rl-tier">
+          <div class="rl-tier-label">Tier 2 · Field Example · Journalism</div>
+          <div class="rl-item"><div class="rl-bullet"></div><div class="rl-text"><strong>No new Tier 2 example this week.</strong> The State of the World assembly is itself the engagement. Students bring ten weeks of beat work; the room brings what everyone has found. The instructor's closing question — what question are you leaving with, and are you going to keep following it — is the only reading list that matters in Week 10.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     5 · COURSE INTRODUCTION UPDATE
+══════════════════════════════════════════ -->
+<div class="panel" id="p5">
+<div class="paste">Course Introduction Update — Paragraph to add to all three Canvas files · Slot into existing Course Introduction · "A Note on the Moment" section</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Course Introduction — Updated Section: "A Note on the Moment"</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What to Add — and Where</h3>
+    <p>The following section replaces or supplements the existing "A Note on the Moment" paragraph at the end of the Course Introduction in all three Canvas files. It is written to hold across whatever the cultural conversation about AI looks like when students encounter it — not tied to the specific controversies of spring 2026, but anchored by them.</p>
+    <p>In the Canvas shell, this section goes between the "What Has Not Changed" block and the "How This Course Is Organized" block.</p>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>The Section — Paste Directly</h3>
+    <div class="callout">
+      <div class="callout-label">Section heading: A Note on the Moment</div>
+      <p>This curriculum was developed in spring 2026. At that moment, public attitudes toward AI were shifting measurably and quickly — faster than pollsters had seen with any comparable technology. Protests had blocked data center construction across the country. A sitting U.S. senator called constituents "under siege." An industry executive described opposition as coming from "cave people." A commencement speaker at a major university was booed for praising AI's potential.</p>
+      <p>By the time you are reading this, the specific controversies will have moved on. The technology will have changed. The poll numbers will look different. AI will be more embedded in daily life in some ways and more contested in others. The moment this paragraph is describing will feel, to you, like recent history rather than current events.</p>
+      <p>That is fine. It is exactly the situation this curriculum is designed for.</p>
+      <p>The questions this course asks do not depend on whether AI is popular or unpopular in any given news cycle. They depend on paying attention to something that will not change regardless of the mood: AI is a force in the information environment. It is not the only force. Understanding how information is made, distributed, evaluated, and believed — and practicing that understanding deliberately — is what media literacy has always been about. The AI moment makes it more urgent. It does not make it different in kind.</p>
+      <p>One more thing worth naming plainly: this course does not take a position on AI. It does not ask you to distrust it, celebrate it, or be afraid of it. It asks you to apply the same critical moves to stories about AI that you apply to any other subject — and to notice, as you do, that AI is simultaneously a tool for making information, a subject of information, and a force shaping how information reaches you. That triple role is unusual and worth understanding carefully. This course gives you the practice to do that.</p>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>For Instructors — On Keeping This Current</h3>
+    <p>The specific examples in the first paragraph of this section (protests, data centers, the "cave people" comment, the booed commencement speaker) are from spring 2026. Update them each term with whatever the equivalent live example is. The structure of the paragraph holds — a moment of heightened public attention, a set of positions in conflict, the observation that by the time students read this it will have moved on. The specific examples should always be recent enough that students recognize them.</p>
+    <div class="callout" style="background:#fff8f0;border-color:#e8d4b8">
+      <div class="callout-label">Maintenance note</div>
+      <p>First paragraph of "A Note on the Moment": update each academic year with current examples of the AI public conversation. Everything else in this section is intentionally written to hold across time without updating.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function show(n){
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.top button').forEach((b,i)=>b.classList.toggle('active',i===n));
+  window.scrollTo({top:0});
+}
+</script>
+</body>
+</html>
