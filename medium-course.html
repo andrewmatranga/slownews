@@ -6,94 +6,672 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Slow News, Smart Citizens — Medium</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap');
+/* ═══════════════════════════════════════════
+   SNSC SHARED DESIGN SYSTEM v2
+   Newspaper website aesthetic throughout
+   No heavy black backgrounds in content areas
+═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@300;400;500&display=swap');
+
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#f0ede8;font-family:'Source Serif 4',Georgia,serif;color:#1a1a1a;font-size:16px}
-.top{background:#1a1a1a;position:sticky;top:0;z-index:200;border-bottom:3px solid #8b2332}
-.top-inner{display:flex;align-items:center;overflow-x:auto;padding:0 20px}
-.top-brand{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#555;padding:13px 16px 13px 0;border-right:1px solid #333;margin-right:2px;white-space:nowrap;flex-shrink:0}
-.top-brand span{color:#c9a96e}
-.top-sep{font-family:'DM Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:#333;padding:0 10px;white-space:nowrap;flex-shrink:0;border-right:1px solid #333;line-height:1.3;text-align:center}
-.top button{background:none;border:none;color:#555;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:13px 12px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .15s;flex-shrink:0}
-.top button.active{color:#fff;border-bottom-color:#8b2332}
-.top button:hover:not(.active){color:#ccc}
-.panel{display:none;max-width:860px;margin:0 auto;padding:0 0 80px}
+
+:root{
+  /* Palette */
+  --ink:#1c1c1c;
+  --ink-soft:#2e2e2e;
+  --paper:#f5f1ea;
+  --cream:#fffdf7;
+  --white:#ffffff;
+  --crimson:#8b2332;
+  --crimson-dark:#6d1a27;
+  --gold:#b8924a;
+  --gold-light:#c9a96e;
+  --rule:#d4cdc3;
+  --rule-light:#e8e2d8;
+  --muted:#6a6259;
+  --sidebar-bg:#23201c;
+  --sidebar-active:#fff;
+  --sidebar-text:#8a8278;
+  --sidebar-hover:#ccc;
+
+  /* Type */
+  --mono:'DM Mono',monospace;
+  --serif:'Source Serif 4',Georgia,serif;
+  --display:'Playfair Display',Georgia,serif;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--paper);font-family:var(--serif);color:var(--ink);font-size:16px;line-height:1.75}
+
+/* ── NAVIGATION ─────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:var(--cream);
+  border-bottom:1px solid var(--rule);
+}
+.nav-rule{height:3px;background:var(--crimson)}
+.nav-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:stretch;height:46px;padding:0 24px;
+}
+.nav-logo{
+  font-family:var(--display);font-size:14px;font-weight:900;
+  color:var(--ink);text-decoration:none;
+  display:flex;align-items:center;
+  padding-right:20px;border-right:1px solid var(--rule);flex-shrink:0;
+}
+.nav-logo em{color:var(--crimson);font-style:italic}
+.nav-links{display:flex;align-items:stretch;flex:1;overflow-x:auto}
+.nav-links a{
+  font-family:var(--mono);font-size:9px;font-weight:500;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  padding:0 12px;display:flex;align-items:center;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:color .15s;white-space:nowrap;flex-shrink:0;cursor:pointer;
+  background:none;border-top:none;border-left:none;border-right:none;
+}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.active{color:var(--crimson);border-bottom-color:var(--crimson)}
+.nav-sep{width:1px;background:var(--rule);margin:12px 3px;flex-shrink:0}
+.nav-date{
+  margin-left:auto;padding-left:16px;border-left:1px solid var(--rule);
+  font-family:var(--mono);font-size:9px;color:var(--muted);
+  display:flex;align-items:center;flex-shrink:0;
+}
+
+/* ── SHELL LAYOUT ────────────────────────────────── */
+.shell{display:flex;padding-top:49px;min-height:100vh}
+
+/* Sidebar — ink background, this is the LMS chrome, intentionally dark */
+.sidebar{
+  width:210px;flex-shrink:0;
+  background:var(--sidebar-bg);
+  position:sticky;top:49px;
+  height:calc(100vh - 49px);overflow-y:auto;
+}
+.sb-section{
+  padding:10px 0 3px 14px;
+  font-family:var(--mono);font-size:7.5px;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:#4a4540;
+  border-top:1px solid #2e2b27;margin-top:6px;
+}
+.sb-section:first-child{border-top:none;margin-top:0}
+.sidebar button{
+  display:block;width:100%;background:none;border:none;
+  text-align:left;padding:6px 14px;
+  font-family:var(--mono);font-size:9px;
+  letter-spacing:.04em;text-transform:uppercase;
+  color:var(--sidebar-text);cursor:pointer;
+  transition:color .12s;line-height:1.4;
+}
+.sidebar button:hover{color:var(--sidebar-hover)}
+.sidebar button.active{
+  color:var(--sidebar-active);
+  border-left:2px solid var(--crimson);padding-left:12px;
+}
+
+/* Main content */
+.main{flex:1;min-width:0}
+
+/* ── PANELS ──────────────────────────────────────── */
+.panel{display:none;max-width:800px;margin:0 auto;padding:0 0 80px}
 .panel.active{display:block}
-.dp-wrapper{background:#fff;margin-bottom:3px}
-.dp-header{background:#8b2332;padding:16px 28px 14px}
-.dp-heading{margin:0;padding:0;border-top:none;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#fff}
-.dp-content-block{padding:26px 32px 24px;border-bottom:1px solid #ede9e3}
-.dp-content-block:last-child{border-bottom:none}
-.dp-has-icon{display:flex;align-items:flex-start;gap:11px;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:#8b2332;margin-bottom:14px;font-weight:500;line-height:1.4}
-.dp-icon{font-size:16px;margin-top:1px;flex-shrink:0}
-.dp-content-block p{font-size:15.5px;line-height:1.78;color:#2c2c2c;margin-bottom:14px}
-.dp-content-block p:last-child{margin-bottom:0}
-.dp-content-block ul,.dp-content-block ol{padding-left:22px;margin-bottom:14px}
-.dp-content-block li{font-size:15.5px;line-height:1.75;color:#2c2c2c;margin-bottom:8px}
-.paste{background:#111;border-left:3px solid #8b2332;padding:7px 14px;margin:2px 0;font-family:'DM Mono',monospace;font-size:9px;color:#555;letter-spacing:.08em;text-transform:uppercase}
-.pull{border-left:4px solid #8b2332;padding:14px 20px;background:#faf7f4;margin:16px 0;font-size:17px;line-height:1.65;font-style:italic;color:#2a1818}
-.callout{background:#faf7f4;border:1px solid #e0dbd4;padding:15px 19px;margin:14px 0}
-.callout-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8b2332;margin-bottom:8px;font-weight:500}
-.callout p{font-size:14.5px;margin:0;color:#3a3a3a;line-height:1.65}
+
+/* ── PAGE STRUCTURE ──────────────────────────────── */
+.page-flag{
+  border-bottom:3px solid var(--ink);
+  padding:24px 32px 18px;
+  background:var(--cream);
+}
+.page-eyebrow{
+  font-family:var(--mono);font-size:8.5px;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:10px;
+}
+.page-title{
+  font-family:var(--display);font-size:clamp(22px,4vw,36px);
+  font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:8px;
+}
+.page-deck{
+  font-family:var(--display);font-size:16px;font-style:italic;
+  color:var(--muted);line-height:1.4;max-width:580px;
+}
+.page-rule{height:3px;background:var(--crimson)}
+
+/* Content blocks — white on cream paper, newspaper column feel */
+.block{
+  padding:26px 32px;
+  background:var(--white);
+  border-bottom:1px solid var(--rule-light);
+}
+.block:last-child{border-bottom:none}
+.block h3{
+  font-family:var(--display);font-size:18px;font-weight:700;
+  color:var(--ink);margin-bottom:12px;
+  padding-bottom:8px;border-bottom:1px solid var(--rule);
+}
+.block h4{
+  font-family:var(--display);font-size:15px;font-weight:700;
+  color:var(--ink);margin-bottom:8px;margin-top:18px;
+}
+.block h4:first-child{margin-top:0}
+.block p{font-size:15.5px;line-height:1.78;color:#363230;margin-bottom:14px}
+.block p:last-child{margin-bottom:0}
+.block ul,.block ol{padding-left:22px;margin-bottom:14px}
+.block li{font-size:15px;line-height:1.72;color:#363230;margin-bottom:6px}
+.block li:last-child{margin-bottom:0}
+
+/* ── INLINE ELEMENTS ─────────────────────────────── */
+.pull{
+  border-left:3px solid var(--crimson);
+  padding:12px 18px;
+  background:var(--paper);
+  margin:16px 0;
+  font-family:var(--display);font-size:17px;font-style:italic;
+  line-height:1.5;color:var(--ink);
+}
+
+.callout{
+  background:var(--paper);border:1px solid var(--rule);
+  padding:13px 17px;margin:12px 0;
+}
+.callout-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:7px;
+}
+.callout p{font-size:14px;margin:0;color:#444;line-height:1.65}
 .callout p+p{margin-top:8px}
-.dark{background:#1a1a1a;padding:24px 28px;margin:14px 0}
-.dark-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#c9a96e;margin-bottom:10px}
-.dark p{font-size:15px;line-height:1.75;color:#bbb;margin-bottom:12px}
-.dark p:last-child{margin-bottom:0}
-.dark strong{color:#fff}
-.dark em{color:#c9a96e;font-style:normal}
-.six-moves{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin:16px 0}
-@media(max-width:620px){.six-moves{grid-template-columns:1fr}}
-.move-card{background:#fff;border:1px solid #e0dbd3;overflow:hidden}
-.move-card.cycle-2{border-color:#8b2332}
-.move-card-stripe{height:4px;background:#e0dbd3}
-.move-card.cycle-2 .move-card-stripe{background:#8b2332}
-.move-card-body{padding:14px 16px}
-.move-card-cycle{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#bbb;margin-bottom:4px}
-.move-card.cycle-2 .move-card-cycle{color:#8b2332}
-.move-card-num{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:5px}
-.move-card.cycle-2 .move-card-num{color:#8b2332}
-.move-card-title{font-family:'Playfair Display',Georgia,serif;font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
-.move-card-q{font-size:13.5px;font-style:italic;color:#666;line-height:1.5;margin-bottom:6px}
-.move-card-desc{font-size:13px;line-height:1.6;color:#555}
-.three-q{display:flex;flex-direction:column;gap:3px;margin:16px 0}
-.q-item{display:flex;gap:0;background:#fff;border:1px solid #e8e3dc}
-.q-num{background:#8b2332;color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;padding:14px 16px;flex-shrink:0;width:44px;display:flex;align-items:center;justify-content:center}
-.q-text{padding:14px 18px;font-size:15.5px;line-height:1.6;color:#1a1a1a;font-style:italic}
-.week-arc{display:flex;flex-direction:column;gap:3px;margin:16px 0}
-.week-row{display:flex;gap:0;align-items:stretch}
-.week-label{background:#1a1a1a;color:#fff;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:12px 14px;flex-shrink:0;width:80px;display:flex;align-items:center}
-.week-label.cycle-2{background:#8b2332}
-.week-content{background:#fff;border:1px solid #e8e3dc;border-left:none;padding:12px 18px;flex:1}
-.week-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:3px}
-.week-sub{font-size:13.5px;color:#666;line-height:1.5}
-.week-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.07em;text-transform:uppercase;background:#f0ede8;color:#8b2332;padding:2px 6px;margin-left:6px}
-.rubric{width:100%;border-collapse:collapse;margin-top:14px;font-size:14px}
-.rubric th{background:#8b2332;color:#fff;padding:9px 13px;text-align:left;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
-.rubric td{padding:9px 13px;vertical-align:top;border-bottom:1px solid #ede9e3;line-height:1.55;color:#2c2c2c}
-.rubric tr:nth-child(even) td{background:#faf7f4}
-.rubric .pts{font-family:'DM Mono',monospace;font-size:12px;color:#8b2332;font-weight:500;white-space:nowrap}
-.journal{border:2px dashed #d4cfc8;padding:18px 22px;margin:14px 0;background:#fdfcfa}
-.journal .callout-label{color:#6b5c5c}
-.journal p{font-size:15px;line-height:1.7;color:#3a3a3a;margin:0}
+.callout ul{padding-left:16px;margin-top:6px;margin-bottom:0}
+.callout li{font-size:14px;line-height:1.65;color:#444;margin-bottom:4px}
+
+/* Accent box — replaces the heavy dark boxes, uses crimson rule instead */
+.accent{
+  background:var(--cream);
+  border-left:4px solid var(--crimson);
+  border:1px solid var(--rule);
+  border-left:4px solid var(--crimson);
+  padding:16px 20px;margin:14px 0;
+}
+.accent-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:10px;
+}
+.accent p{font-size:14.5px;line-height:1.72;color:#363230;margin-bottom:10px}
+.accent p:last-child{margin-bottom:0}
+.accent strong{color:var(--ink)}
+.accent em{color:var(--crimson);font-style:normal}
+.accent ul{padding-left:18px;margin-bottom:0}
+.accent li{font-size:14px;line-height:1.68;color:#444;margin-bottom:5px}
+
+/* Note box — for instructor-facing guidance, slightly warmer */
+.note{
+  background:#fdf8f0;
+  border:1px solid #e0d4ba;
+  border-left:4px solid var(--gold);
+  padding:14px 18px;margin:12px 0;
+}
+.note-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:7px;
+}
+.note p{font-size:14px;line-height:1.65;color:#4a3e28;margin:0}
+.note p+p{margin-top:8px}
+.note strong{color:#2e2416}
+
+/* Swap-out box — for discipline adaptation notes */
+.swap{
+  background:#f8f6f0;border:1px solid #ddd5c0;
+  border-left:3px solid var(--gold-light);
+  padding:10px 14px;margin-top:8px;
+}
+.swap-label{
+  font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:#a07c40;margin-bottom:4px;
+}
+.swap p{font-size:13px;line-height:1.6;color:#5a4e38;margin:0}
+
+/* ── MODULE HEADER ─────────────────────────────────── */
+/* This one keeps the dark ink — it's structural chrome, not content */
+.mod-header{background:var(--sidebar-bg);padding:26px 32px}
+.mod-badge{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold-light);margin-bottom:10px;
+}
+.mod-title{
+  font-family:var(--display);font-size:clamp(22px,4vw,34px);
+  font-weight:900;color:#fff;line-height:1.1;margin-bottom:6px;
+}
+.mod-sub{
+  font-family:var(--display);font-size:15px;
+  font-style:italic;color:#9a9088;margin-bottom:16px;
+}
+.mod-meta{
+  display:flex;gap:20px;flex-wrap:wrap;
+  border-top:1px solid #3a3530;padding-top:14px;
+}
+.mod-meta-item{
+  font-family:var(--mono);font-size:8.5px;font-weight:400;
+  letter-spacing:.05em;text-transform:uppercase;color:#6a6258;
+}
+.mod-meta-item span{
+  color:var(--gold-light);display:block;
+  font-size:11px;margin-top:2px;letter-spacing:.02em;font-weight:300;
+}
+
+/* ── CRITICAL MOVES ─────────────────────────────────── */
+.move-row{
+  display:flex;align-items:stretch;
+  background:var(--white);border:1px solid var(--rule);margin-bottom:2px;
+}
+.move-n{
+  background:var(--crimson);color:#fff;
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  padding:14px 16px;flex-shrink:0;width:42px;
+  display:flex;align-items:center;justify-content:center;
+}
+.move-body{padding:14px 18px;flex:1}
+.move-title{
+  font-family:var(--display);font-size:15px;font-weight:700;
+  color:var(--ink);margin-bottom:3px;
+}
+.move-q{font-size:14px;font-style:italic;color:var(--muted)}
+
+/* ── ARC / SCHEDULE VISUAL ─────────────────────────── */
+.arc{display:flex;flex-direction:column;gap:2px;margin:12px 0}
+.arc-row{display:flex;align-items:stretch}
+.arc-wk{
+  font-family:var(--mono);font-size:8.5px;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;color:#fff;
+  padding:9px 10px;flex-shrink:0;width:74px;
+  display:flex;align-items:center;
+}
+.arc-wk.c0{background:#888}
+.arc-wk.c1{background:#6a7d8a}
+.arc-wk.c2{background:var(--crimson)}
+.arc-wk.c3{background:var(--sidebar-bg)}
+.arc-content{
+  background:var(--white);border:1px solid var(--rule);
+  border-left:none;padding:9px 14px;flex:1;
+}
+.arc-title{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.arc-sub{font-size:12px;color:var(--muted)}
+
+/* ── RUBRIC ─────────────────────────────────────────── */
+.rubric{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px}
+.rubric th{
+  background:var(--crimson);color:#fff;
+  padding:8px 12px;text-align:left;
+  font-family:var(--mono);font-size:8px;
+  letter-spacing:.08em;text-transform:uppercase;font-weight:500;
+}
+.rubric td{
+  padding:8px 12px;vertical-align:top;
+  border-bottom:1px solid var(--rule-light);
+  line-height:1.5;color:#333;
+}
+.rubric tr:nth-child(even) td{background:var(--paper)}
+.rubric .pts{
+  font-family:var(--mono);font-size:11px;
+  color:var(--crimson);font-weight:500;white-space:nowrap;
+}
+
+/* ── READING LIST ─────────────────────────────────── */
+.rl-tier-label{
+  font-family:var(--mono);font-size:7.5px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:8px;margin-top:14px;
+  border-bottom:1px solid var(--rule-light);padding-bottom:5px;
+}
+.rl-item{display:flex;gap:9px;margin-bottom:8px;align-items:flex-start}
+.rl-dot{
+  width:4px;height:4px;background:var(--crimson);
+  border-radius:50%;flex-shrink:0;margin-top:8px;
+}
+.rl-text{font-size:13.5px;line-height:1.6;color:#444}
+.rl-flag{
+  font-family:var(--mono);font-size:7px;letter-spacing:.07em;
+  text-transform:uppercase;background:var(--paper);
+  border:1px solid var(--rule);color:var(--crimson);
+  padding:1px 4px;margin-left:4px;vertical-align:middle;display:inline-block;
+}
+
+/* ── JOURNAL / NOTEBOOK ─────────────────────────────── */
+.journal{
+  border:2px dashed #c8c0b4;padding:16px 20px;
+  margin:12px 0;background:var(--cream);
+}
+.journal-label{
+  font-family:var(--mono);font-size:8px;letter-spacing:.1em;
+  text-transform:uppercase;color:#7a6a58;margin-bottom:10px;font-weight:500;
+}
+.journal p{font-size:15px;line-height:1.72;color:#363230;margin:0}
 .journal p+p{margin-top:10px}
-.week-header{padding:20px 32px 0;background:#fff}
-.week-badge{display:inline-block;background:#8b2332;color:#fff;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;margin-bottom:10px}
-.week-title-lg{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.2;margin-bottom:5px}
-.week-sub-lg{font-size:14px;font-style:italic;color:#888}
-.week-rule{height:3px;background:#8b2332;margin:0}
-.meta{display:flex;gap:20px;flex-wrap:wrap;margin:6px 0 16px}
-.meta-item{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#999}
-.meta-item span{color:#8b2332;font-weight:500}
-.step{display:flex;gap:13px;margin-bottom:14px;align-items:flex-start}
-.step-num{flex-shrink:0;width:26px;height:26px;background:#8b2332;color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;border-radius:50%;margin-top:3px}
-.step-body{font-size:15px;line-height:1.72;color:#2c2c2c}
-.step-body strong{color:#1a1a1a}
-.connoisseur-box{background:#fff;border:1px solid #e0dbd3;border-left:4px solid #1a1a1a;padding:20px 24px;margin:16px 0}
-.connoisseur-box-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#1a1a1a;margin-bottom:10px;font-weight:500}
-.connoisseur-box p{font-size:15px;line-height:1.75;color:#333;margin-bottom:10px}
-.connoisseur-box p:last-child{margin-bottom:0}
-a{color:#8b2332;text-decoration:underline;text-underline-offset:2px}
+
+/* ── SPEC / FEATURE GRID ────────────────────────────── */
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:12px 0}
+@media(max-width:560px){.spec-grid{grid-template-columns:1fr}}
+.spec-card{background:var(--white);border:1px solid var(--rule);padding:14px 16px}
+.spec-card-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--crimson);margin-bottom:8px;
+}
+.spec-card p{font-size:13.5px;line-height:1.65;color:#444;margin:0}
+.spec-card p+p{margin-top:7px}
+.spec-card ul{padding-left:16px;margin-bottom:0}
+.spec-card li{font-size:13px;line-height:1.65;color:#555;margin-bottom:3px}
+
+/* ── INSTRUCTOR DECISIONS ────────────────────────────── */
+.decision{
+  background:var(--paper);
+  border:1px solid var(--rule);
+  border-left:4px solid var(--gold);
+  padding:16px 20px;margin:12px 0;
+}
+.decision-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px;
+}
+.d-row{display:flex;gap:10px;margin-bottom:7px;align-items:flex-start}
+.d-num{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  color:var(--gold);flex-shrink:0;width:16px;
+}
+.d-text{font-size:14px;line-height:1.6;color:#363230}
+.d-text strong{color:var(--ink)}
+
+/* ── DISCUSSION PROMPTS ───────────────────────────────── */
+.disc{
+  background:var(--paper);border:1px solid var(--rule);
+  padding:14px 18px;margin:10px 0;
+}
+.disc-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:8px;
+}
+.disc p{font-size:14.5px;color:#363230;margin:0;line-height:1.65}
+
+/* ── FILE/STEP LISTS ─────────────────────────────────── */
+.file-index{display:flex;flex-direction:column;gap:3px;margin:14px 0}
+.file-row{display:flex;align-items:stretch;background:var(--white);border:1px solid var(--rule)}
+.file-row.featured{border-color:var(--crimson)}
+.file-icon{
+  background:var(--crimson);color:#fff;
+  font-family:var(--mono);font-size:9px;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:12px 14px;flex-shrink:0;width:68px;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;line-height:1.3;
+}
+.file-icon.muted{background:#888}
+.file-icon.warm{background:#8a6a30}
+.file-body{padding:12px 16px;flex:1}
+.file-name{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  color:var(--ink);margin-bottom:3px;
+}
+.file-desc{font-size:13.5px;color:var(--muted);line-height:1.5}
+.file-tag{
+  display:inline-block;font-family:var(--mono);font-size:7.5px;
+  font-weight:500;letter-spacing:.09em;text-transform:uppercase;
+  border:1px solid var(--crimson);color:var(--crimson);
+  padding:1px 5px;margin-left:6px;vertical-align:middle;
+}
+.file-tag.muted{border-color:#aaa;color:#aaa}
+
+.steps{display:flex;flex-direction:column;gap:2px;margin:12px 0}
+.step{display:flex;align-items:stretch;background:var(--white);border:1px solid var(--rule)}
+.step-n{
+  background:var(--crimson);color:#fff;
+  font-family:var(--display);font-size:20px;font-weight:900;
+  padding:14px 16px;flex-shrink:0;width:52px;
+  display:flex;align-items:center;justify-content:center;line-height:1;
+}
+.step-body{padding:14px 18px;flex:1}
+.step-title{
+  font-family:var(--display);font-size:15px;font-weight:700;
+  color:var(--ink);margin-bottom:4px;
+}
+.step-desc{font-size:14px;color:var(--muted);line-height:1.6}
+
+/* ── SIZE CARDS ─────────────────────────────────────── */
+.size-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin:12px 0}
+@media(max-width:620px){.size-grid{grid-template-columns:1fr}}
+.size-card{background:var(--white);border:1px solid var(--rule);padding:16px 18px}
+.size-badge{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  border:1.5px solid var(--crimson);color:var(--crimson);
+  padding:2px 6px;display:inline-block;margin-bottom:10px;
+}
+.size-card h4{
+  font-family:var(--display);font-size:15px;font-weight:700;
+  color:var(--ink);margin-bottom:8px;line-height:1.2;margin-top:0;
+}
+.size-card p{font-size:13.5px;line-height:1.6;color:#444;margin-bottom:6px}
+.size-card p:last-child{margin-bottom:0}
+.size-card ul{padding-left:16px;margin-bottom:0}
+.size-card li{font-size:13px;line-height:1.6;color:#555;margin-bottom:3px}
+
+/* ── DECISION TABLE ─────────────────────────────────── */
+.dec-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+.dec-table th{
+  background:var(--ink-soft);color:var(--cream);
+  font-family:var(--mono);font-size:8px;letter-spacing:.1em;
+  text-transform:uppercase;padding:8px 12px;text-align:left;font-weight:500;
+}
+.dec-table td{
+  padding:9px 12px;border-bottom:1px solid var(--rule-light);
+  vertical-align:top;line-height:1.55;color:#333;
+}
+.dec-table tr:last-child td{border-bottom:none}
+.dec-table tr:nth-child(even) td{background:var(--paper)}
+.dec-table .q{font-weight:600;color:var(--ink);font-size:13.5px}
+.dec-table .a{color:#555;font-size:13px}
+
+/* ── PASTE BAR (Canvas copy instructions) ────────────── */
+.paste{
+  background:#f0ede6;
+  border-left:3px solid var(--crimson);
+  padding:6px 14px;margin:2px 0;
+  font-family:var(--mono);font-size:8px;
+  color:var(--muted);letter-spacing:.07em;text-transform:uppercase;
+}
+
+/* ── NOTEBOOK ARC ────────────────────────────────────── */
+.nb-arc{display:flex;flex-direction:column;gap:2px;margin:10px 0}
+.nb-row{display:flex;align-items:stretch}
+.nb-wk{
+  font-family:var(--mono);font-size:8.5px;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;
+  color:#fff;padding:8px 10px;flex-shrink:0;width:68px;
+  display:flex;align-items:center;background:#888;
+}
+.nb-wk.active{background:var(--crimson)}
+.nb-body{
+  background:var(--white);border:1px solid var(--rule);
+  border-left:none;padding:8px 13px;flex:1;
+}
+.nb-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.nb-sub{font-size:11.5px;color:var(--muted)}
+
+/* ── RESPONSIVE ─────────────────────────────────────── */
+@media(max-width:500px){
+  .block,.page-flag,.mod-header{padding-left:20px;padding-right:20px}
+  .nav-date{display:none}
+}
+
+
+/* ── OLD SHELL COMPATIBILITY: numeric show(), top-only nav ── */
+/* Convert top nav to match new system */
+.top{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:var(--cream);border-bottom:1px solid var(--rule);
+  border-top:3px solid var(--crimson);
+}
+.top-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:stretch;height:46px;
+  overflow-x:auto;padding:0 20px;gap:0;
+}
+.top-brand{
+  font-family:var(--display);font-size:13px;font-weight:900;
+  color:var(--ink);display:flex;align-items:center;
+  padding-right:16px;border-right:1px solid var(--rule);
+  flex-shrink:0;white-space:nowrap;
+}
+.top-brand span{color:var(--crimson);font-style:italic}
+.top button{
+  background:none;border:none;
+  font-family:var(--mono);font-size:9px;font-weight:500;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;
+  padding:0 11px;display:flex;align-items:center;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:color .15s;white-space:nowrap;flex-shrink:0;
+}
+.top button:hover{color:var(--ink)}
+.top button.active{color:var(--crimson);border-bottom-color:var(--crimson)}
+.top-sep{
+  font-family:var(--mono);font-size:7.5px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--rule);padding:0 8px;display:flex;align-items:center;
+  white-space:nowrap;flex-shrink:0;line-height:1.2;border-left:1px solid var(--rule);
+  margin:0 2px;
+}
+
+/* Panel layout for top-nav-only files */
+.panel{display:none;max-width:840px;margin:49px auto 0;padding:0 0 80px}
+.panel.active{display:block}
+
+/* Old panel components - remap to new system */
+.dp-wrapper{background:var(--white);margin-bottom:3px;border:1px solid var(--rule-light)}
+.dp-header{background:var(--crimson);padding:14px 26px 12px}
+.dp-heading{margin:0;font-size:10px;font-family:var(--mono);letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#fff}
+.dp-content-block{padding:24px 30px 22px;border-bottom:1px solid var(--rule-light)}
+.dp-content-block:last-child{border-bottom:none}
+.dp-has-icon{display:flex;align-items:flex-start;gap:10px;font-size:11px;font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--crimson);margin-bottom:12px;font-weight:500;line-height:1.4}
+.dp-icon{font-size:14px;margin-top:1px;flex-shrink:0}
+.dp-content-block p{font-size:15.5px;line-height:1.78;color:#363230;margin-bottom:13px}
+.dp-content-block p:last-child{margin-bottom:0}
+.dp-content-block ul,.dp-content-block ol{padding-left:20px;margin-bottom:13px}
+.dp-content-block li{font-size:15px;line-height:1.72;color:#363230;margin-bottom:6px}
+.week-header{padding:22px 30px 0;background:var(--white)}
+.week-badge{display:inline-block;background:var(--crimson);color:#fff;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;margin-bottom:9px}
+.week-title{font-family:var(--display);font-size:clamp(20px,3.5vw,30px);font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:4px}
+.week-sub{font-size:14px;font-style:italic;color:var(--muted);margin-bottom:0}
+.week-rule{height:3px;background:var(--crimson);margin:0}
+
+/* Old callout style */
+.callout{background:var(--paper);border:1px solid var(--rule);padding:13px 17px;margin:11px 0}
+.callout-label{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--crimson);margin-bottom:7px}
+.callout p{font-size:14px;margin:0;color:#444;line-height:1.65}
+.callout p+p{margin-top:8px}
+
+/* Old pull quote */
+.pull{border-left:3px solid var(--crimson);padding:12px 17px;background:var(--paper);margin:14px 0;font-family:var(--display);font-size:17px;font-style:italic;line-height:1.5;color:var(--ink)}
+
+/* Old dark box -> now accent/note */
+.dark{background:var(--paper);border:1px solid var(--rule);border-left:4px solid var(--gold);padding:18px 22px;margin:12px 0}
+.dark-label{font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+.dark p{font-size:15px;line-height:1.75;color:#363230;margin-bottom:11px}
+.dark p:last-child{margin-bottom:0}
+.dark strong{color:var(--ink)}
+.dark em{color:var(--gold);font-style:normal}
+.dark ul{padding-left:18px;margin-bottom:0}
+.dark li{font-size:14px;line-height:1.68;color:#444;margin-bottom:5px}
+
+/* Paste bar */
+.paste{background:#f0ede6;border-left:3px solid var(--crimson);padding:6px 13px;margin:2px 0;font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+
+/* Rubric */
+.rubric{width:100%;border-collapse:collapse;margin-top:11px;font-size:13.5px}
+.rubric th{background:var(--crimson);color:#fff;padding:8px 12px;text-align:left;font-family:var(--mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+.rubric td{padding:8px 12px;vertical-align:top;border-bottom:1px solid var(--rule-light);line-height:1.5;color:#333}
+.rubric tr:nth-child(even) td{background:var(--paper)}
+.rubric .pts{font-family:var(--mono);font-size:11px;color:var(--crimson);font-weight:500;white-space:nowrap}
+
+/* Reading list in old format */
+.rl-week{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--rule-light)}
+.rl-week:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.rl-tier{padding:12px 18px;border-bottom:1px solid var(--rule-light)}
+.rl-tier:last-child{border-bottom:none}
+.rl-tier-label{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--crimson);margin-bottom:9px;border-bottom:1px solid var(--rule-light);padding-bottom:5px}
+.rl-item{display:flex;gap:9px;margin-bottom:7px;align-items:flex-start}
+.rl-bullet{flex-shrink:0;width:5px;height:5px;background:var(--crimson);border-radius:50%;margin-top:7px}
+.rl-text{font-size:14px;line-height:1.6;color:#444}
+.rl-flag{font-family:var(--mono);font-size:7px;letter-spacing:.07em;text-transform:uppercase;background:var(--paper);border:1px solid var(--rule);color:var(--crimson);padding:1px 4px;margin-left:4px;vertical-align:middle;display:inline-block}
+.rl-swap{background:#fdf8f0;border:1px solid #e0d4ba;border-left:3px solid var(--gold);padding:9px 13px;margin-top:8px}
+.rl-swap-label{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:#a07c40;margin-bottom:4px}
+.rl-swap p{font-size:13px;line-height:1.6;color:#4a3e28;margin:0}
+
+/* Old spec grid and trust cards */
+.spec-grid,.trust-grid,.analog-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:11px 0}
+@media(max-width:560px){.spec-grid,.trust-grid,.analog-grid{grid-template-columns:1fr}}
+.spec-card,.trust-card,.analog-card{background:var(--white);border:1px solid var(--rule);padding:13px 15px}
+.spec-card-label,.trust-card-label,.analog-card-label{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--crimson);margin-bottom:7px}
+.spec-card p,.trust-card p,.analog-card p{font-size:13.5px;line-height:1.62;color:#444;margin:0}
+
+/* Move rows in old format */
+.moves-list{display:flex;flex-direction:column;gap:2px;margin:13px 0}
+.moves-list-item{display:flex;background:var(--white);border:1px solid var(--rule)}
+.moves-list-n{background:var(--crimson);color:#fff;font-family:var(--mono);font-size:10px;font-weight:500;padding:11px 13px;flex-shrink:0;width:38px;display:flex;align-items:center;justify-content:center}
+.moves-list-body{padding:11px 15px}
+.moves-list-title{font-family:var(--display);font-size:14.5px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.moves-list-q{font-size:13px;font-style:italic;color:var(--muted)}
+
+/* Arc in old format */
+.arc-visual{margin:13px 0;display:flex;flex-direction:column;gap:2px}
+.arc-row{display:flex;align-items:stretch}
+.arc-label{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#fff;padding:9px 11px;flex-shrink:0;width:72px;display:flex;align-items:center}
+.arc-label.c1{background:#888}
+.arc-label.c2{background:var(--crimson)}
+.arc-label.c3{background:var(--sidebar-bg)}
+.arc-content{background:var(--white);border:1px solid var(--rule);border-left:none;padding:9px 14px;flex:1}
+.arc-title{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.arc-sub{font-size:12px;color:var(--muted)}
+
+/* Decision box in new style */
+.decision-box{background:var(--paper);border:1px solid var(--rule);border-left:4px solid var(--gold);padding:15px 19px;margin:10px 0}
+.decision-box-label{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+.d-row{display:flex;gap:9px;margin-bottom:6px;align-items:flex-start}
+.d-num{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--gold);flex-shrink:0;width:14px}
+.d-txt{font-size:13.5px;line-height:1.6;color:#363230}
+.d-txt strong{color:var(--ink)}
+
+/* Notebook journal in old shell */
+.journal{border:2px dashed #c8c0b4;padding:14px 18px;margin:10px 0;background:var(--cream)}
+.journal-label{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#7a6a58;margin-bottom:9px;font-weight:500}
+.journal p{font-size:15px;line-height:1.72;color:#363230;margin:0}
+.journal p+p{margin-top:9px}
+
+/* Produces */
+.produces{display:flex;flex-direction:column;gap:2px}
+.prod-item{display:flex;align-items:stretch;background:var(--paper);border:1px solid var(--rule)}
+.prod-item.highlight{background:var(--cream)}
+.prod-wk{font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--muted);padding:8px 10px;flex-shrink:0;width:64px;display:flex;align-items:center}
+.prod-item.highlight .prod-wk{background:var(--crimson)}
+.prod-body{padding:8px 12px}
+.prod-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.prod-desc{font-size:12px;color:var(--muted)}
+
+/* Week header arc */
+.nb-arc{display:flex;flex-direction:column;gap:2px;margin:10px 0}
+.nb-row{display:flex;align-items:stretch}
+.nb-wk{font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:#fff;padding:8px 10px;flex-shrink:0;width:68px;display:flex;align-items:center;background:#888}
+.nb-wk.c2{background:var(--crimson)}
+.nb-body{background:var(--white);border:1px solid var(--rule);border-left:none;padding:8px 13px;flex:1}
+.nb-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.nb-sub{font-size:11.5px;color:var(--muted)}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -121,6 +699,9 @@ a{color:#8b2332;text-decoration:underline;text-underline-offset:2px}
     <button onclick="show(14)">Interpretive Note</button>
     <button onclick="show(15)">Short Public Piece</button>
     <button onclick="show(16)">Self-Assessment</button>
+    <div class="top-sep">Reference</div>
+    <button onclick="show(17)">News + Publishing</button>
+    <button onclick="show(18)">The Slow News Practice</button>
   </div>
 </div>
 
@@ -175,6 +756,18 @@ a{color:#8b2332;text-decoration:underline;text-underline-offset:2px}
     <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>How This Course Is Organized</h3>
     <p>The Medium version of Slow News, Smart Citizens asks you to choose one live news story and follow it for five weeks, applying all five moves of the critical process in sequence. You produce three pieces of writing — a Story Source Map, an Interpretive Note, and a Short Public Piece — each one building on the last. You keep a brief reading log each week. At the end, you apply Description to your own writing before submitting it: the same discipline you have been applying to the news, turned on yourself.</p>
     <p>The course builds on the Small version's three-move practice and extends naturally into the Large version's ten-week arc. If you have not taken the Small version, that is fine — this introduction is all the context you need. If you have, you will recognize the first three weeks and find them deepened by the commitment to a single story.</p>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Slow News Conversation</h3>
+    <p>There is a form of conversation that predates every media technology: people sitting down together, having read something, to talk about what they noticed. A coffee klatch. A reading group. A newsroom morning meeting. A kitchen table argument about something in the paper. The form is ancient. In some ways it is the most durable thing journalism has ever produced.</p>
+    <p>The Medium version of this module runs on that form. Each week you arrive having followed your story for another week, having written something by hand about what you noticed. You sit down with your classmates and talk about it. The five critical moves give the conversation structure. The notebook gives it memory. The Short Public Piece at the end gives it a form that lasts beyond the five weeks.</p>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>A Note on the Moment — Spring 2026</h3>
+    <p>This curriculum was developed in spring 2026, at a moment when public attitudes toward AI were shifting measurably and quickly. Protests blocked data center construction. Poll numbers dropped. A commencement speaker at a major university was booed for praising AI's potential. The specific controversies of that moment will have changed by the time students are reading this.</p>
+    <p>The questions this course asks do not depend on whether AI is popular or unpopular in any given news cycle. They depend on paying attention to something that will not change: AI is a force in the information environment. It is not the only force. Understanding how information is made, distributed, evaluated, and believed, and practicing that understanding deliberately, is what media literacy has always been about. One structural change worth naming: the default mode of information consumption has shifted from opt-in to opt-out. AI-generated summaries and agentic overviews now arrive without being sought. That shift is part of what the five critical moves are designed to address.</p>
   </div>
 </div>
 </div>
@@ -495,6 +1088,15 @@ a{color:#8b2332;text-decoration:underline;text-underline-offset:2px}
     <div class="callout"><div class="callout-label">Your Post</div><p>Share your story: one sentence on what it is, one sentence on where it comes from, one sentence on why you chose it. Then: what is the one thing about this story that a general reader would need to understand that the headline does not give them?</p></div>
     <div class="callout"><div class="callout-label">Your Reply</div><p>Find one classmate whose story connects to yours — not by topic, but by the kind of question it raises or the kind of knowledge it requires. Name the connection in one sentence.</p></div>
   </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Notebook Prompt — Week 1 · Description</h3>
+    <div class="journal">
+      <div class="journal-label">By Hand · 150–200 words · Photo to Canvas Before Class</div>
+      <p><strong>What I noticed:</strong> Describe your story as it exists right now in one or two sentences, present tense and specific. What does the coverage say, and what does it not say?</p>
+      <p><strong>What moved:</strong> How did this story reach you? Trace the path from primary source to your screen. Where did AI enter that path?</p>
+      <p><strong>What I'm sitting with:</strong> What is one question your Beat Source Map cannot yet answer? Write it as specifically as you can.</p>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -529,6 +1131,15 @@ a{color:#8b2332;text-decoration:underline;text-underline-offset:2px}
     <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Discussion Board — Week 2</h3>
     <div class="callout"><div class="callout-label">Your Post</div><p>Share what moved in your story this week and what you think drove it. Then: what did the algorithm show you versus what you found when you searched directly? What does the difference tell you about what the recommendation system considers important in your story?</p></div>
     <div class="callout"><div class="callout-label">Your Reply</div><p>Tell a classmate one voice that is absent from their story's coverage — someone or something that should be in the account but isn't. How would the story read differently if that voice were present?</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Notebook Prompt — Week 2 · Analysis</h3>
+    <div class="journal">
+      <div class="journal-label">By Hand · 150–200 words · Photo to Canvas Before Class</div>
+      <p><strong>What I noticed:</strong> One structural observation about how your story's coverage is produced or distributed — not this week's news, but something about the system behind it.</p>
+      <p><strong>What moved:</strong> What changed in your story's coverage this week, and what drove it? Be specific about what you know versus what you are inferring.</p>
+      <p><strong>What I'm sitting with:</strong> Name one voice consistently absent from your story's coverage. What structural reason might explain that absence?</p>
+    </div>
   </div>
 </div>
 </div>
@@ -572,6 +1183,15 @@ a{color:#8b2332;text-decoration:underline;text-underline-offset:2px}
     <div class="callout"><div class="callout-label">Your Post</div><p>Share your interpretive claim — the "what this story is really about" sentence — and in two or three sentences, explain what knowledge supports it. Be specific: name the concept, the framework, the field-specific understanding that makes the claim possible.</p></div>
     <div class="callout"><div class="callout-label">Your Reply</div><p>Tell a classmate whether their interpretive claim holds — does the knowledge they are invoking actually change the meaning of the story, or does it add context without changing the claim? Be honest. The Note is stronger for pushback than for agreement.</p></div>
   </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Notebook Prompt — Week 3 · Interpretation</h3>
+    <div class="journal">
+      <div class="journal-label">By Hand · 150–200 words · Photo to Canvas Before Class</div>
+      <p><strong>What I noticed:</strong> Complete this sentence and mean it: "What this story is really about, when you understand [something from my field or training], is..." Write it as a genuine claim, not a topic description.</p>
+      <p><strong>What moved:</strong> What happened in your story this week that your interpretive lens helps you understand better than the general coverage does?</p>
+      <p><strong>What I'm sitting with:</strong> What does your knowledge reveal about this story that the coverage cannot say? This is the seed of your Interpretive Note.</p>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -607,6 +1227,15 @@ a{color:#8b2332;text-decoration:underline;text-underline-offset:2px}
     <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Discussion Board — Week 4</h3>
     <div class="callout"><div class="callout-label">Your Post</div><p>Share your evaluative claim — your principle, your evidence, your conclusion. Make it specific enough that someone could disagree with you. Then: does the coverage of your story serve the public's understanding of what is at stake? What would need to change for it to do so?</p></div>
     <div class="callout"><div class="callout-label">Your Reply</div><p>Engage with a classmate's evaluative argument — not to agree or disagree immediately, but to ask: what is the strongest objection to their claim? State it as fairly as you can. Then let them respond.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Notebook Prompt — Week 4 · Evaluation</h3>
+    <div class="journal">
+      <div class="journal-label">By Hand · 150–200 words · Photo to Canvas Before Class</div>
+      <p><strong>What I noticed:</strong> Who is bearing a cost in your story — in the events themselves or in how they are being covered — that the mainstream coverage is not naming?</p>
+      <p><strong>What moved:</strong> What happened this week that has the clearest human stakes? Who is specifically affected, and how?</p>
+      <p><strong>What I'm sitting with:</strong> What is the strongest argument against your evaluative position on this story? State it fairly, then respond to it in a few sentences.</p>
+    </div>
   </div>
 </div>
 </div>
@@ -644,6 +1273,15 @@ a{color:#8b2332;text-decoration:underline;text-underline-offset:2px}
     <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Discussion Board — Week 5</h3>
     <div class="callout"><div class="callout-label">Your Post</div><p>Share your opening sentence. Just the first sentence of your Short Public Piece. Then: does it earn a stranger's attention? Would you keep reading if you encountered it outside this course?</p></div>
     <div class="callout"><div class="callout-label">Your Reply</div><p>Tell a classmate honestly: would you read their piece? What would make you stop after the first paragraph — and what would make you keep going? This is not encouragement. It is the reader's feedback that makes the piece better.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Notebook Prompt — Week 5 · Engagement (Final Entry)</h3>
+    <div class="journal">
+      <div class="journal-label">Final Entry · By Hand · 200–250 words · Submitted with Short Public Piece</div>
+      <p><strong>What I noticed:</strong> What did writing the Short Public Piece reveal about your story that your previous assignments did not say?</p>
+      <p><strong>What moved:</strong> Read back through your four previous notebook entries before writing this. What changed in how you see your story? What did you believe at Week 1 that turned out to be wrong, incomplete, or more complicated than you understood?</p>
+      <p><strong>What I'm sitting with:</strong> What question does your five weeks of attention leave genuinely open? And are you going to keep following it?</p>
+    </div>
   </div>
 </div>
 </div>
@@ -752,6 +1390,124 @@ a{color:#8b2332;text-decoration:underline;text-underline-offset:2px}
     <div class="callout"><div class="callout-label">Engagement</div><p>What did you say in the Short Public Piece that you could not have said at Week 1? What did five weeks of attention make possible?</p></div>
     <div class="callout"><div class="callout-label">Return to Description</div><p>What question about your story are you leaving this module with — something five weeks of careful attention raised but did not resolve? That question is not a failure. It is where the work continues.</p></div>
     <div class="dark" style="margin-top:20px"><div class="dark-label">For instructors — on receiving self-assessments</div><p>The Self-Assessment's sixth question — the open question students leave with — is the most useful data the module produces for curriculum development. Students who have done the Medium version well tend to leave with questions that are more specific, more disciplinarily grounded, and more civic in their orientation than the questions they arrived with. Reading those questions across a class tells you whether the Interpretive Note is doing its work and whether the Short Public Piece is connecting to something real.</p></div>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p17">
+<div class="paste">Canvas Page — News and Publishing: A Brief History · Concept Overview · Reference page · All versions</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Concept Overview · Reference</div>
+    <div class="week-title">News and Publishing: How We Got Here</div>
+    <div class="week-sub">Technology changes the conditions. Human beings determine what they do inside them. A brief history of that argument, and what it means for where we are now.</div>
+  </div>
+  <div class="week-rule"></div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Argument That Keeps Recurring</h3>
+    <p>Every time a significant communication technology has emerged and spread, the same argument has followed it. This technology is destroying journalism. Or: this technology is saving journalism. The argument has been made about the penny press, the telegraph, the photograph, radio, television, cable news, the internet, social media, and now generative AI. In every case the answer has been neither, and in every case people have had to figure out what journalism was inside the new conditions the technology created.</p>
+    <p>That is not technological determinism, which holds that technology drives social change and human beings simply adapt to it. It is something more complicated and more honest: technology creates new possibilities and new constraints, and human beings, institutions, economies, and cultures make choices inside those possibilities and constraints. The outcome is not written by the technology. It is made by the people navigating it.</p>
+    <div class="pull" style="margin:16px 0">
+      <p style="font-family:'Playfair Display',Georgia,serif;font-size:17px;font-style:italic;line-height:1.5;color:var(--ink);margin:0">"The printing press did not determine what the Reformation would be. It created conditions inside which the Reformation became possible. Human beings, with their convictions and their conflicts, determined what happened next."</p>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Five Moments Worth Understanding</h3>
+
+    <h4 style="font-family:'Playfair Display',Georgia,serif;font-size:15px;font-weight:700;color:#1a1a1a;margin:14px 0 8px">The Print Era: Reproducibility and Public Knowledge</h4>
+    <p>The printing press changed who could produce information, what it cost to distribute it, and who counted as an audience. It created the authority problem that media literacy still addresses: if anyone can print something, how do readers know what to believe? Named authors, identifiable publishers, correction culture, the separation of news from advertising: these practices were made and remade across centuries and are still being contested now.</p>
+
+    <h4 style="font-family:'Playfair Display',Georgia,serif;font-size:15px;font-weight:700;color:#1a1a1a;margin:14px 0 8px">Radio and Television: Presence and the Credible Voice</h4>
+    <p>Radio introduced the voice in real time. Television added the image, and the image changed what a credible source looked like. The visual grammar of authority in journalism was invented largely by broadcasters figuring it out as they went. What counts as credible is not fixed. It is made, in specific conditions, by specific people with specific interests. That lesson applies directly to the AI era.</p>
+
+    <h4 style="font-family:'Playfair Display',Georgia,serif;font-size:15px;font-weight:700;color:#1a1a1a;margin:14px 0 8px">The Internet: Abundance and the Collapse of Gatekeeping</h4>
+    <p>The internet collapsed the economic model that had sustained journalism for a century. What emerged was not chaos exactly, but a profoundly different information environment: more voices, more access to primary sources, more perspectives on any given story, and simultaneously more noise, more manipulation, and more content produced for engagement rather than understanding.</p>
+
+    <h4 style="font-family:'Playfair Display',Georgia,serif;font-size:15px;font-weight:700;color:#1a1a1a;margin:14px 0 8px">The iPad and the Magazine That Was Not Saved</h4>
+    <p>In 2010, the iPad arrived and publishers believed it would save the magazine. The apps were often gorgeous. Readers downloaded them. Nobody paid for them at scale, and the model collapsed. What survived on the tablet was not the magazine. It was the feed. The infinite, scrollable, algorithmically sorted feed that had already begun reshaping how people encountered information on the web. The economic and behavioral logic of the screen was different from the logic of print, and that logic could not be overridden by making a digital object look like a paper one. The physical publication this course produces is not attempting to recreate what the iPad could not. It is doing something different: making a deliberate, hand-assembled object that exists because a specific group of people made it together.</p>
+
+    <h4 style="font-family:'Playfair Display',Georgia,serif;font-size:15px;font-weight:700;color:#1a1a1a;margin:14px 0 8px">Generative AI: The Collapsed Source Chain</h4>
+    <p>Generative AI changes the relationship between a claim and its origin. When a large language model synthesizes an answer to your question, it produces a response that may be accurate, partially accurate, or inaccurate. The reader has no reliable way to evaluate which, because the chain from answer to source has been collapsed by the synthesis.</p>
+    <p>There is also something new in how AI-generated content is now delivered. Earlier technologies required some active choice on the reader's part. AI-generated summaries and agentic overviews now arrive without being sought. You are opting out rather than opting in. That shift in the presumption of consent is one of the more significant changes in the information environment of the mid-2020s, and it is worth noticing as a structural fact rather than a complaint.</p>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Where This Leaves Us</h3>
+    <p>The history of news is not a story of progress or decline. It is a story of recurring negotiation between new technological conditions and the persistent human need for reliable information about the shared world. You are not simply a reader of this history. You are inside it. The choices you make about what to follow, how carefully to read, what to trust, and what to contribute are part of what determines what journalism and public information become in the years ahead.</p>
+    <div class="callout" style="background:#faf7f4;border:1px solid #e0dbd3;padding:13px 17px;margin:12px 0">
+      <div style="font-family:'DM Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#8b2332;margin-bottom:7px">For instructors outside journalism</div>
+      <p style="font-size:14px;color:#444;line-height:1.65;margin:0">This page is written from a journalism perspective but the history it describes applies to every field that produces knowledge for public use. Every discipline has its own version of the authority problem, the gatekeeping collapse, and the AI synthesis challenge. Consider asking students to identify the equivalent transitions in your field.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p18">
+<div class="paste">Canvas Page — The Slow News Practice · Student and Instructor Facing · Analog Layer · Medium version</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">The Analog Layer · Reference</div>
+    <div class="week-title">The Slow News Practice</div>
+    <div class="week-sub">Why the notebook is kept by hand, what the physical publication is for, and what the research says about slowing down on purpose.</div>
+  </div>
+  <div class="week-rule"></div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Why Analog</h3>
+    <p>The research on handwriting and learning is not ambiguous. Writing by hand engages the brain differently from typing. It slows the process of recording in a way that forces synthesis: you cannot write down everything, so you decide what matters. That decision is a cognitive act. It is, in a small way, the same act as the critical process this module practices.</p>
+    <p>A 2024 study by researchers at the Norwegian University of Science and Technology confirmed what a well-established body of earlier research had found: handwriting activates more of the brain than typing, engages both fine motor systems and higher-order cognitive functions, and produces stronger memory encoding for conceptual material. The study did not suggest that typing is bad. It suggested that handwriting does something different, and that the difference is worth preserving in learning environments where screens have become the default for everything.</p>
+    <div class="callout" style="background:#faf7f4;border:1px solid #e0dbd3;padding:13px 17px;margin:12px 0">
+      <div style="font-family:'DM Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#8b2332;margin-bottom:7px">In plain terms</div>
+      <p style="font-size:14px;color:#444;line-height:1.65;margin:0">Slowing down is not falling behind. It is the condition for knowing what you think.</p>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Notebook Across Five Weeks</h3>
+    <p>The notebook runs throughout the module. Before each session, you write a brief entry by hand, 150 to 200 words, using the three-part prompt. Photograph it and upload to Canvas before class.</p>
+    <div class="nb-arc">
+      <div class="nb-row"><div class="nb-wk">Week 1</div><div class="nb-body"><div class="nb-title">Description Entry</div><div class="nb-sub">Name your story. What does it say right now? What drew you to it?</div></div></div>
+      <div class="nb-row"><div class="nb-wk">Week 2</div><div class="nb-body"><div class="nb-title">Analysis Entry</div><div class="nb-sub">One structural observation. One voice absent. One AI footprint.</div></div></div>
+      <div class="nb-row"><div class="nb-wk">Week 3</div><div class="nb-body"><div class="nb-title">Interpretation Entry</div><div class="nb-sub">"What this story is really about, when you understand [X], is..."</div></div></div>
+      <div class="nb-row"><div class="nb-wk">Week 4</div><div class="nb-body"><div class="nb-title">Evaluation Entry</div><div class="nb-sub">Who bears a cost. The strongest objection to your position.</div></div></div>
+      <div class="nb-row"><div class="nb-wk c2">Week 5</div><div class="nb-body"><div class="nb-title">Final Entry</div><div class="nb-sub">Read back through all four previous entries. What changed? Submitted with the Short Public Piece.</div></div></div>
+    </div>
+    <p>The notebook is assessed holistically alongside the Short Public Piece: not entry by entry, but as evidence of developing attention and deepening specificity across five weeks.</p>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Physical Publication</h3>
+    <p>At the end of the five weeks, students produce a short physical publication: four to six pages of hand-assembled material drawn from their story, their notebook, and their Short Public Piece. This is the Slow News deliverable for the Medium version.</p>
+    <div class="spec-grid">
+      <div class="spec-card">
+        <div class="spec-card-label">The Format</div>
+        <p>8.5x11 as the atomic unit: one page, one week of attention. 11x17 folded as the ideal artboard: four pages in tabloid format. Your instructor specifies the format for this course.</p>
+      </div>
+      <div class="spec-card">
+        <div class="spec-card-label">What Goes In It</div>
+        <p>The Short Public Piece as the anchor. Excerpts from your notebook. Hand-lettered headlines and annotations. Typed text printed and cut-pasted in physically. Any found materials from your story.</p>
+      </div>
+      <div class="spec-card">
+        <div class="spec-card-label">Why Hand-Assembled</div>
+        <p>The publication does not need to look designed. It needs to look made. The seams and imperfections are evidence that a specific person made it about a specific story. That authenticity is the point.</p>
+      </div>
+      <div class="spec-card">
+        <div class="spec-card-label">Submission</div>
+        <p>Photograph the finished publication clearly and upload the image set to Canvas alongside the notebook archive. The physical object is yours to keep.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Your Instructor's Decisions for This Course</h3>
+    <div class="decision-box">
+      <div class="decision-box-label">Filled in by your instructor</div>
+      <div class="d-row"><div class="d-num">1</div><div class="d-txt"><strong>The notebook is called:</strong> [Instructor fills in — reporter's notebook, field journal, researcher's log, observer's record, or other]</div></div>
+      <div class="d-row"><div class="d-num">2</div><div class="d-txt"><strong>The publication format is:</strong> [Instructor fills in — 8.5x11 booklet, 11x17 tabloid folded, landscape broadsheet, or other]</div></div>
+      <div class="d-row"><div class="d-num">3</div><div class="d-txt"><strong>The publication minimum is:</strong> [Instructor fills in — e.g., four pages minimum, one per week, or other]</div></div>
+    </div>
   </div>
 </div>
 </div>
