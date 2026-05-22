@@ -1,0 +1,982 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slow News, Smart Citizens — Large</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f0ede8;font-family:'Source Serif 4',Georgia,serif;color:#1a1a1a;font-size:16px}
+.top{background:#1a1a1a;position:sticky;top:0;z-index:200;border-bottom:3px solid #8b2332}
+.top-inner{display:flex;align-items:center;overflow-x:auto;padding:0 16px}
+.top-brand{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#555;padding:13px 14px 13px 0;border-right:1px solid #333;margin-right:2px;white-space:nowrap;flex-shrink:0}
+.top-brand span{color:#c9a96e}
+.top-sep{font-family:'DM Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:#333;padding:0 8px;white-space:nowrap;flex-shrink:0;border-right:1px solid #333;line-height:1.3;text-align:center}
+.top button{background:none;border:none;color:#555;font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:13px 10px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .15s;flex-shrink:0}
+.top button.active{color:#fff;border-bottom-color:#8b2332}
+.top button:hover:not(.active){color:#ccc}
+.panel{display:none;max-width:860px;margin:0 auto;padding:0 0 80px}
+.panel.active{display:block}
+.dp-wrapper{background:#fff;margin-bottom:3px}
+.dp-header{background:#8b2332;padding:16px 28px 14px}
+.dp-heading{margin:0;padding:0;border-top:none;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#fff}
+.dp-content-block{padding:26px 32px 24px;border-bottom:1px solid #ede9e3}
+.dp-content-block:last-child{border-bottom:none}
+.dp-has-icon{display:flex;align-items:flex-start;gap:11px;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:#8b2332;margin-bottom:14px;font-weight:500;line-height:1.4}
+.dp-icon{font-size:16px;margin-top:1px;flex-shrink:0}
+.dp-content-block p{font-size:15.5px;line-height:1.78;color:#2c2c2c;margin-bottom:14px}
+.dp-content-block p:last-child{margin-bottom:0}
+.dp-content-block ul,.dp-content-block ol{padding-left:22px;margin-bottom:14px}
+.dp-content-block li{font-size:15.5px;line-height:1.75;color:#2c2c2c;margin-bottom:8px}
+.paste{background:#111;border-left:3px solid #8b2332;padding:7px 14px;margin:2px 0;font-family:'DM Mono',monospace;font-size:9px;color:#555;letter-spacing:.08em;text-transform:uppercase}
+.pull{border-left:4px solid #8b2332;padding:14px 20px;background:#faf7f4;margin:16px 0;font-size:17px;line-height:1.65;font-style:italic;color:#2a1818}
+.callout{background:#faf7f4;border:1px solid #e0dbd4;padding:15px 19px;margin:12px 0}
+.callout-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8b2332;margin-bottom:8px;font-weight:500}
+.callout p{font-size:14.5px;margin:0;color:#3a3a3a;line-height:1.65}
+.callout p+p{margin-top:8px}
+.dark{background:#1a1a1a;padding:22px 26px;margin:12px 0}
+.dark-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#c9a96e;margin-bottom:10px}
+.dark p{font-size:15px;line-height:1.75;color:#bbb;margin-bottom:12px}
+.dark p:last-child{margin-bottom:0}
+.dark strong{color:#fff}
+.dark em{color:#c9a96e;font-style:normal}
+
+/* nine moves grid */
+.nine-moves{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin:16px 0}
+@media(max-width:620px){.nine-moves{grid-template-columns:1fr}}
+.mc{background:#fff;border:1px solid #e0dbd3;overflow:hidden}
+.mc.c2{border-color:#8b2332}
+.mc.c3{border-color:#1a1a1a}
+.mc-stripe{height:4px;background:#e0dbd3}
+.mc.c2 .mc-stripe{background:#8b2332}
+.mc.c3 .mc-stripe{background:#1a1a1a}
+.mc-body{padding:12px 14px}
+.mc-cycle{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:3px}
+.mc.c2 .mc-cycle{color:#8b2332}
+.mc.c3 .mc-cycle{color:#888}
+.mc-week{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:#999;margin-bottom:5px}
+.mc-title{font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:5px}
+.mc-q{font-size:13px;font-style:italic;color:#666;line-height:1.5;margin-bottom:5px}
+.mc-desc{font-size:12.5px;line-height:1.55;color:#555}
+
+/* week arc rows */
+.arc{display:flex;flex-direction:column;gap:3px;margin:14px 0}
+.arc-row{display:flex;align-items:stretch;gap:0}
+.arc-wk{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.07em;text-transform:uppercase;padding:11px 12px;flex-shrink:0;width:76px;display:flex;align-items:center;color:#fff;background:#555}
+.arc-wk.c1{background:#555}
+.arc-wk.c2{background:#8b2332}
+.arc-wk.c3{background:#1a1a1a}
+.arc-content{background:#fff;border:1px solid #e8e3dc;border-left:none;padding:11px 16px;flex:1}
+.arc-title{font-size:14.5px;font-weight:600;color:#1a1a1a;margin-bottom:2px}
+.arc-sub{font-size:13px;color:#666;line-height:1.45}
+.arc-tag{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.07em;text-transform:uppercase;background:#f0ede8;color:#8b2332;padding:2px 5px;margin-left:5px}
+
+/* notebook prompt */
+.notebook{border:2px dashed #d4cfc8;padding:16px 20px;margin:12px 0;background:#fdfcfa}
+.notebook-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6b5c5c;margin-bottom:10px;font-weight:500}
+.notebook p{font-size:15px;line-height:1.7;color:#3a3a3a;margin:0}
+.notebook p+p{margin-top:10px}
+
+/* week header */
+.wh{padding:18px 32px 0;background:#fff}
+.wh-badge{display:inline-block;background:#8b2332;color:#fff;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;margin-bottom:8px}
+.wh-badge.c2{background:#8b2332}
+.wh-badge.c3{background:#1a1a1a}
+.wh-title{font-family:'Playfair Display',Georgia,serif;font-size:23px;font-weight:700;color:#1a1a1a;line-height:1.2;margin-bottom:4px}
+.wh-sub{font-size:14px;font-style:italic;color:#888}
+.wh-rule{height:3px;background:#8b2332;margin:0}
+
+.meta{display:flex;gap:18px;flex-wrap:wrap;margin:6px 0 14px}
+.mi{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#999}
+.mi span{color:#8b2332;font-weight:500}
+
+.step{display:flex;gap:12px;margin-bottom:13px;align-items:flex-start}
+.step-n{flex-shrink:0;width:24px;height:24px;background:#8b2332;color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;border-radius:50%;margin-top:3px}
+.step-b{font-size:15px;line-height:1.7;color:#2c2c2c}
+.step-b strong{color:#1a1a1a}
+
+.conbox{background:#fff;border:1px solid #e0dbd3;border-left:4px solid #1a1a1a;padding:18px 22px;margin:14px 0}
+.conbox-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#1a1a1a;margin-bottom:10px;font-weight:500}
+.conbox p{font-size:15px;line-height:1.75;color:#333;margin-bottom:10px}
+.conbox p:last-child{margin-bottom:0}
+
+.rubric{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+.rubric th{background:#8b2332;color:#fff;padding:8px 12px;text-align:left;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+.rubric td{padding:8px 12px;vertical-align:top;border-bottom:1px solid #ede9e3;line-height:1.5;color:#2c2c2c}
+.rubric tr:nth-child(even) td{background:#faf7f4}
+.rubric .pts{font-family:'DM Mono',monospace;font-size:12px;color:#8b2332;font-weight:500;white-space:nowrap}
+
+.three-q{display:flex;flex-direction:column;gap:3px;margin:14px 0}
+.q-item{display:flex;gap:0;background:#fff;border:1px solid #e8e3dc}
+.q-num{background:#8b2332;color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;padding:12px 14px;flex-shrink:0;width:40px;display:flex;align-items:center;justify-content:center}
+.q-text{padding:12px 16px;font-size:15px;line-height:1.6;color:#1a1a1a;font-style:italic}
+
+a{color:#8b2332;text-decoration:underline;text-underline-offset:2px}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+<div class="top">
+  <div class="top-inner">
+    <div class="top-brand"><span>Slow News, Smart Citizens</span> — Large</div>
+    <div class="top-sep">Instructor<br>Facing</div>
+    <button class="active" onclick="show(0)">Course Overview</button>
+    <button onclick="show(1)">How to Run It</button>
+    <button onclick="show(2)">The Notebook</button>
+    <button onclick="show(3)">AI Thread</button>
+    <button onclick="show(4)">Adapt</button>
+    <div class="top-sep">Student<br>Facing</div>
+    <button onclick="show(5)">Welcome</button>
+    <button onclick="show(6)">Nine Moves</button>
+    <button onclick="show(7)">Finding Your Beat</button>
+    <div class="top-sep">Cycle 1<br>Wks 1–2</div>
+    <button onclick="show(8)">Wk 1 · Description</button>
+    <button onclick="show(9)">Wk 2 · Analysis</button>
+    <div class="top-sep">Cycle 2<br>Wks 3–6</div>
+    <button onclick="show(10)">Wk 3 · Interpretation</button>
+    <button onclick="show(11)">Wk 4 · Evaluation</button>
+    <button onclick="show(12)">Wk 5 · Interpretation↑</button>
+    <button onclick="show(13)">Wk 6 · Analysis↑</button>
+    <div class="top-sep">Cycle 3<br>Wks 7–10</div>
+    <button onclick="show(14)">Wk 7 · Evaluation↑</button>
+    <button onclick="show(15)">Wk 8 · Engagement</button>
+    <button onclick="show(16)">Wk 9 · Engagement↑</button>
+    <button onclick="show(17)">Wk 10 · Description↑</button>
+    <div class="top-sep">Assess<br>ment</div>
+    <button onclick="show(18)">Beat Source Map</button>
+    <button onclick="show(19)">Story Arc Analysis</button>
+    <button onclick="show(20)">Interpretive Brief</button>
+    <button onclick="show(21)">Equity Assessment</button>
+    <button onclick="show(22)">State of the World</button>
+    <button onclick="show(23)">Notebook + Self-Assessment</button>
+  </div>
+</div>
+
+<!-- ═══ 0 · INSTRUCTOR · COURSE OVERVIEW ═══ -->
+<div class="panel active" id="p0">
+<div class="paste">Instructor Page — Course Overview (pin to course top)</div>
+<div class="dp-wrapper">
+  <div class="wh">
+    <div class="wh-badge">Slow News, Smart Citizens · Large · Instructor Overview</div>
+    <div class="wh-title">Ten Weeks. One Beat. Nine Moves. One Document the Class Makes Together.</div>
+    <div class="wh-sub">The full Citizen Scholar arc — three cycles of three, a notebook running underneath everything, and a capstone that belongs to the class.</div>
+  </div>
+  <div class="wh-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What This Is</h3>
+    <p>Slow News, Smart Citizens (Large) is the full Citizen Scholar framework: ten weeks, five Campbell critical moves applied across three cycles, a weekly notebook that runs from Week 1 through Week 10, four individual assignments, and a collective capstone — the State of the World — assembled by the class in the final session.</p>
+    <p>The Small version gave students three moves applied once to a single item. The Medium version extended those three moves across five weeks on one live story and added Evaluation and Engagement. The Large version runs all five moves across ten weeks on a self-chosen beat, returns to earlier moves at deeper levels, adds cluster formation and collaborative production, and ends with the class making something together that none of them could have made alone.</p>
+    <div class="pull">"The beat does not end at Week 10. The question the course leaves students with is whether they keep following it — and what it means to be the kind of person who does."</div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Three Cycles — Nine Moves</h3>
+    <p>The Large version runs three cycles of three moves each. Each cycle returns to moves the student has practiced before and applies them at a deeper level — to a longer arc of coverage, to the work of other students, and finally to the collective document the class is building.</p>
+    <div class="nine-moves">
+      <div class="mc"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 1</div><div class="mc-week">Week 1</div>
+        <div class="mc-title">Description</div>
+        <div class="mc-q">"What is your beat, and what does it say right now?"</div>
+        <div class="mc-desc">Students choose a beat, identify a thread, describe it precisely, and map its source architecture.</div>
+      </div></div>
+      <div class="mc"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 1</div><div class="mc-week">Week 2</div>
+        <div class="mc-title">Analysis</div>
+        <div class="mc-q">"How does the coverage work — structurally?"</div>
+        <div class="mc-desc">Students analyze how their beat's coverage is produced and distributed, and where AI enters the system.</div>
+      </div></div>
+      <div class="mc c2"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 2</div><div class="mc-week">Week 3</div>
+        <div class="mc-title">Interpretation</div>
+        <div class="mc-q">"What does your knowledge reveal?"</div>
+        <div class="mc-desc">Students apply disciplinary knowledge to their thread's meaning. Interpretive Brief due.</div>
+      </div></div>
+      <div class="mc c2"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 2</div><div class="mc-week">Week 4</div>
+        <div class="mc-title">Evaluation</div>
+        <div class="mc-q">"What is at stake, and who is paying?"</div>
+        <div class="mc-desc">Students make evaluative claims about events and coverage. Equity Assessment due.</div>
+      </div></div>
+      <div class="mc c2"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 2</div><div class="mc-week">Weeks 5–6</div>
+        <div class="mc-title">Interpretation + Analysis — Deeper</div>
+        <div class="mc-q">"What connects your beat to others in this room?"</div>
+        <div class="mc-desc">Clusters form as students find the shared questions across beats. Interpretation deepens; Analysis returns at scale.</div>
+      </div></div>
+      <div class="mc c3"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 3</div><div class="mc-week">Weeks 7–8</div>
+        <div class="mc-title">Evaluation + Engagement</div>
+        <div class="mc-q">"What do we say — together?"</div>
+        <div class="mc-desc">Evaluation returns as civic argument. Clusters draft their State of the World entries. Engagement begins.</div>
+      </div></div>
+      <div class="mc c3"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 3</div><div class="mc-week">Week 9</div>
+        <div class="mc-title">Engagement — Collective</div>
+        <div class="mc-q">"What does this entry actually say?"</div>
+        <div class="mc-desc">Cluster drafts submitted, peer-reviewed, revised. Description returns — applied to the collective entry before assembly.</div>
+      </div></div>
+      <div class="mc c3"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 3</div><div class="mc-week">Week 10</div>
+        <div class="mc-title">Description — Return</div>
+        <div class="mc-q">"Does this document say what we think it says?"</div>
+        <div class="mc-desc">The class assembles the State of the World. Description applied one final time — to the collective document before it goes public.</div>
+      </div></div>
+      <div class="mc c3"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 3</div><div class="mc-week">Week 10</div>
+        <div class="mc-title">Engagement — Assembly</div>
+        <div class="mc-q">"What did we make?"</div>
+        <div class="mc-desc">The assembly session. Each cluster reads aloud, names its open question, and hands its entry to the room.</div>
+      </div></div>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Notebook</h3>
+    <p>The notebook is the backbone of the Large version. Every week, before class, students write a brief entry — in whatever form the instructor names for their discipline. Reporter's notebook. Researcher's log. Field journal. Observer's record. The name is the instructor's to choose; the practice is the same: writing toward what you are noticing, not what you are supposed to say.</p>
+    <p>The notebook runs from Week 1 through Week 10. It is submitted complete at the end of the course and assessed holistically — as a record of sustained attention, developing perception, and honest engagement with a corner of the world across ten weeks. It is not graded entry by entry. It is read as an arc.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What Students Produce</h3>
+    <div class="meta">
+      <div class="mi">Week 2: <span>Beat Source Map</span></div>
+      <div class="mi">Week 4: <span>Story Arc Analysis</span></div>
+      <div class="mi">Week 6: <span>Interpretive Brief</span></div>
+      <div class="mi">Week 8: <span>Equity Assessment + Cluster Proposal</span></div>
+      <div class="mi">Week 10: <span>State of the World Entry + Complete Notebook + Self-Assessment</span></div>
+    </div>
+    <p>Four individual assignments build toward the collective capstone. Each one draws on everything produced before it. The State of the World entry is a cluster production — two to four students, one shared entry, assembled in Week 10 into the class's complete document.</p>
+  </div>
+</div>
+</div>
+
+<!-- ═══ 1 · INSTRUCTOR · HOW TO RUN IT ═══ -->
+<div class="panel" id="p1">
+<div class="paste">Instructor Page — How to Run the Large Version</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">How to Run the Large Version</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>The Weekly Rhythm</h3>
+    <p>Every class session opens with fifteen minutes of conversation — the same ritual as Small and Medium, now running on beats rather than single items. The instructor's opening question changes each week to track the current cycle's move. Students arrive with their notebook entry completed. The conversation moves through the room: what is your beat doing this week? What moved? What did you notice that others in the room are not watching?</p>
+    <p>The instructor's role across ten weeks is to participate, to listen for connections students do not see, and to name one connection per session that the room missed — but only after giving the room time to find it first. By Week 5, the room is finding connections the instructor did not plan. By Week 8, cluster conversations are happening before class starts. By Week 10, the instructor's job is to hold the space for the assembly and get out of the way.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>The Arc — Instructor Tasks by Week</h3>
+    <div class="arc">
+      <div class="arc-row"><div class="arc-wk c1">Wk 1</div><div class="arc-content"><div class="arc-title">Beat selection + first notebook entry</div><div class="arc-sub">Confirm every student has a live, traceable beat connected to something they know. Flag students who chose topics too broad to follow weekly — redirect toward a specific thread within the topic.</div></div></div>
+      <div class="arc-row"><div class="arc-wk c1">Wk 2</div><div class="arc-content"><div class="arc-title">Beat Source Map due <span class="arc-tag">Assignment 1</span></div><div class="arc-sub">Read Source Maps before Week 3. Identify students whose primary source layer is thin — they will struggle with Interpretation in Week 3 without a more specific anchor.</div></div></div>
+      <div class="arc-row"><div class="arc-wk c2">Wk 3</div><div class="arc-content"><div class="arc-title">Interpretive Brief due <span class="arc-tag">Assignment 2</span></div><div class="arc-sub">Most important assignment to give feedback on quickly — students need it before Week 5 when Interpretation deepens and clusters begin forming. The test: could someone without their training have written this?</div></div></div>
+      <div class="arc-row"><div class="arc-wk c2">Wk 4</div><div class="arc-content"><div class="arc-title">Equity Assessment due <span class="arc-tag">Assignment 3</span></div><div class="arc-sub">Push for specificity in evaluative claims. "This is unfair" is a reaction. "According to [standard], [specific group] bears a cost the coverage does not name because…" is an evaluation.</div></div></div>
+      <div class="arc-row"><div class="arc-wk c2">Wk 5</div><div class="arc-content"><div class="arc-title">Interpretation deepens — clusters begin forming</div><div class="arc-sub">After this week's class, review notebook entries and discussion posts. Propose provisional cluster groupings of two to four students whose beats share underlying questions — not surface topics. Post groupings before Week 6.</div></div></div>
+      <div class="arc-row"><div class="arc-wk c2">Wk 6</div><div class="arc-content"><div class="arc-title">Clusters confirmed — Analysis returns at scale</div><div class="arc-sub">Clusters meet for the first time. Their task: one sentence naming the shared question across their beats. The instructor circulates and pushes: "Is that the real shared question, or the surface one?"</div></div></div>
+      <div class="arc-row"><div class="arc-wk c3">Wk 7</div><div class="arc-content"><div class="arc-title">Evaluation returns — civic argument</div><div class="arc-sub">Individual evaluative work continues. Clusters begin sketching what their State of the World entry will argue — not describe, argue.</div></div></div>
+      <div class="arc-row"><div class="arc-wk c3">Wk 8</div><div class="arc-content"><div class="arc-title">Cluster Proposal + Equity Assessment due <span class="arc-tag">Assignment 4</span></div><div class="arc-sub">The Cluster Proposal is a group submission: shared question, what each beat contributes, proposed form and content of the State of the World entry. Approve or redirect before Week 9.</div></div></div>
+      <div class="arc-row"><div class="arc-wk c3">Wk 9</div><div class="arc-content"><div class="arc-title">State of the World drafts + peer review</div><div class="arc-sub">Cluster drafts submitted midweek. Peer review assigned across clusters — one cluster reviews another using Description: what does this entry actually say? Run in-class discussion on what makes a cluster entry genuinely collective versus stitched-together individual pieces.</div></div></div>
+      <div class="arc-row"><div class="arc-wk c3">Wk 10</div><div class="arc-content"><div class="arc-title">Assembly session <span class="arc-tag">Capstone</span></div><div class="arc-sub">Each cluster reads one passage aloud and names one open question. The room listens as citizens encountering reporting they have not seen. The document is assembled and distributed. The instructor reads the opening aloud — or invites a student to. Then it exists.</div></div></div>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Forming Clusters</h3>
+    <p>Clusters form naturally through the notebook entries and class conversation of Weeks 3–5. The instructor's task is to see the connections before students do and propose groupings that reflect genuine intellectual rhymes across beats — not surface topic similarities. A student following environmental contamination and a student following corporate labor practices may share a deeper question about accountability that neither has named yet. That is a cluster.</p>
+    <div class="callout"><div class="callout-label">Cluster size</div><p>Two to four students. Groups of two produce tighter, more focused entries. Groups of four produce richer, more contested ones. Both work. What does not work: a cluster formed for convenience rather than shared inquiry, or one where one student's beat clearly dominates the others.</p></div>
+    <div class="callout"><div class="callout-label">The State of the World format</div><p>Decide the format before Week 8 so the Cluster Proposal can name it. Options: a shared Google Doc (one section per cluster); a printed and assembled zine (one page per cluster, assembled in the final session); a Canvas wiki with linked entries; a formatted PDF distributed at assembly. The format matters less than the fact that it is real — a document that exists, with a name, that the class made.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ 2 · INSTRUCTOR · THE NOTEBOOK ═══ -->
+<div class="panel" id="p2">
+<div class="paste">Instructor Page — The Notebook (permanent reference; share with students)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">The Notebook</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What It Is and What to Call It</h3>
+    <p>The notebook is the weekly writing practice that runs underneath every other assignment in the Large version. Its name is yours to choose for your discipline and your students. A journalism course might call it a reporter's notebook. A research methods course might call it a researcher's log. A science course might call it a field journal. A literature or cultural studies course might call it an observer's record. A media studies course might call it a critical log.</p>
+    <p>The name shapes how students understand the practice. Choose the name that makes the act of writing toward what you notice feel natural in your discipline — not like an assignment imported from journalism education, but like the record-keeping your field has always valued.</p>
+    <div class="callout"><div class="callout-label">The one thing the name cannot change</div><p>The notebook is not a summary of readings. It is not a report on what happened in the news this week. It is a record of what the student noticed — what surprised them, what confused them, what changed between last week and this week, what question they are sitting with that they cannot yet answer. It is writing toward perception, not writing toward compliance.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Weekly Prompt Structure</h3>
+    <p>Each week's notebook prompt follows the same three-part structure, calibrated to that week's move. Students write 150 to 250 words — enough to say something specific, not enough to summarize everything. The prompt is not a checklist. It is a starting point. Students who find themselves writing past the word count because something is genuinely interesting should keep writing.</p>
+    <div class="callout"><div class="callout-label">The three-part weekly structure</div><p><strong>What I noticed:</strong> One specific observation from this week's beat work — not a summary, a noticing. Something that surprised you, confused you, or changed how you see the thread. <strong>What moved:</strong> One thing that changed in the story or the coverage this week — and what you think drove the change. <strong>What I'm sitting with:</strong> The question you cannot yet answer. Specific enough that someone could help you think about it — not "I wonder about AI" but "I can't figure out why the primary source disappeared from coverage after Day 3."</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Assessment</h3>
+    <p>The notebook is submitted complete at the end of Week 10 — all ten entries, in chronological order, compiled into a single document. It is assessed holistically, not entry by entry. The standard is sustained genuine engagement: did the student show up to their beat each week and write toward what they actually noticed? A notebook that is honest and specific across ten weeks will score higher than one that is polished and generic.</p>
+    <div class="callout"><div class="callout-label">What to look for holistically</div><p>Does the thinking develop across ten weeks? Does the student's language for their beat become more precise over time? Do the questions they are sitting with in Week 9 reflect what they learned in Weeks 1 through 8? Is there evidence that the notebook entries informed the formal assignments — that the map, the brief, the assessment, and the State of the World entry grew from the notebook rather than alongside it?</p></div>
+    <div class="callout"><div class="callout-label">Holistic grade</div><p>Complete and genuinely engaged across all ten weeks: full credit. Mostly complete with some thin or summary-style entries: 80%. Significant gaps or entries that are clearly perfunctory: 60%. Incomplete: no credit. Do not grade individual entries — reading the arc holistically takes less time and produces better feedback.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ 3 · INSTRUCTOR · AI THREAD ═══ -->
+<div class="panel" id="p3">
+<div class="paste">Instructor Page — The AI Thread Across Ten Weeks</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">The AI Thread</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>How AI Runs Across the Three Cycles</h3>
+    <p>In the Small version, AI entered once inside Analysis and was held lightly. In the Medium version, it deepened across five weeks. In the Large version, it is a thread that runs through all three cycles and all five moves — students accumulate ten weeks of evidence about how AI shapes what they see, and the State of the World entry implicitly addresses that accumulation whether or not the cluster makes it explicit.</p>
+    <div class="callout"><div class="callout-label">Cycle 1 — Weeks 1–2: AI in the source architecture</div><p>Students map where AI enters their beat's information system — in how stories are found, summarized, recommended, distributed. The Beat Source Map includes an AI audit. This is structural observation, not alarm.</p></div>
+    <div class="callout"><div class="callout-label">Cycle 2 — Weeks 3–6: AI and meaning</div><p>The Interpretive Brief asks what AI summarization flattened or missed. The Equity Assessment asks whether AI-mediated coverage adequately represents who bears costs. Cluster formation sometimes surfaces shared AI patterns across beats — students following different fields noticing the same algorithmic behavior in different contexts.</p></div>
+    <div class="callout"><div class="callout-label">Cycle 3 — Weeks 7–10: AI and the document</div><p>The State of the World entry is, among other things, a human-authored, sourced, disciplinarily grounded document produced in response to an AI-shaped information environment. Students do not need to say this explicitly. The assembly session is the moment where that implicit argument becomes visible — a room of people who followed things carefully, together, and made something with it.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Framing — Use It Once, Return to It When Earned</h3>
+    <div class="dark">
+      <div class="dark-label">For Week 1 — set this up and let it run</div>
+      <p>This course is organized around a paradox. The tools reshaping your information environment — AI-generated content, algorithmic recommendation, large language models producing plausible text on any subject in seconds — are also among the most significant drivers of economic growth in a generation. Your institution's endowment may hold positions in companies whose products are making it harder to know what is true.</p>
+      <p>This is not a reason for cynicism. It is a reason for the kind of careful, slow, disciplined attention this course asks of you. <strong>The notebook you keep across ten weeks is a response to that paradox.</strong> So is the State of the World the class produces together. A room of people who looked carefully at different corners of the world and then looked at what they found together — that is what democratic information culture needs, and it is increasingly rare.</p>
+      <p><em>By Week 10, you will have ten weeks of evidence about how AI shaped what you saw. The assembly session is where you use it.</em></p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ 4 · INSTRUCTOR · ADAPT ═══ -->
+<div class="panel" id="p4">
+<div class="paste">Instructor Page — Adapting the Large Version</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Adapting the Large Version</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Non-Negotiables</h3>
+    <p>Three things cannot be compressed out of the Large version without losing what makes it distinct from Medium. The notebook must run all ten weeks — it is the connective tissue that makes the State of the World meaningful. The Interpretive Brief must be graded and returned before Week 5 — students need that feedback to deepen their interpretation in the cluster work. And the assembly session in Week 10 must happen — the State of the World is not complete until the class gathers around it.</p>
+    <p>Everything else is adjustable.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>If You Are Running Large After Medium</h3>
+    <p>Students who completed the Medium version already have a live story, a Source Map, an Interpretive Note, and experience with all five moves. The Large version picks up directly: their Medium story becomes their Large beat thread. Weeks 1 and 2 of Large compress to one week of onboarding — students present their existing Source Map and thread to the class, and beat selection is complete. Cluster formation can begin earlier, sometimes as early as Week 4.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>For Courses That Cannot Run All Four Individual Assignments</h3>
+    <p>The minimum viable Large version keeps the Interpretive Brief and the State of the World entry, and folds the Beat Source Map and Equity Assessment into the notebook prompts rather than separate graded assignments. This reduces the grading load while preserving the intellectual arc. The notebook becomes more substantive in Weeks 1–2 (Source Map embedded) and Week 4 (Equity thinking embedded), and the Interpretive Brief remains the individual assignment that anchors the course.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>For Online and Hybrid Sections</h3>
+    <p>The cluster work is the most challenging element to adapt for async courses. Clusters should be formed by Week 5 and given a dedicated async collaboration space — a shared Google Doc, a Slack channel, a Canvas group. The Cluster Proposal due at Week 8 serves as the synchronizing mechanism: it forces clusters to reach consensus on their shared question and entry plan before drafting begins. The assembly session in Week 10 can run as a synchronous video session even in an otherwise async course — it is worth the scheduling effort. If synchronous is impossible, a shared document thread where each cluster posts their passage and open question, and other clusters respond, is the closest equivalent.</p>
+  </div>
+</div>
+</div>
+
+<!-- ═══ 5 · STUDENT · WELCOME ═══ -->
+<div class="panel" id="p5">
+<div class="paste">Student Page — Welcome</div>
+<div class="dp-wrapper">
+  <div class="wh">
+    <div class="wh-badge">Slow News, Smart Citizens · Large</div>
+    <div class="wh-title">Ten Weeks of Looking Carefully at One Corner of the World</div>
+    <div class="wh-sub">And then looking at what you found, together, and making something with it.</div>
+  </div>
+  <div class="wh-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What This Course Asks</h3>
+    <p>The Small version asked you to bring something you read. The Medium version asked you to follow one story for five weeks. The Large version asks you to follow a beat — a field, a live area of public life connected to something you know — for ten weeks, applying nine moves across three cycles, and then to sit with a few classmates whose beats rhyme with yours and make something together that none of you could have made alone.</p>
+    <p>That last part is the State of the World. It is the document this class produces in Week 10. It is what sustained attention, applied by different people to different corners of the same world, eventually makes possible.</p>
+    <div class="pull">"The citizen scholar is not someone who knows a great deal. It is someone who uses what they know in the service of a public that needs it."</div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Notebook</h3>
+    <p>The notebook runs from Week 1 through Week 10. Your instructor has named it for your discipline — reporter's notebook, researcher's log, field journal, observer's record, or something else. Whatever it is called, it is the same object: a weekly record of what you noticed, what moved in your beat, and what question you are sitting with that you cannot yet answer.</p>
+    <p>The notebook is not submitted weekly. It is submitted complete at Week 10 — all ten entries, as an arc. It is graded holistically: not entry by entry, but as evidence that you were genuinely present to your beat across ten weeks and that your thinking developed over time. Read your Week 1 entry before you write your Week 10 entry. Something will have changed. The notebook is where that change lives.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The State of the World</h3>
+    <p>In Weeks 5 and 6, you will find the classmates whose beats raise the same underlying questions as yours — even if your subjects look nothing alike. That is your cluster. Together you will produce one entry for the State of the World: a piece of writing that addresses the shared question your beats illuminate, that draws on all of your individual work, and that could not have been written by any one of you alone.</p>
+    <p>In Week 10, the class assembles all the cluster entries into the State of the World. Each cluster reads one passage aloud and names one question their beat work left open. Then the document exists — a record of what this class was watching, at this moment, and what it understood.</p>
+  </div>
+</div>
+</div>
+
+<!-- ═══ 6 · STUDENT · NINE MOVES ═══ -->
+<div class="panel" id="p6">
+<div class="paste">Student Page — The Nine Moves (reference page)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">The Nine Moves — Three Cycles</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Each Cycle Returns — and Goes Further</h3>
+    <p>The Large version runs three cycles of three moves each. The same five Campbell moves — Description, Analysis, Interpretation, Evaluation, Engagement — recur across all three cycles, but each return applies them at a deeper level: to a longer arc of coverage, to the work of other students, and finally to the collective document the class is building together.</p>
+    <div class="nine-moves">
+      <div class="mc"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 1 · Week 1</div>
+        <div class="mc-title">Description</div>
+        <div class="mc-q">"What is your beat, and what does it say right now?"</div>
+        <div class="mc-desc">Choose a beat. Find a thread. Describe it precisely. Map where it comes from and how it reaches you.</div>
+      </div></div>
+      <div class="mc"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 1 · Week 2</div>
+        <div class="mc-title">Analysis</div>
+        <div class="mc-q">"How does this beat's coverage work — structurally?"</div>
+        <div class="mc-desc">Map the source architecture. Track the AI footprint. Identify the structural pattern in how your beat gets covered.</div>
+      </div></div>
+      <div class="mc c2"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 2 · Week 3</div>
+        <div class="mc-title">Interpretation</div>
+        <div class="mc-q">"What does your knowledge reveal?"</div>
+        <div class="mc-desc">Apply your disciplinary training to what the story means. The Interpretive Brief is due this week.</div>
+      </div></div>
+      <div class="mc c2"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 2 · Week 4</div>
+        <div class="mc-title">Evaluation</div>
+        <div class="mc-q">"Who bears the costs the coverage isn't naming?"</div>
+        <div class="mc-desc">Make a reasoned evaluative argument about the events and the coverage. The Equity Assessment is due this week.</div>
+      </div></div>
+      <div class="mc c2"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 2 · Weeks 5–6</div>
+        <div class="mc-title">Interpretation + Analysis — Deeper</div>
+        <div class="mc-q">"What connects your beat to others in this room?"</div>
+        <div class="mc-desc">Your interpretation deepens as you encounter other students' beats. Analysis returns at scale — you start seeing structural patterns across beats, not just within your own.</div>
+      </div></div>
+      <div class="mc c3"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 3 · Weeks 7–8</div>
+        <div class="mc-title">Evaluation + Engagement</div>
+        <div class="mc-q">"What does your cluster argue — together?"</div>
+        <div class="mc-desc">Evaluation returns as your cluster's shared civic argument. Engagement begins: what does your cluster's entry say, and to whom?</div>
+      </div></div>
+      <div class="mc c3"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 3 · Week 9</div>
+        <div class="mc-title">Engagement — Collective</div>
+        <div class="mc-q">"Does our draft say what we think it says?"</div>
+        <div class="mc-desc">Cluster draft submitted and peer-reviewed. Description returns: applied to the collective entry before revision.</div>
+      </div></div>
+      <div class="mc c3"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 3 · Week 10</div>
+        <div class="mc-title">Description — Return</div>
+        <div class="mc-q">"Does the document say what we made it to say?"</div>
+        <div class="mc-desc">The complete State of the World. Description applied one final time — to the collective document before assembly.</div>
+      </div></div>
+      <div class="mc c3"><div class="mc-stripe"></div><div class="mc-body">
+        <div class="mc-cycle">Cycle 3 · Week 10</div>
+        <div class="mc-title">Engagement — Assembly</div>
+        <div class="mc-q">"What did we make, and what does it leave open?"</div>
+        <div class="mc-desc">The assembly session. One passage read aloud. One open question named. The document exists.</div>
+      </div></div>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Nine Questions</h3>
+    <div class="three-q">
+      <div class="q-item"><div class="q-num">1</div><div class="q-text">What is your beat, and what does it actually say right now?</div></div>
+      <div class="q-item"><div class="q-num">2</div><div class="q-text">How does this beat's coverage work — structurally — and where does AI enter?</div></div>
+      <div class="q-item"><div class="q-num">3</div><div class="q-text">What does your knowledge reveal that the coverage does not say?</div></div>
+      <div class="q-item"><div class="q-num">4</div><div class="q-text">Who bears the costs the coverage is not naming?</div></div>
+      <div class="q-item"><div class="q-num">5</div><div class="q-text">What connects your beat to the beats of others in this room?</div></div>
+      <div class="q-item"><div class="q-num">6</div><div class="q-text">What does your cluster argue — together — that none of you could argue alone?</div></div>
+      <div class="q-item"><div class="q-num">7</div><div class="q-text">Does your cluster's draft say what you think it says?</div></div>
+      <div class="q-item"><div class="q-num">8</div><div class="q-text">Does the State of the World say what the class made it to say?</div></div>
+      <div class="q-item"><div class="q-num">9</div><div class="q-text">What question does the State of the World leave open — and are you going to keep following it?</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ 7 · STUDENT · FINDING YOUR BEAT ═══ -->
+<div class="panel" id="p7">
+<div class="paste">Student Page — Finding Your Beat</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Finding Your Beat</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Beat vs. Story</h3>
+    <p>A story is a specific event or development. A beat is the field that produces stories — the ongoing area of public life that journalists return to week after week because it keeps generating news. The Medium version asked you to follow a story. The Large version asks you to follow a beat.</p>
+    <p>The practical difference: a story can go quiet. A beat does not. Even when your specific thread stalls or resolves, the beat keeps producing material. By Week 10, you will have followed a corner of the world long enough to see its patterns — what it reliably covers, what it consistently ignores, how AI shapes what surfaces and what disappears.</p>
+    <div class="callout"><div class="callout-label">Beat examples — by discipline</div><p><strong>Sciences:</strong> Environmental contamination in your region. Clinical trial coverage in your specialty. Energy technology reporting. <strong>Social sciences:</strong> Housing policy in a specific city. Criminal justice reform in your state. Immigration enforcement at a specific institution. <strong>Business/economics:</strong> Labor organizing in a specific sector. Cryptocurrency regulation. A specific company's financial and labor practices. <strong>Humanities/arts:</strong> Coverage of a cultural institution, preservation effort, or artistic community. Language policy in a specific country. A literary or cultural controversy with ongoing implications. <strong>Any field:</strong> How your field's research is covered by mainstream media — and how AI is changing that coverage.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>The Thread Within the Beat</h3>
+    <p>Once you have a beat, find a thread — the specific ongoing story within the beat that you will follow most closely across the ten weeks. The thread is your anchor. It is what you bring to the notebook each week, what you trace in the Beat Source Map, and what you will know better than almost anyone by Week 10.</p>
+    <p>The thread should be live and specific: something developing right now, with a traceable primary source, connected to something you know. It can shift slightly across the quarter as the story develops — that is following the beat, not losing the thread.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>The Notebook Starts Now</h3>
+    <p>Your first notebook entry is due before Week 1's class. It does not need to be polished. It needs to be honest. Name your beat, name your thread, describe what it says right now in two or three sentences, and name the question you are starting with. That question may change by Week 3. That is the point.</p>
+  </div>
+</div>
+</div>
+
+<!-- ═══ WEEKS 1–10 ═══ -->
+<!-- Week 1 -->
+<div class="panel" id="p8">
+<div class="paste">Week 1 — Description · Session Page + Notebook Prompt</div>
+<div class="dp-wrapper">
+  <div class="wh"><div class="wh-badge">Cycle 1 · Week 1 · Description</div>
+  <div class="wh-title">What Is Your Beat, and What Does It Say Right Now?</div>
+  <div class="wh-sub">Find it. Name it. Describe it — without reacting, interpreting, or evaluating yet.</div></div>
+  <div class="wh-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta"><div class="mi">Cycle: <span>1</span></div><div class="mi">Move: <span>Description</span></div><div class="mi">Notebook entry: <span>Due before class</span></div></div>
+    <p>This week you choose your beat, identify your thread, and describe both as precisely as you can. Description means accounting for what is actually there — without reaction, without interpretation, without evaluation. The notebook entry this week is the first page of a ten-week record. Write it as a starting point, not a conclusion.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Notebook — Week 1</h3>
+    <div class="notebook">
+      <div class="notebook-label">[Notebook name] · Week 1 · Due before class</div>
+      <p><strong>What I noticed:</strong> Name your beat and your thread. Describe what the thread says right now — one or two sentences, present tense, specific. What is happening?</p>
+      <p><strong>What moved:</strong> How did you find this beat and this thread? What drew you to it — what about your field, your background, your life, made this the corner of the world you want to watch?</p>
+      <p><strong>What I'm sitting with:</strong> What is the first question this beat raises for you — the one you are starting with and do not yet know how to answer?</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Discussion Board — Week 1</h3>
+    <div class="callout"><div class="callout-label">Your Post</div><p>Name your beat and your thread in one sentence each. Then: what does your field or background connect to this beat that a general reader following the same story would not have?</p></div>
+    <div class="callout"><div class="callout-label">Your Reply</div><p>Find one classmate whose beat raises a question that rhymes with something in yours — even if the subjects look nothing alike. Name the rhyme in one sentence.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- Week 2 -->
+<div class="panel" id="p9">
+<div class="paste">Week 2 — Analysis · Session Page + Notebook Prompt + Beat Source Map</div>
+<div class="dp-wrapper">
+  <div class="wh"><div class="wh-badge">Cycle 1 · Week 2 · Analysis</div>
+  <div class="wh-title">How Does This Beat's Coverage Work?</div>
+  <div class="wh-sub">Map the source architecture. Trace the AI footprint. Name the structural pattern you are starting to see.</div></div>
+  <div class="wh-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta"><div class="mi">Cycle: <span>1</span></div><div class="mi">Move: <span>Analysis</span></div><div class="mi">Assignment due: <span>Beat Source Map</span></div></div>
+    <p>Analysis at the beat level asks a bigger question than Analysis at the story level: not just how this week's coverage worked, but how this beat's coverage works structurally — who generates the original material, who covers it first with expertise, how it reaches the general public, and where AI enters and shapes the chain.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Notebook — Week 2</h3>
+    <div class="notebook">
+      <div class="notebook-label">[Notebook name] · Week 2 · Due before class</div>
+      <p><strong>What I noticed:</strong> One specific observation about how your beat's coverage is produced or distributed — something structural, not just this week's news.</p>
+      <p><strong>What moved:</strong> What changed in your thread this week? What drove the change — a new document, a source, an editorial decision, algorithmic amplification?</p>
+      <p><strong>What I'm sitting with:</strong> What do you not yet understand about how your beat's information system works? What would you need to know to map it completely?</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Discussion Board — Week 2</h3>
+    <div class="callout"><div class="callout-label">Your Post</div><p>Share one structural observation about your beat's information architecture — something about how news in your field is produced, distributed, or shaped by AI that a general reader would not notice. Then: what is one voice consistently absent from your beat's coverage, and what structural reason might explain its absence?</p></div>
+    <div class="callout"><div class="callout-label">Your Reply</div><p>Tell a classmate whether the structural pattern they described appears in your beat too — or whether your beat works differently. If differently, what accounts for the difference?</p></div>
+  </div>
+</div>
+</div>
+
+<!-- Week 3 -->
+<div class="panel" id="p10">
+<div class="paste">Week 3 — Interpretation · Session Page + Notebook Prompt + Interpretive Brief</div>
+<div class="dp-wrapper">
+  <div class="wh"><div class="wh-badge c2">Cycle 2 · Week 3 · Interpretation</div>
+  <div class="wh-title">What Does Your Knowledge Reveal?</div>
+  <div class="wh-sub">The move that separates careful reading from casual reading. Use what you know.</div></div>
+  <div class="wh-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta"><div class="mi">Cycle: <span>2</span></div><div class="mi">Move: <span>Interpretation</span></div><div class="mi">Assignment due: <span>Interpretive Brief</span></div></div>
+    <p>Two weeks of Description and Analysis have given you a clear picture of your beat's source architecture and your thread's coverage pattern. Now you bring your own knowledge to bear on what it means. The Interpretive Brief is where that perception becomes writing.</p>
+    <div class="conbox">
+      <div class="conbox-label">The Standard for Interpretation</div>
+      <p>There is a kind of knowledge that comes from looking carefully at something long enough to see what is actually there — as distinct from what you expect to see, or what a summary told you was there. Your field gives you a lens that changes what you see when you apply it to a story. The Interpretive Brief asks you to name what that lens reveals.</p>
+      <p>The test: could someone without your training, your field, your weeks of following this beat have written this? If yes, go further. The Brief earns its place when it says something that is only possible because of what you bring.</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Notebook — Week 3</h3>
+    <div class="notebook">
+      <div class="notebook-label">[Notebook name] · Week 3 · Due before class</div>
+      <p><strong>What I noticed:</strong> Complete this sentence — and mean it: "What this beat is really about, when you understand [something from my field], is…"</p>
+      <p><strong>What moved:</strong> What happened in your thread this week that your interpretive lens helps you understand better than the general coverage does?</p>
+      <p><strong>What I'm sitting with:</strong> What question does your interpretation open that it does not close? The better the interpretation, the more specific this question becomes.</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Discussion Board — Week 3</h3>
+    <div class="callout"><div class="callout-label">Your Post</div><p>Share your interpretive claim — the "what this beat is really about" sentence — and in two or three sentences, name the knowledge that supports it. Be specific: name the concept, the framework, the field-specific understanding that makes the claim possible.</p></div>
+    <div class="callout"><div class="callout-label">Your Reply</div><p>Whose beat in this class raises the same underlying question as yours — even if the subjects look nothing alike? Name the shared question in one sentence. This is the beginning of cluster formation.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- Week 4 -->
+<div class="panel" id="p11">
+<div class="paste">Week 4 — Evaluation · Session Page + Notebook Prompt + Equity Assessment</div>
+<div class="dp-wrapper">
+  <div class="wh"><div class="wh-badge c2">Cycle 2 · Week 4 · Evaluation</div>
+  <div class="wh-title">Who Bears the Costs the Coverage Isn't Naming?</div>
+  <div class="wh-sub">Reasoned judgment, grounded in evidence, applied to real stakes. Not reaction — evaluation.</div></div>
+  <div class="wh-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta"><div class="mi">Cycle: <span>2</span></div><div class="mi">Move: <span>Evaluation</span></div><div class="mi">Assignment due: <span>Equity Assessment</span></div></div>
+    <p>You have described, analyzed, and interpreted your beat. Now you evaluate it — both the events the beat covers and the coverage itself. Evaluation asks whether what is happening is fair, whether the distribution of costs and benefits is named, and whether the coverage serves the public understanding of those stakes. It requires everything the previous three weeks built.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Notebook — Week 4</h3>
+    <div class="notebook">
+      <div class="notebook-label">[Notebook name] · Week 4 · Due before class</div>
+      <p><strong>What I noticed:</strong> Who is bearing a cost in your beat this week — in the events themselves or in how they are being covered — that the mainstream coverage is not naming?</p>
+      <p><strong>What moved:</strong> What happened in your thread this week that has the clearest human stakes? Who specifically is affected, and how?</p>
+      <p><strong>What I'm sitting with:</strong> What would the coverage need to include for the public to understand what is actually at stake in your beat? What is it systematically leaving out — and why?</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Discussion Board — Week 4</h3>
+    <div class="callout"><div class="callout-label">Your Post</div><p>Share one evaluative claim about your beat — your principle, your evidence, your conclusion. Make it specific enough that someone could disagree with you. Then: does the coverage of your beat adequately represent what is at stake? What would need to change?</p></div>
+    <div class="callout"><div class="callout-label">Your Reply</div><p>State the strongest objection to a classmate's evaluative claim. Not a disagreement — the most honest challenge to the standard or evidence they applied. Let them respond.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- Week 5 -->
+<div class="panel" id="p12">
+<div class="paste">Week 5 — Interpretation Deeper · Session Page + Notebook Prompt (Clusters Begin)</div>
+<div class="dp-wrapper">
+  <div class="wh"><div class="wh-badge c2">Cycle 2 · Week 5 · Interpretation — Deeper</div>
+  <div class="wh-title">What Connects Your Beat to Others in This Room?</div>
+  <div class="wh-sub">Interpretation deepens when you encounter what other people are watching. This week you start looking sideways.</div></div>
+  <div class="wh-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta"><div class="mi">Cycle: <span>2</span></div><div class="mi">Move: <span>Interpretation — Deeper</span></div><div class="mi">Clusters: <span>Begin forming</span></div></div>
+    <p>Your interpretation of your own beat deepens when you encounter what other people are watching. This week the discussion turns outward: whose beats raise the same underlying questions as yours? The connections are not always obvious on the surface — a student following pharmaceutical pricing and a student following agricultural subsidies may share a deeper question about how public policy serves private interests. That is a cluster.</p>
+    <p>The instructor will propose provisional cluster groupings before Week 6. This week's discussion is how those groupings get seeded.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Notebook — Week 5</h3>
+    <div class="notebook">
+      <div class="notebook-label">[Notebook name] · Week 5 · Due before class</div>
+      <p><strong>What I noticed:</strong> Whose beat in this class raises the same underlying question as yours? Name them and name the connection — not the surface similarity, the underlying shared question.</p>
+      <p><strong>What moved:</strong> What happened in your thread this week? How does it relate to what the underlying shared question your cluster might address?</p>
+      <p><strong>What I'm sitting with:</strong> What would your cluster's State of the World entry be about — not what it would say, just what problem or question it would address?</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Discussion Board — Week 5 (Cluster-Seeding)</h3>
+    <div class="callout"><div class="callout-label">Your Post — Two Parts</div><p><strong>Part 1:</strong> State your interpretive claim from this week in two or three sentences. Then name the underlying question your beat is really circling — not the topic, the question. Something like: who pays when systems fail? How does power decide what counts as evidence?<br><br><strong>Part 2:</strong> Find one classmate whose underlying question overlaps with yours. Tell them specifically what the overlap is. This is the beginning of cluster formation.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- Week 6 -->
+<div class="panel" id="p13">
+<div class="paste">Week 6 — Analysis at Scale · Session Page + Notebook Prompt (Clusters Confirmed)</div>
+<div class="dp-wrapper">
+  <div class="wh"><div class="wh-badge c2">Cycle 2 · Week 6 · Analysis — At Scale</div>
+  <div class="wh-title">Clusters Confirmed — Analysis Returns Across Beats</div>
+  <div class="wh-sub">Analysis returns — now applied to the patterns you can only see when multiple beats are in view at once.</div></div>
+  <div class="wh-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta"><div class="mi">Cycle: <span>2</span></div><div class="mi">Move: <span>Analysis — At Scale</span></div><div class="mi">Clusters: <span>Confirmed by instructor</span></div></div>
+    <p>Clusters are posted before this session. Your cluster meets for the first time with one task: agree on one sentence naming the shared question across your beats. Not the surface topics — the underlying question. Then sketch what a State of the World entry addressing that question would need to say.</p>
+    <p>Analysis returns this week at a different scale — not just how your beat's coverage works, but what the coverage patterns across your cluster's beats reveal about how information systems operate. Structural patterns visible in one beat often repeat across others. That repetition is the analysis.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Notebook — Week 6</h3>
+    <div class="notebook">
+      <div class="notebook-label">[Notebook name] · Week 6 · Due before class</div>
+      <p><strong>What I noticed:</strong> What does your cluster's shared question reveal about your own beat that you had not named before encountering the other beats in your cluster?</p>
+      <p><strong>What moved:</strong> What happened in your thread this week that is directly relevant to your cluster's shared question?</p>
+      <p><strong>What I'm sitting with:</strong> What does your beat contribute to the cluster's State of the World entry that none of the other beats can? Name it specifically — this is your irreplaceable contribution.</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Cluster First Meeting — Post Summary to Canvas</h3>
+    <div class="callout"><div class="callout-label">Cluster Meeting Task — Complete This Week</div><p>Meet with your cluster — synchronously or asynchronously. Each person states their beat thread in two sentences and the evaluative question it raises. Then: agree on one sentence naming the shared question. Sketch what your State of the World entry will address. Post a brief summary to the cluster's shared Canvas space.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- Week 7 -->
+<div class="panel" id="p14">
+<div class="paste">Week 7 — Evaluation Returns · Session Page + Notebook Prompt</div>
+<div class="dp-wrapper">
+  <div class="wh"><div class="wh-badge c3">Cycle 3 · Week 7 · Evaluation — Civic Argument</div>
+  <div class="wh-title">What Does Your Cluster Argue?</div>
+  <div class="wh-sub">Evaluation returns as the civic argument your cluster will make — not just about events, but about what the public needs to understand.</div></div>
+  <div class="wh-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta"><div class="mi">Cycle: <span>3</span></div><div class="mi">Move: <span>Evaluation — Civic Argument</span></div><div class="mi">Clusters: <span>Begin drafting State of the World entry</span></div></div>
+    <p>Individual evaluative work continues — what is at stake in your thread, who bears costs the coverage is not naming. At the same time, your cluster begins translating its shared evaluative thinking into the argument your State of the World entry will make. The entry is not a collection of individual evaluations. It is a collective civic argument — one that requires all of your beats to make its case.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Notebook — Week 7</h3>
+    <div class="notebook">
+      <div class="notebook-label">[Notebook name] · Week 7 · Due before class</div>
+      <p><strong>What I noticed:</strong> What is the civic argument your cluster's State of the World entry will make? State it in one sentence — not what the entry will describe, what it will argue.</p>
+      <p><strong>What moved:</strong> What happened in your thread this week that strengthens or complicates the cluster's argument?</p>
+      <p><strong>What I'm sitting with:</strong> What is the strongest objection to your cluster's argument? How does the evidence from your beats respond to it?</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Week 8 -->
+<div class="panel" id="p15">
+<div class="paste">Week 8 — Engagement Begins · Session Page + Notebook Prompt + Equity Assessment + Cluster Proposal</div>
+<div class="dp-wrapper">
+  <div class="wh"><div class="wh-badge c3">Cycle 3 · Week 8 · Engagement — Beginning</div>
+  <div class="wh-title">What Does the Cluster Say, and to Whom?</div>
+  <div class="wh-sub">Individual work closes. Collective work begins. Two deliverables this week — one yours alone, one yours together.</div></div>
+  <div class="wh-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta"><div class="mi">Cycle: <span>3</span></div><div class="mi">Move: <span>Engagement — Beginning</span></div><div class="mi">Due: <span>Equity Assessment + Cluster Proposal</span></div></div>
+    <p>Two parallel deliverables this week. The Equity Assessment is individual — the last individual assignment of the course, closing your personal evaluative arc. The Cluster Proposal is collective — a group document naming the shared question, what each beat contributes, and the planned form and content of the State of the World entry. Both are due by the end of the week.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Notebook — Week 8</h3>
+    <div class="notebook">
+      <div class="notebook-label">[Notebook name] · Week 8 · Due before class</div>
+      <p><strong>What I noticed:</strong> What is the irreplaceable thing your beat contributes to the cluster's State of the World entry — the angle, the knowledge, the community, the system that only your thread illuminates?</p>
+      <p><strong>What moved:</strong> What happened in your thread this week that belongs in the cluster entry?</p>
+      <p><strong>What I'm sitting with:</strong> What does your cluster need to produce an entry that a reader outside this course would find worth reading?</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Week 9 -->
+<div class="panel" id="p16">
+<div class="paste">Week 9 — Engagement + Draft + Peer Review · Session Page + Notebook Prompt</div>
+<div class="dp-wrapper">
+  <div class="wh"><div class="wh-badge c3">Cycle 3 · Week 9 · Engagement — Collective + Description Returns</div>
+  <div class="wh-title">Does the Draft Say What You Think It Says?</div>
+  <div class="wh-sub">Description returns — applied to your own cluster's writing before you ask another cluster to read it.</div></div>
+  <div class="wh-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta"><div class="mi">Cycle: <span>3</span></div><div class="mi">Move: <span>Engagement — Collective + Description Returns</span></div><div class="mi">Due: <span>Cluster Draft + Peer Review</span></div></div>
+    <p>Each cluster submits a draft State of the World entry midweek (500–700 words). Before submitting, run the draft through Description: what does it actually say? Does the opening deliver what it promises? Is there a gap between the shared question your cluster named and what the entry actually argues? Fix it before it goes to peer review.</p>
+    <p>After submitting, each cluster reviews one other cluster's draft using the same three moves: describe what the entry says, analyze how it works, evaluate what it needs before Week 10.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Notebook — Week 9</h3>
+    <div class="notebook">
+      <div class="notebook-label">[Notebook name] · Week 9 · Due before class</div>
+      <p><strong>What I noticed:</strong> What did working with your cluster reveal about your own beat that you had not seen before? What did you have to give up or revise from your individual framing to write something genuinely collective?</p>
+      <p><strong>What moved:</strong> What does the cluster's draft say that none of your individual assignments said? Name it specifically.</p>
+      <p><strong>What I'm sitting with:</strong> What would the cluster entry need to say — or say differently — for a reader who knows nothing about any of your beats to find it worth reading?</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Peer Review — Due End of Week</h3>
+    <div class="callout"><div class="callout-label">Peer Review — 200–300 words, submitted as a group</div><p><strong>Description:</strong> What does this entry actually say? State the central claim in your own words.<br><strong>Analysis:</strong> Where does the synthesis feel genuine — where does it feel like separate pieces sitting next to each other?<br><strong>Evaluation:</strong> What is the entry's strongest moment? What one thing needs to change before the assembly?</p></div>
+  </div>
+</div>
+</div>
+
+<!-- Week 10 -->
+<div class="panel" id="p17">
+<div class="paste">Week 10 — Assembly · Session Page + Final Notebook Prompt</div>
+<div class="dp-wrapper">
+  <div class="wh"><div class="wh-badge c3">Cycle 3 · Week 10 · Description Returns + Engagement — Assembly</div>
+  <div class="wh-title">The State of the World</div>
+  <div class="wh-sub">Ten weeks of looking carefully. Today the class puts what it saw on the page — together.</div></div>
+  <div class="wh-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta"><div class="mi">Cycle: <span>3</span></div><div class="mi">Move: <span>Description Returns + Engagement — Assembly</span></div><div class="mi">Due: <span>Final Cluster Entry + Complete Notebook + Self-Assessment</span></div></div>
+    <p>Final cluster entries are submitted incorporating peer feedback. The complete State of the World is assembled in the final session. Each cluster takes three to four minutes — not to present, but to read one passage aloud and name one question their beat work left genuinely open. The room listens. Then the document is distributed and it exists.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Notebook — Week 10 (Final Entry)</h3>
+    <div class="notebook">
+      <div class="notebook-label">[Notebook name] · Week 10 · Final Entry</div>
+      <p><strong>What I noticed:</strong> Read back through your notebook entries from Weeks 1 through 9. What changed in how you see your beat? What did you believe at Week 1 that turned out to be wrong, incomplete, or more complicated?</p>
+      <p><strong>What moved:</strong> What does the State of the World say that no individual assignment in this course said? What required the class — together — to make it possible?</p>
+      <p><strong>What I'm sitting with:</strong> What question does your ten weeks of attention leave genuinely open — something you understand better now but have not resolved? And are you going to keep following it?</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Final Discussion</h3>
+    <div class="callout"><div class="callout-label">After the Assembly</div><p>Name one entry from a cluster that is not yours. Describe what you learned from it. Then name one connection between that cluster's question and your own beat that neither of you named during the course. In your reply, tell a classmate whether their open question is one you share — and why it matters that it remains open.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ ASSESSMENTS ═══ -->
+<!-- 18: Beat Source Map -->
+<div class="panel" id="p18">
+<div class="paste">Assessment — Beat Source Map (due end of Week 2; 400–500 words)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Assessment — Beat Source Map</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle"></i>Purpose</h3>
+    <p>The Beat Source Map establishes the information architecture of your chosen beat — the three source layers, the structural pattern of coverage, the AI footprint, and your disciplinary angle. It is the anchor document for everything that follows. A careful Source Map in Week 2 makes the Interpretive Brief, the Equity Assessment, and the State of the World entry significantly easier to write with depth.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Instructions — 400 to 500 words in prose</h3>
+    <div class="step"><div class="step-n">1</div><div class="step-b"><strong>Name the beat and the thread.</strong> One sentence each: what is the beat (the ongoing area of public life), and what is the specific thread you are following within it right now?</div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-b"><strong>Map the three source layers.</strong> Primary source (who or what generates the original material), specialist layer (who covers it first with expertise), and mainstream layer (where the general public encounters it). Name specific institutions, publications, or outlets at each layer.</div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-b"><strong>Trace the AI footprint.</strong> Where does AI enter your beat's information system — in recommendation, summarization, generation, distribution? What specific observation can you make about what AI does to your beat's coverage?</div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-b"><strong>Name your disciplinary angle.</strong> One sentence on what your field or background connects to this beat — specific enough to seed the Interpretive Brief in Week 3.</div></div>
+    <div class="step"><div class="step-n">5</div><div class="step-b"><strong>Name one structural pattern you already see.</strong> Something about how this beat's coverage works that you noticed in the first two weeks — not a judgment about quality, an observation about structure.</div></div>
+    <table class="rubric" style="margin-top:16px">
+      <tr><th>Element</th><th>What We Are Looking For</th><th>Points</th></tr>
+      <tr><td><strong>Beat and thread</strong></td><td>Both named specifically and in present tense. Thread is live and traceable.</td><td class="pts">15 pts</td></tr>
+      <tr><td><strong>Three source layers</strong></td><td>All three layers described with named examples. Primary source located or attempted.</td><td class="pts">30 pts</td></tr>
+      <tr><td><strong>AI footprint</strong></td><td>At least one specific, concrete observation about AI's role in this beat's information system.</td><td class="pts">25 pts</td></tr>
+      <tr><td><strong>Disciplinary angle</strong></td><td>One sentence specific enough to seed interpretation — not "I study economics" but "my training in [specific area] lets me see [specific thing] in this beat."</td><td class="pts">20 pts</td></tr>
+      <tr><td><strong>Structural pattern</strong></td><td>One structural observation — specific, descriptive, not evaluative.</td><td class="pts">10 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- 19: Story Arc Analysis -->
+<div class="panel" id="p19">
+<div class="paste">Assessment — Story Arc Analysis (folded into Week 4 Equity Assessment in Large; standalone if instructor chooses)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Assessment — Story Arc Analysis</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle"></i>Purpose and Note</h3>
+    <p>In the Large version, the Story Arc Analysis from the Medium version is folded into the Equity Assessment — the evaluative arc across Weeks 3 and 4 already covers the analytical ground the Story Arc addressed in the Medium version. Instructors who want to assign the Story Arc Analysis as a standalone piece (for example, in courses running Large after completing Medium without producing the Medium's Analysis assignment) can use it independently after Week 4.</p>
+    <p>The standalone Story Arc Analysis asks students to make an analytical argument about how their beat's coverage has worked across the first four weeks — not what the story is about, but how the coverage functions. At least four coverage items must be cited with dates. The central deliverable is one arguable analytical claim about the shape of coverage.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Instructions — 400 to 500 words</h3>
+    <div class="step"><div class="step-n">1</div><div class="step-b"><strong>The arc.</strong> Map the development of your thread across its coverage so far. What were the key turning points? What drove them?</div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-b"><strong>The voices.</strong> Who has spoken in this coverage? Who has been described but not heard? What structural reasons might explain the pattern?</div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-b"><strong>The pattern.</strong> One recurring structural feature of how your beat covers this thread — named specifically.</div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-b"><strong>The analytical claim.</strong> Two to three sentences stating your argument about how the coverage works — not an evaluation of quality, an argument about structure.</div></div>
+    <table class="rubric" style="margin-top:12px">
+      <tr><th>Element</th><th>Expectations</th><th>Points</th></tr>
+      <tr><td>Arc mapping</td><td>Four or more coverage items cited with dates; turning points identified with specific causes</td><td class="pts">25 pts</td></tr>
+      <tr><td>Voice inventory</td><td>Specific named sources present and absent; structural explanation attempted</td><td class="pts">25 pts</td></tr>
+      <tr><td>Pattern</td><td>One structural feature named specifically, not generally</td><td class="pts">25 pts</td></tr>
+      <tr><td>Analytical claim</td><td>Clear arguable claim about how coverage works — distinct from evaluation</td><td class="pts">25 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- 20: Interpretive Brief -->
+<div class="panel" id="p20">
+<div class="paste">Assessment — Interpretive Brief (due end of Week 3; 500–650 words)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Assessment — Interpretive Brief</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle"></i>Purpose</h3>
+    <p>The Interpretive Brief is the most important individual assignment in the Large version — the one the instructor must return with feedback before Week 5, because students need it to deepen their interpretation in the cluster work and to seed the State of the World entry. It extends the Medium version's Interpretive Note: longer, more developed, and now applied to a beat rather than a single story.</p>
+    <div class="conbox">
+      <div class="conbox-label">The Standard — Elevated for the Large Version</div>
+      <p>The Interpretive Brief in the Large version carries more weight than the Medium version's Note because it is doing more work: seeding the cluster's shared question, informing the Equity Assessment, and ultimately shaping the State of the World entry. The standard is the same — could someone without your training have written this? — but the stakes of the answer are higher. A Brief that is genuinely specific about what disciplinary knowledge reveals about a beat's meaning will generate better cluster connections, richer evaluative arguments, and a more substantive State of the World entry than one that is vague about its interpretive contribution.</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Instructions — 500 to 650 words</h3>
+    <div class="step"><div class="step-n">1</div><div class="step-b"><strong>What the coverage says the beat is about.</strong> Accurately describe what the mainstream coverage presents as the beat's meaning. Use Description.</div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-b"><strong>What your knowledge reveals.</strong> Name and explain the concept, framework, or field-specific understanding that changes how this beat reads. Apply it specifically: what does the coverage miss or misrepresent that your training allows you to see?</div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-b"><strong>Your interpretive claim.</strong> What does this beat actually mean, in light of what you know? Specific, arguable, only possible because of what you bring.</div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-b"><strong>The underlying question.</strong> What question does your interpretation open that it does not close? This is the seed of your cluster's shared question.</div></div>
+    <table class="rubric" style="margin-top:12px">
+      <tr><th>Element</th><th>Expectations</th><th>Points</th></tr>
+      <tr><td>Coverage account</td><td>Accurate, specific description of what mainstream coverage presents as the beat's meaning</td><td class="pts">15 pts</td></tr>
+      <tr><td>Disciplinary knowledge</td><td>Named, explained accessibly, applied specifically — a lens that changes what you see, not background</td><td class="pts">35 pts</td></tr>
+      <tr><td>Interpretive claim</td><td>Specific, arguable, only possible because of this student's training and beat work</td><td class="pts">35 pts</td></tr>
+      <tr><td>Underlying question</td><td>Specific enough to seed a cluster's shared inquiry — not a general wonder, a real open question</td><td class="pts">15 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- 21: Equity Assessment -->
+<div class="panel" id="p21">
+<div class="paste">Assessment — Equity Assessment + Cluster Proposal (due end of Week 8)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Assessment — Equity Assessment + Cluster Proposal</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle"></i>Purpose</h3>
+    <p>Two deliverables this week — one individual, one collective. The Equity Assessment closes the individual arc of the course with a structured evaluative argument. The Cluster Proposal opens the collective arc: the group's plan for the State of the World entry.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Individual — Equity Assessment (500–600 words)</h3>
+    <div class="step"><div class="step-n">1</div><div class="step-b"><strong>The stakes.</strong> Who is affected by the developments in your beat? Name them specifically. What do they stand to gain or lose?</div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-b"><strong>The evaluative claim.</strong> Is the distribution of costs and benefits in your beat fair or unfair, according to a principle you can name and defend? Support with specific evidence.</div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-b"><strong>Coverage evaluation.</strong> Does your beat's coverage adequately represent the equity and ethical dimensions you have identified? What is missing, and why might it be absent?</div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-b"><strong>The counterargument.</strong> State the strongest objection to your evaluation and respond to it substantively.</div></div>
+    <table class="rubric" style="margin-top:12px">
+      <tr><th>Element</th><th>Expectations</th><th>Points</th></tr>
+      <tr><td>Stakes</td><td>Specific named affected parties; concrete account of what is at stake</td><td class="pts">20 pts</td></tr>
+      <tr><td>Evaluative claim</td><td>Clear claim, named principle, specific evidence — arguable and falsifiable</td><td class="pts">30 pts</td></tr>
+      <tr><td>Coverage evaluation</td><td>Specific evaluative claim about coverage adequacy, with evidence</td><td class="pts">25 pts</td></tr>
+      <tr><td>Counterargument</td><td>Fairly stated objection and substantive response</td><td class="pts">25 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Collective — Cluster Proposal (300–400 words; one submission per cluster)</h3>
+    <div class="step"><div class="step-n">1</div><div class="step-b"><strong>The shared question.</strong> One sentence. Specific enough to guide the entry and broad enough to genuinely require all beats to answer it.</div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-b"><strong>What each beat contributes.</strong> One sentence per beat on the irreplaceable thing it brings — the angle, the knowledge, the community, the system that only that thread illuminates.</div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-b"><strong>Proposed form and content.</strong> What will a reader encounter in the State of the World entry? What will they understand after reading it that they did not understand before?</div></div>
+  </div>
+</div>
+</div>
+
+<!-- 22: State of the World -->
+<div class="panel" id="p22">
+<div class="paste">Assessment — State of the World Entry (due end of Week 10; 500–700 words per cluster)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Assessment — State of the World</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle"></i>Purpose</h3>
+    <p>The State of the World entry is the culminating collective assignment of the Large version. It is a piece of writing that could only exist because these specific students followed these specific beats at this specific moment and then looked at what they found together. The entry is not a collection of individual summaries. It is a collective argument — one that requires all of the cluster's beats to make its case, and that could not have been made by any one student alone.</p>
+    <div class="conbox">
+      <div class="conbox-label">The Standard for the Entry</div>
+      <p>Ask: could a reader who has never heard of any of these beats encounter this entry and find it worth reading? Does it make a claim — not just describe a situation? Does it draw on the evidence of all the beats in the cluster, not just the most prominent one? Does it say something that ten weeks of collective attention made possible, and that a single week of reading the news would not?</p>
+      <p>If the answer to any of these is no, revise before submitting.</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Instructions — 500 to 700 words; submitted as a cluster</h3>
+    <p>Revise the Week 9 draft in response to peer feedback. The final entry should be self-contained — a reader who has never encountered any of your individual work should be able to read it and understand what your cluster was watching, why it mattered, and what you collectively understood about it that most people do not.</p>
+    <table class="rubric" style="margin-top:12px">
+      <tr><th>Element</th><th>Expectations</th><th>Points</th></tr>
+      <tr><td>Collective argument</td><td>Entry makes an argument — not describes a situation. Requires all beats to make the case.</td><td class="pts">30 pts</td></tr>
+      <tr><td>Evidence and specificity</td><td>Claims grounded in ten weeks of beat work. No vague generalities. Sources traceable.</td><td class="pts">20 pts</td></tr>
+      <tr><td>Accessibility</td><td>Readable by someone outside the course with no prior knowledge of any beat in the cluster.</td><td class="pts">20 pts</td></tr>
+      <tr><td>Peer feedback incorporated</td><td>Week 9 draft meaningfully revised — not cosmetically adjusted.</td><td class="pts">15 pts</td></tr>
+      <tr><td>Description applied</td><td>Entry says what it claims to say. Opening earns its promise. No gap between the shared question named and what the entry argues.</td><td class="pts">15 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>The Assembly Session</h3>
+    <p>Each cluster takes three to four minutes in the final session. One passage read aloud — not the strongest sentence, the one that captures what your cluster was watching and why it mattered. Then one open question: the genuine question your beat work raised that ten weeks of attention did not resolve. The room listens. The instructor (or a student) reads the opening of the complete document aloud. Then it is distributed. Then it exists.</p>
+    <div class="dark"><div class="dark-label">A closing note for instructors</div><p>The assembly session is the most important class meeting of the course. It is also the most likely to be cut when time gets tight. Protect it. The State of the World is not complete until the class gathers around it — until the document exists in the room, read aloud, with the people who made it. Everything before it is preparation. The assembly is the thing itself.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- 23: Notebook + Self-Assessment -->
+<div class="panel" id="p23">
+<div class="paste">Assessment — Notebook Archive + Self-Assessment (due end of Week 10; holistic)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Assessment — Notebook Archive + Self-Assessment</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle"></i>The Notebook Archive</h3>
+    <p>Submit all ten notebook entries in chronological order, compiled into a single document. Each entry labeled by week. The notebook is assessed holistically — not entry by entry, but as evidence that you were genuinely present to your beat each week and that your thinking developed over time.</p>
+    <p>Before you compile, read back through all ten entries. Something will have changed — in your language for the beat, in the specificity of your questions, in what you find surprising versus expected. The Self-Assessment is where you name what changed.</p>
+    <div class="callout"><div class="callout-label">Holistic grading standard</div><p>Complete and genuinely engaged across all ten weeks, with evidence of developing thought: full credit. Mostly complete with some thin or summary-style entries: 80%. Significant gaps or entries clearly written for compliance rather than noticing: 60%. Incomplete: no credit.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>The Self-Assessment — Nine Questions, One Per Move</h3>
+    <p>Answer these nine questions — one for each of the nine moves across the three cycles. A sentence or two each. More if you have more to say. Completion-graded: submit honestly and you receive full credit.</p>
+    <div class="callout"><div class="callout-label">Cycle 1 · Description</div><p>What did you believe about your beat at Week 1 that turned out to be wrong, incomplete, or more complicated than you understood?</p></div>
+    <div class="callout"><div class="callout-label">Cycle 1 · Analysis</div><p>What structural pattern in your beat's coverage did you see by Week 2 that you could not have named before following it?</p></div>
+    <div class="callout"><div class="callout-label">Cycle 2 · Interpretation</div><p>What is the most specific thing your training lets you see in your beat that a general reader would miss? Name it precisely.</p></div>
+    <div class="callout"><div class="callout-label">Cycle 2 · Evaluation</div><p>Who bore a cost in your beat that the coverage did not name adequately across ten weeks? What would have needed to change?</p></div>
+    <div class="callout"><div class="callout-label">Cycle 2 · Interpretation + Analysis Deeper</div><p>What did your cluster's shared question reveal about your own beat that you could not have seen alone?</p></div>
+    <div class="callout"><div class="callout-label">Cycle 3 · Evaluation + Engagement</div><p>What does the State of the World entry argue that none of your individual assignments argued? What required the cluster to make it possible?</p></div>
+    <div class="callout"><div class="callout-label">Cycle 3 · Engagement Collective</div><p>What did you have to revise or give up from your individual framing to write something genuinely collective?</p></div>
+    <div class="callout"><div class="callout-label">Cycle 3 · Description Returns</div><p>When you applied Description to the State of the World entry — what did it actually say versus what you thought it said? What changed in revision?</p></div>
+    <div class="callout"><div class="callout-label">Cycle 3 · Engagement Assembly</div><p>What question are you leaving the course with — something ten weeks of careful attention raised but did not resolve? And are you going to keep following it?</p></div>
+    <div class="dark" style="margin-top:20px"><div class="dark-label">For instructors — on receiving self-assessments</div><p>The ninth question — are you going to keep following it — is not rhetorical. Students who say yes and mean it are the ones the course most succeeded with. Students who say no honestly have still learned something worth knowing. Read both kinds. The proportion of each, across a class, tells you more about how the course ran than any other single data point.</p></div>
+  </div>
+</div>
+</div>
+
+<script>
+function show(n){
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.top button').forEach((b,i)=>b.classList.toggle('active',i===n));
+  window.scrollTo({top:0});
+}
+</script>
+</body>
+</html>
