@@ -1,0 +1,767 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slow News, Smart Citizens — Medium</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f0ede8;font-family:'Source Serif 4',Georgia,serif;color:#1a1a1a;font-size:16px}
+.top{background:#1a1a1a;position:sticky;top:0;z-index:200;border-bottom:3px solid #8b2332}
+.top-inner{display:flex;align-items:center;overflow-x:auto;padding:0 20px}
+.top-brand{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#555;padding:13px 16px 13px 0;border-right:1px solid #333;margin-right:2px;white-space:nowrap;flex-shrink:0}
+.top-brand span{color:#c9a96e}
+.top-sep{font-family:'DM Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:#333;padding:0 10px;white-space:nowrap;flex-shrink:0;border-right:1px solid #333;line-height:1.3;text-align:center}
+.top button{background:none;border:none;color:#555;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:13px 12px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .15s;flex-shrink:0}
+.top button.active{color:#fff;border-bottom-color:#8b2332}
+.top button:hover:not(.active){color:#ccc}
+.panel{display:none;max-width:860px;margin:0 auto;padding:0 0 80px}
+.panel.active{display:block}
+.dp-wrapper{background:#fff;margin-bottom:3px}
+.dp-header{background:#8b2332;padding:16px 28px 14px}
+.dp-heading{margin:0;padding:0;border-top:none;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#fff}
+.dp-content-block{padding:26px 32px 24px;border-bottom:1px solid #ede9e3}
+.dp-content-block:last-child{border-bottom:none}
+.dp-has-icon{display:flex;align-items:flex-start;gap:11px;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:#8b2332;margin-bottom:14px;font-weight:500;line-height:1.4}
+.dp-icon{font-size:16px;margin-top:1px;flex-shrink:0}
+.dp-content-block p{font-size:15.5px;line-height:1.78;color:#2c2c2c;margin-bottom:14px}
+.dp-content-block p:last-child{margin-bottom:0}
+.dp-content-block ul,.dp-content-block ol{padding-left:22px;margin-bottom:14px}
+.dp-content-block li{font-size:15.5px;line-height:1.75;color:#2c2c2c;margin-bottom:8px}
+.paste{background:#111;border-left:3px solid #8b2332;padding:7px 14px;margin:2px 0;font-family:'DM Mono',monospace;font-size:9px;color:#555;letter-spacing:.08em;text-transform:uppercase}
+.pull{border-left:4px solid #8b2332;padding:14px 20px;background:#faf7f4;margin:16px 0;font-size:17px;line-height:1.65;font-style:italic;color:#2a1818}
+.callout{background:#faf7f4;border:1px solid #e0dbd4;padding:15px 19px;margin:14px 0}
+.callout-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8b2332;margin-bottom:8px;font-weight:500}
+.callout p{font-size:14.5px;margin:0;color:#3a3a3a;line-height:1.65}
+.callout p+p{margin-top:8px}
+.dark{background:#1a1a1a;padding:24px 28px;margin:14px 0}
+.dark-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#c9a96e;margin-bottom:10px}
+.dark p{font-size:15px;line-height:1.75;color:#bbb;margin-bottom:12px}
+.dark p:last-child{margin-bottom:0}
+.dark strong{color:#fff}
+.dark em{color:#c9a96e;font-style:normal}
+.six-moves{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin:16px 0}
+@media(max-width:620px){.six-moves{grid-template-columns:1fr}}
+.move-card{background:#fff;border:1px solid #e0dbd3;overflow:hidden}
+.move-card.cycle-2{border-color:#8b2332}
+.move-card-stripe{height:4px;background:#e0dbd3}
+.move-card.cycle-2 .move-card-stripe{background:#8b2332}
+.move-card-body{padding:14px 16px}
+.move-card-cycle{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#bbb;margin-bottom:4px}
+.move-card.cycle-2 .move-card-cycle{color:#8b2332}
+.move-card-num{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:5px}
+.move-card.cycle-2 .move-card-num{color:#8b2332}
+.move-card-title{font-family:'Playfair Display',Georgia,serif;font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+.move-card-q{font-size:13.5px;font-style:italic;color:#666;line-height:1.5;margin-bottom:6px}
+.move-card-desc{font-size:13px;line-height:1.6;color:#555}
+.three-q{display:flex;flex-direction:column;gap:3px;margin:16px 0}
+.q-item{display:flex;gap:0;background:#fff;border:1px solid #e8e3dc}
+.q-num{background:#8b2332;color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;padding:14px 16px;flex-shrink:0;width:44px;display:flex;align-items:center;justify-content:center}
+.q-text{padding:14px 18px;font-size:15.5px;line-height:1.6;color:#1a1a1a;font-style:italic}
+.week-arc{display:flex;flex-direction:column;gap:3px;margin:16px 0}
+.week-row{display:flex;gap:0;align-items:stretch}
+.week-label{background:#1a1a1a;color:#fff;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:12px 14px;flex-shrink:0;width:80px;display:flex;align-items:center}
+.week-label.cycle-2{background:#8b2332}
+.week-content{background:#fff;border:1px solid #e8e3dc;border-left:none;padding:12px 18px;flex:1}
+.week-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:3px}
+.week-sub{font-size:13.5px;color:#666;line-height:1.5}
+.week-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.07em;text-transform:uppercase;background:#f0ede8;color:#8b2332;padding:2px 6px;margin-left:6px}
+.rubric{width:100%;border-collapse:collapse;margin-top:14px;font-size:14px}
+.rubric th{background:#8b2332;color:#fff;padding:9px 13px;text-align:left;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+.rubric td{padding:9px 13px;vertical-align:top;border-bottom:1px solid #ede9e3;line-height:1.55;color:#2c2c2c}
+.rubric tr:nth-child(even) td{background:#faf7f4}
+.rubric .pts{font-family:'DM Mono',monospace;font-size:12px;color:#8b2332;font-weight:500;white-space:nowrap}
+.journal{border:2px dashed #d4cfc8;padding:18px 22px;margin:14px 0;background:#fdfcfa}
+.journal .callout-label{color:#6b5c5c}
+.journal p{font-size:15px;line-height:1.7;color:#3a3a3a;margin:0}
+.journal p+p{margin-top:10px}
+.week-header{padding:20px 32px 0;background:#fff}
+.week-badge{display:inline-block;background:#8b2332;color:#fff;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;margin-bottom:10px}
+.week-title-lg{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.2;margin-bottom:5px}
+.week-sub-lg{font-size:14px;font-style:italic;color:#888}
+.week-rule{height:3px;background:#8b2332;margin:0}
+.meta{display:flex;gap:20px;flex-wrap:wrap;margin:6px 0 16px}
+.meta-item{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#999}
+.meta-item span{color:#8b2332;font-weight:500}
+.step{display:flex;gap:13px;margin-bottom:14px;align-items:flex-start}
+.step-num{flex-shrink:0;width:26px;height:26px;background:#8b2332;color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;border-radius:50%;margin-top:3px}
+.step-body{font-size:15px;line-height:1.72;color:#2c2c2c}
+.step-body strong{color:#1a1a1a}
+.connoisseur-box{background:#fff;border:1px solid #e0dbd3;border-left:4px solid #1a1a1a;padding:20px 24px;margin:16px 0}
+.connoisseur-box-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#1a1a1a;margin-bottom:10px;font-weight:500}
+.connoisseur-box p{font-size:15px;line-height:1.75;color:#333;margin-bottom:10px}
+.connoisseur-box p:last-child{margin-bottom:0}
+a{color:#8b2332;text-decoration:underline;text-underline-offset:2px}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+<div class="top">
+  <div class="top-inner">
+    <div class="top-brand"><span>Slow News, Smart Citizens</span> — Medium</div>
+    <button onclick="show(0)">Introduction</button><div class="top-sep">Instructor<br>Facing</div>
+    <button class="active" onclick="show(1)">Course Overview</button>
+    <button onclick="show(2)">How to Run It</button>
+    <button onclick="show(3)">The AI Conversation</button>
+    <button onclick="show(4)">Adapt for Your Course</button>
+    <div class="top-sep">Student<br>Facing</div>
+    <button onclick="show(5)">Welcome</button>
+    <button onclick="show(6)">The Six Moves</button>
+    <button onclick="show(7)">Finding Your Story</button>
+    <div class="top-sep">Weeks<br>1–5</div>
+    <button onclick="show(8)">Week 1 · Description</button>
+    <button onclick="show(9)">Week 2 · Analysis</button>
+    <button onclick="show(10)">Week 3 · Interpretation</button>
+    <button onclick="show(11)">Week 4 · Evaluation</button>
+    <button onclick="show(12)">Week 5 · Engagement</button>
+    <div class="top-sep">Assess<br>ment</div>
+    <button onclick="show(13)">Story Source Map</button>
+    <button onclick="show(14)">Interpretive Note</button>
+    <button onclick="show(15)">Short Public Piece</button>
+    <button onclick="show(16)">Self-Assessment</button>
+  </div>
+</div>
+
+<!-- ══ 0 · INSTRUCTOR · COURSE OVERVIEW ══ -->
+
+<div class="panel active" id="p0">
+<div class="paste">Course Introduction — First page for all users · Pin to top of course</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Slow News, Smart Citizens · Medium · Course Introduction</div>
+    <div class="week-title">Media Literacy: Where It Came From, Where We Are, and Why It Matters More Than Ever</div>
+    <div class="week-sub">A brief history of reading carefully in public — and what generative AI has changed about that project.</div>
+  </div>
+  <div class="week-rule"></div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Old Problem</h3>
+    <p>In 1922, the journalist and political philosopher Walter Lippmann wrote that there is an unavoidable gap between "the world outside and the pictures in our heads." He was writing about newspapers, but the insight has never stopped being true: the representations of events that reach us through media are never the events themselves. They are shaped by who covered them, who published them, what got left out, who the audience was assumed to be, and what the economics of the medium required.</p>
+    <p>Media literacy — the practice of reading those representations critically rather than transparently — emerged as a formal educational project in the 1970s and 1980s, largely in response to television. Educators in the UK, Canada, Australia, and the United States developed frameworks for helping students understand that media texts are constructed, that they carry values and assumptions, and that they represent the world in particular ways for particular purposes. The core questions those frameworks asked have not changed: Who made this? For whom? What is left out? What does it assume? What is it asking of me?</p>
+    <div class="pull">"The goal of media literacy has never been suspicion. It has been the capacity to ask the next question."</div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Critical Process</h3>
+    <p>This course is built around a five-step critical process developed in media studies education: Description, Analysis, Interpretation, Evaluation, and Engagement. Its logic is sequential — each move requires the one before it, and the sequence is the pedagogy.</p>
+    <p>Description asks you to account for what is actually there, without reaction or judgment. Analysis asks how it works and how it got to be that way. Interpretation asks what it means in light of what you know. Evaluation asks whether it is fair, adequate, and who pays its costs. Engagement asks what you do with what you have learned.</p>
+    <p>The Medium version practices all five moves across five weeks — applied to one live news story you follow from beginning to end. This is more than the Small version's three-move practice, and less than the Large version's full ten-week arc. It is the complete sequence, applied once, on a story you care about, producing three pieces of writing that build on each other toward something you could not have said at Week 1.</p>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What Changed — The Collapse of the Source Chain</h3>
+    <p>For most of the internet era, information literacy had a workable architecture. You searched for something, found a page, read it, evaluated the source. The chain was visible: here is the claim, here is who made it, here is where it was published, here is whether I can find corroboration elsewhere.</p>
+    <p>Generative AI search is collapsing that architecture. When you ask a question and receive an answer synthesized by a large language model, the source disappears. There is no page to evaluate, no byline to check, no publication whose editorial standards you can assess. There is a plausible-sounding answer, generated from sources you cannot see, presented with a confidence that is often indistinguishable from accuracy.</p>
+    <div class="dark">
+      <div class="dark-label">The shift — and what it means for how you follow a story</div>
+      <p>Traditional search surfaces pages. You choose which page to read and evaluate. The chain is visible.</p>
+      <p>Generative AI search synthesizes an answer. The chain is hidden. Evaluation becomes harder by design.</p>
+      <p><strong>This is exactly why following one story across five weeks matters.</strong> When you trace a story from the AI summary that surfaced it to the primary source it was based on, you are rebuilding the chain that generative search collapsed. The Analysis move — asking where this came from and how it reached you — is a direct response to the architecture of contemporary information distribution.</p>
+      <p><em>By Week 3, you will have followed your story long enough to see what the AI-mediated version of it left out. That gap is where your Interpretive Note lives.</em></p>
+    </div>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Broader Picture</h3>
+    <p><strong>Volume:</strong> A significant and growing proportion of online text is now generated in whole or in part by AI systems. The pace of content production has outpaced any editorial or fact-checking system's capacity to verify it.</p>
+    <p><strong>Recommendation:</strong> Most people encounter most information not by seeking it but by receiving it — served by algorithms optimizing for engagement rather than accuracy or civic value. What the algorithm shows you is a selection, not a sample.</p>
+    <p><strong>The economic paradox:</strong> The companies building the tools that are reshaping the information environment are also among the most heavily capitalized in history. The same systems making it harder to know what is true are driving significant economic growth. That is not a technology problem with a technology solution. It is a structural condition. Following a story carefully across five weeks is a small but genuine response to it.</p>
+    <p><strong>What has not changed:</strong> The questions. Who made this? Where did it come from? What does my knowledge add? What is at stake? Those questions were the foundation of media literacy in 1980. They are the foundation of this course in 2026. They are harder to answer now. They are more necessary now. The five moves are how you practice answering them.</p>
+  </div>
+
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>How This Course Is Organized</h3>
+    <p>The Medium version of Slow News, Smart Citizens asks you to choose one live news story and follow it for five weeks, applying all five moves of the critical process in sequence. You produce three pieces of writing — a Story Source Map, an Interpretive Note, and a Short Public Piece — each one building on the last. You keep a brief reading log each week. At the end, you apply Description to your own writing before submitting it: the same discipline you have been applying to the news, turned on yourself.</p>
+    <p>The course builds on the Small version's three-move practice and extends naturally into the Large version's ten-week arc. If you have not taken the Small version, that is fine — this introduction is all the context you need. If you have, you will recognize the first three weeks and find them deepened by the commitment to a single story.</p>
+  </div>
+</div>
+</div>
+
+<div class="panel" id="p1">
+<div class="paste">Instructor Page — Course Overview (pin to course top)</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Slow News, Smart Citizens · Medium · Instructor Overview</div>
+    <div class="week-title-lg">Following One Story Across the News Cycle</div>
+    <div class="week-sub-lg">Five weeks. Six moves. One live story — traced, interpreted, evaluated, and made useful.</div>
+  </div>
+  <div class="week-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What This Is</h3>
+    <p>Slow News, Smart Citizens (Medium) extends the three-move practice of the Small version into a sustained five-week arc. Students choose a live news story, follow it across the news cycle, and apply all five critical moves in sequence — returning to Description at the end to apply the same discipline to their own writing. The arc produces three gradable assignments: a Story Source Map, an Interpretive Note, and a Short Public Piece.</p>
+    <p>The central pedagogical move of the Medium version is what happens in Week 3: the Interpretive Note. This is the moment when a student stops reading about a story and starts contributing to the understanding of it — bringing their disciplinary knowledge, their field-specific perception, their educated attention to bear on what the coverage cannot or does not say. That move is the foundation of everything the Large version builds toward. It is worth protecting even when time is tight.</p>
+    <div class="pull">"A student who has followed one story carefully for three weeks and can say what their field adds to it has done something real. The Short Public Piece is proof of that."</div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Six Moves — Two Cycles of Three</h3>
+    <p>The Medium version runs all five critical moves plus a return to Description — two cycles of three, the second cycle building directly on the first. The Small version gave students the first cycle. The Medium version completes it.</p>
+    <div class="six-moves">
+      <div class="move-card"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-cycle">Cycle 1</div>
+        <div class="move-card-num">Move 1 · Week 1</div>
+        <div class="move-card-title">Description</div>
+        <div class="move-card-q">"What does this story actually say?"</div>
+        <div class="move-card-desc">Students choose a live story, describe it precisely, and map its source architecture. The Story Source Map is due this week.</div>
+      </div></div>
+      <div class="move-card"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-cycle">Cycle 1</div>
+        <div class="move-card-num">Move 2 · Week 2</div>
+        <div class="move-card-title">Analysis</div>
+        <div class="move-card-q">"How has it moved, and who has spoken?"</div>
+        <div class="move-card-desc">Students track the story across one week of development — what changed, whose voices entered or left, where AI shaped what they saw.</div>
+      </div></div>
+      <div class="move-card"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-cycle">Cycle 1</div>
+        <div class="move-card-num">Move 3 · Week 3</div>
+        <div class="move-card-title">Interpretation</div>
+        <div class="move-card-q">"What does your knowledge reveal?"</div>
+        <div class="move-card-desc">Students bring disciplinary knowledge to the story's meaning — what the coverage cannot say, what a careful reader with their training can. The Interpretive Note is due this week.</div>
+      </div></div>
+      <div class="move-card cycle-2"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-cycle">Cycle 2</div>
+        <div class="move-card-num">Move 4 · Week 4</div>
+        <div class="move-card-title">Evaluation</div>
+        <div class="move-card-q">"What is at stake, and for whom?"</div>
+        <div class="move-card-desc">Students make a reasoned judgment about the events and the coverage — who bears costs, who is absent, whether the public is being served.</div>
+      </div></div>
+      <div class="move-card cycle-2"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-cycle">Cycle 2</div>
+        <div class="move-card-num">Move 5 · Week 5</div>
+        <div class="move-card-title">Engagement</div>
+        <div class="move-card-q">"What do I say, and to whom?"</div>
+        <div class="move-card-desc">Students produce the Short Public Piece — 400 to 500 words for a named general audience — carrying five weeks of attention into something a reader outside the course can use.</div>
+      </div></div>
+      <div class="move-card cycle-2"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-cycle">Cycle 2</div>
+        <div class="move-card-num">Move 6 · Week 5</div>
+        <div class="move-card-title">Description — Return</div>
+        <div class="move-card-q">"What does my own piece actually say?"</div>
+        <div class="move-card-desc">Students apply Description to their own writing before submitting. Does the piece say what they think it says? Does the opening deliver what it promises? The Self-Assessment closes the loop.</div>
+      </div></div>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What Students Produce</h3>
+    <div class="meta">
+      <div class="meta-item">Week 1: <span>Story Source Map (300–400 words)</span></div>
+      <div class="meta-item">Week 2: <span>Reading Log (completion)</span></div>
+      <div class="meta-item">Week 3: <span>Interpretive Note (400–500 words)</span></div>
+      <div class="meta-item">Week 4: <span>Reading Log (completion)</span></div>
+      <div class="meta-item">Week 5: <span>Short Public Piece (400–500 words) + Self-Assessment</span></div>
+    </div>
+    <p>The Reading Log continues from the Small version — the same brief three-move pre-class post, completion-graded, every week. The three formal assignments ask students to write at increasing scale: a map, a note, a piece. Each one builds on the previous. A student who writes the Story Source Map carefully will find the Interpretive Note easier to locate; a student who writes the Interpretive Note honestly will find the Short Public Piece already half-formed.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Relationship to Small and Large</h3>
+    <p>Students who completed the Small version already know the three moves and the Reading Log format. The Medium version introduces the story arc — the commitment to one live story across five weeks — and the two new moves: Evaluation and Engagement. The return to Description in Week 5 is the move that students who have done the Small version will recognize immediately and find newly meaningful when applied to their own writing.</p>
+    <p>The Medium version extends cleanly into the Large version. A course that runs Medium in the first five weeks and then adds the Large version's cluster formation, collaborative capstone, and State of the World assembly has a natural ten-week arc. The Interpretive Note from Week 3 becomes the raw material for the Large version's Interpretive Brief. Nothing is wasted.</p>
+  </div>
+</div>
+</div>
+
+<!-- ══ 1 · INSTRUCTOR · HOW TO RUN IT ══ -->
+<div class="panel" id="p2">
+<div class="paste">Instructor Page — How to Run the Medium Version</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">How to Run the Medium Version</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>The Weekly Rhythm</h3>
+    <p>Each week follows the same structure as the Small version's recurring ritual — fifteen minutes of in-class conversation using that week's critical move — but now every student is following their own live story rather than sharing a single item. The conversation shifts from "what did you bring?" to "what happened to your story this week?" The room becomes a room of reporters, each one watching a different corner of the world.</p>
+    <div class="callout"><div class="callout-label">The opening question each week</div><p>Week 1: "What is your story, and what does it actually say right now?" Week 2: "What moved in your story this week — and what did not?" Week 3: "What does your field see in this story that the coverage does not say?" Week 4: "Who is paying a cost in this story that the coverage is not naming?" Week 5: "Read us your first sentence. Does it earn a stranger's attention?"</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Week by Week — Instructor Tasks</h3>
+    <div class="week-arc">
+      <div class="week-row"><div class="week-label">Week 1</div><div class="week-content"><div class="week-title">Description <span class="week-tag">Story Source Map due</span></div><div class="week-sub">Students choose their story and map its source architecture. The instructor's task: confirm every student has a live, traceable story — not a research topic, a live news story with a primary source that can be found. Flag any student who has chosen something too broad ("climate change") or too finished ("the 2020 election") and redirect toward something developing right now.</div></div></div>
+      <div class="week-row"><div class="week-label">Week 2</div><div class="week-content"><div class="week-title">Analysis</div><div class="week-sub">Students report on what moved. The instructor listens for the AI question — it will surface naturally when students describe how they found updates to their story. Name it when it appears: "That's the algorithm deciding what you see. What does that mean for what you are tracking?"</div></div></div>
+      <div class="week-row"><div class="week-label">Week 3</div><div class="week-content"><div class="week-title">Interpretation <span class="week-tag">Interpretive Note due</span></div><div class="week-sub">The most important week. The instructor's task is to protect the Interpretive Note from collapsing into opinion or summary. The test: does the student's Note say something that only someone with their training could say? If not, push further. Provide brief written feedback before Week 5 so students can draw on the Note in the Short Public Piece.</div></div></div>
+      <div class="week-row"><div class="week-label cycle-2">Week 4</div><div class="week-content"><div class="week-title">Evaluation</div><div class="week-sub">Students make evaluative claims about their story. The instructor's task: keep evaluation grounded in evidence rather than reaction. "What is the principle you are applying? Who specifically bears this cost? What would the coverage need to include for the public to understand what is at stake?"</div></div></div>
+      <div class="week-row"><div class="week-label cycle-2">Week 5</div><div class="week-content"><div class="week-title">Engagement <span class="week-tag">Short Public Piece due</span></div><div class="week-sub">Students read their opening sentence aloud. The room responds as a general audience — not as evaluators, but as readers who do not know the story. The instructor's closing question: "What did five weeks of following this story let you say that you could not have said at Week 1?"</div></div></div>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>What to Do When a Student's Story Dies</h3>
+    <p>Some stories stop developing. The coverage moves on; the primary institution stops issuing statements; the news cycle finds something else. This is not a failure — it is data. A student whose story goes quiet in Week 2 has learned something about how the news cycle works: stories disappear not because they are resolved but because they lose the attention of the outlets covering them. That observation belongs in the Interpretive Note and the Short Public Piece. The story going quiet is itself a story.</p>
+    <div class="callout"><div class="callout-label">If a student needs to switch stories</div><p>Allow it through the end of Week 2. After that, a story switch forfeits the Story Source Map's value and makes the Interpretive Note harder to write with genuine depth. If a student's story has genuinely become untraceable, redirect them toward a related thread within the same beat area rather than a completely new subject.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ 2 · INSTRUCTOR · THE AI CONVERSATION ══ -->
+<div class="panel" id="p3">
+<div class="paste">Instructor Page — The AI Conversation in Medium</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">The AI Conversation in Medium</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>How It Deepens Across Five Weeks</h3>
+    <p>In the Small version, the AI conversation surfaces once — inside Analysis — and the instructor holds it lightly. In the Medium version, AI is a thread that runs across all five weeks, deepening each time. By Week 5, students have five weeks of evidence about how AI shaped what they saw, and the Short Public Piece is implicitly or explicitly a response to that.</p>
+    <div class="callout"><div class="callout-label">Week 1 · Description</div><p>Where did the story appear, and how did it find you? Was there an AI summary before the article? What did the summary say versus what the article said? Students note this in the Story Source Map.</p></div>
+    <div class="callout"><div class="callout-label">Week 2 · Analysis</div><p>How did the story develop in your feed versus in direct searches of the outlet? Did the algorithm show you the follow-up, or did you have to look for it? What does the difference tell you about what the recommendation system considers important?</p></div>
+    <div class="callout"><div class="callout-label">Week 3 · Interpretation</div><p>Did AI-generated or AI-summarized content shape the public's understanding of this story in ways that changed its meaning? The Interpretive Note can address this directly: what does your field see that the AI summary flattened or missed?</p></div>
+    <div class="callout"><div class="callout-label">Week 4 · Evaluation</div><p>Who benefits from how this story has been covered — and who loses? Does the AI-mediated version of this story serve the public understanding of what is at stake? What does the coverage leave out that a citizen would need to evaluate it fairly?</p></div>
+    <div class="callout"><div class="callout-label">Week 5 · Engagement</div><p>The Short Public Piece is, among other things, a response to the AI information environment — it is a human, sourced, disciplinarily grounded account of a story that the AI-mediated ecosystem has handled poorly or incompletely. Students do not need to say this explicitly. It is the premise of the assignment.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Structural Irony — How Directly to Name It</h3>
+    <div class="dark">
+      <div class="dark-label">For Medium — use this framing in Week 1 or whenever it fits your course</div>
+      <p>The story you are following this week exists inside a distribution system that is largely automated. Algorithms decided what appeared in your feed. AI tools may have summarized it before you reached the full article. The company that owns the platform showing it to you has a financial interest in your continued engagement, not your accurate understanding.</p>
+      <p>At the same time, the companies building these systems are among the most significant economic actors of our time. <em>The growth of the AI economy and the degradation of the public information environment are not separate phenomena.</em> They are connected, and following a live news story across five weeks is one way to see exactly how.</p>
+      <p><strong>By Week 5, you will have five weeks of evidence about how this connection works in your specific beat.</strong> The Short Public Piece is where you use it.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ 3 · INSTRUCTOR · ADAPT ══ -->
+<div class="panel" id="p4">
+<div class="paste">Instructor Page — Adapting the Medium Version</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Adapting the Medium Version</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Minimum Viable Medium Version</h3>
+    <p>If five weeks is more than your course can sustain, the minimum viable Medium version is three weeks: Description (Story Source Map), Interpretation (Interpretive Note), and Engagement (Short Public Piece). This compresses Analysis and Evaluation into the Reading Log entries rather than full class sessions, and produces the three core deliverables with less in-class time. The story arc is shorter but the three assignments remain intact.</p>
+    <div class="callout"><div class="callout-label">Three-week compression</div><p>Week 1: Description — Story Source Map due. Week 2: Interpretation — Interpretive Note due; Analysis and Evaluation folded into Reading Log prompts. Week 3: Engagement — Short Public Piece due, Return to Description applied as the revision step before submission.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>For Courses Coming From Small</h3>
+    <p>Students who have completed the Small version already know the Reading Log format and the first three moves. Introduce the Medium version by naming what is new: they are following one story now instead of bringing different items each week, and they are adding Evaluation and Engagement to the three moves they already know. The Story Source Map is the new anchor — it is the document that makes a five-week arc possible rather than just a series of weekly conversations.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Discipline Entry Points for the Interpretive Note</h3>
+    <p>The Interpretive Note is where the discipline enters most fully. These prompts work across fields — adapt or replace with something more specific to your course:</p>
+    <div class="callout"><div class="callout-label">Sciences</div><p>"What does the methodology of the underlying research actually support — and what has the coverage claimed it supports? Where is the gap, and why does it matter for public understanding?"</p></div>
+    <div class="callout"><div class="callout-label">Social Sciences and Humanities</div><p>"What structural, historical, or cultural forces are shaping this story that the coverage treats as background or ignores entirely? Name them and explain what understanding them changes."</p></div>
+    <div class="callout"><div class="callout-label">Business, Law, Policy</div><p>"What does a practitioner in this area know about how decisions actually get made here — that the public-facing coverage consistently misrepresents or omits? Say it plainly."</p></div>
+    <div class="callout"><div class="callout-label">Arts, Design, Communication</div><p>"How is this story being told — visually, rhetorically, structurally — and what does that framing do to what a reader understands? What would a different framing reveal?"</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>For Online and Hybrid Sections</h3>
+    <p>The five-week arc works well asynchronously. The Reading Log entries and Discussion Board carry the weekly conversation. The Story Source Map, Interpretive Note, and Short Public Piece are individual submissions with clear due dates. The in-class opening question each week becomes the Discussion Board prompt for that week. The one adjustment that matters: provide written feedback on the Interpretive Note before students begin the Short Public Piece. In an async course, this feedback is the equivalent of the in-class conversation that helps students find their angle.</p>
+  </div>
+</div>
+</div>
+
+<!-- ══ 4 · STUDENT · WELCOME ══ -->
+<div class="panel" id="p5">
+<div class="paste">Student Page — Welcome</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Slow News, Smart Citizens · Medium</div>
+    <div class="week-title-lg">Five Weeks. One Story. Six Ways of Seeing It.</div>
+    <div class="week-sub-lg">You are going to follow something carefully for five weeks. By the end, you will have something to say about it that almost no one else can.</div>
+  </div>
+  <div class="week-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What This Module Asks</h3>
+    <p>The Small version of this course asked you to bring something you read each week and to apply three moves to it: Description, Analysis, Interpretation. The Medium version asks you to commit. Choose one live news story — something developing right now, in a field connected to your studies or your life — and follow it for five weeks. Not because it is the most important story in the world, but because following anything carefully enough produces understanding that skimming many things cannot.</p>
+    <div class="pull">"The difference between someone who has been following a story for five weeks and someone who just read the headline is visible the moment they open their mouth. This module cultivates that difference deliberately."</div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>What You Will Produce</h3>
+    <p>Three pieces of writing, across five weeks. Each one builds on the previous. Together they are a record of what sustained attention to one corner of the world actually yields.</p>
+    <div class="week-arc">
+      <div class="week-row"><div class="week-label">Week 1</div><div class="week-content"><div class="week-title">Story Source Map <span class="week-tag">Assignment</span></div><div class="week-sub">A short document (300–400 words) mapping your story's information architecture — where it comes from, how it travels, where AI enters the chain.</div></div></div>
+      <div class="week-row"><div class="week-label">Week 2</div><div class="week-content"><div class="week-title">Reading Log</div><div class="week-sub">Your three-move account of how the story developed this week. Completion-graded.</div></div></div>
+      <div class="week-row"><div class="week-label">Week 3</div><div class="week-content"><div class="week-title">Interpretive Note <span class="week-tag">Assignment</span></div><div class="week-sub">A focused piece (400–500 words) applying your disciplinary knowledge to the story's meaning — what the coverage cannot say, what you can.</div></div></div>
+      <div class="week-row"><div class="week-label cycle-2">Week 4</div><div class="week-content"><div class="week-title">Reading Log</div><div class="week-sub">Your evaluative account of the story this week — what is at stake, who pays, whether the coverage is adequate. Completion-graded.</div></div></div>
+      <div class="week-row"><div class="week-label cycle-2">Week 5</div><div class="week-content"><div class="week-title">Short Public Piece <span class="week-tag">Assignment</span></div><div class="week-sub">400–500 words for a general reader — someone who has seen the headlines but needs a knowledgeable guide to understanding them. The piece that only five weeks of attention makes possible.</div></div></div>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Why One Story</h3>
+    <p>Following one story across five weeks does something that following many stories cannot: it teaches you how the news cycle actually works. You will watch your story grow, stall, get picked up by different outlets, get covered differently depending on who is telling it, get summarized by AI in ways that change its meaning, and eventually either resolve or disappear from coverage without resolving at all. That arc is the lesson — and you cannot see it in a single session.</p>
+    <p>By Week 3, you will know things about your story that almost no one who encountered it in a headline does. By Week 5, you will have something worth saying about it. The Short Public Piece is where you say it.</p>
+  </div>
+</div>
+</div>
+
+<!-- ══ 5 · STUDENT · THE SIX MOVES ══ -->
+<div class="panel" id="p6">
+<div class="paste">Student Page — The Six Moves (reference page)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">The Six Moves</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>Two Cycles — Each Building on the Last</h3>
+    <p>The Medium version runs six moves across five weeks — the original three moves from the Small version, followed by three more, with Description returning at the end applied to your own writing. The sequence is the method. Do not skip ahead.</p>
+    <div class="six-moves">
+      <div class="move-card"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-cycle">Cycle 1 · Week 1</div>
+        <div class="move-card-title">Description</div>
+        <div class="move-card-q">"What does this story actually say?"</div>
+        <div class="move-card-desc">Account for what is in the story — the main claim, the evidence cited, the gap between headline and body. Map where the story comes from and how it reached you. Do not evaluate or interpret yet.</div>
+      </div></div>
+      <div class="move-card"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-cycle">Cycle 1 · Week 2</div>
+        <div class="move-card-title">Analysis</div>
+        <div class="move-card-q">"How has it moved, and who has spoken?"</div>
+        <div class="move-card-desc">Track what changed in one week of coverage. What new evidence appeared? Whose voices entered or left? What did the algorithm show you versus what you found when you searched? Where did AI touch the story?</div>
+      </div></div>
+      <div class="move-card"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-cycle">Cycle 1 · Week 3</div>
+        <div class="move-card-title">Interpretation</div>
+        <div class="move-card-q">"What does your knowledge reveal?"</div>
+        <div class="move-card-desc">This is the move that separates a careful reader from a casual one. Use your training, your field, your educated attention to say what this story means in ways the coverage does not. The Interpretive Note is your record of that perception.</div>
+      </div></div>
+      <div class="move-card cycle-2"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-cycle">Cycle 2 · Week 4</div>
+        <div class="move-card-title">Evaluation</div>
+        <div class="move-card-q">"What is at stake, and for whom?"</div>
+        <div class="move-card-desc">Make a reasoned judgment. Who bears the costs of what is happening in your story? Does the coverage serve the public's understanding of those stakes? Evaluation is not reaction — it is a claim supported by evidence and grounded in a principle you can name.</div>
+      </div></div>
+      <div class="move-card cycle-2"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-cycle">Cycle 2 · Week 5</div>
+        <div class="move-card-title">Engagement</div>
+        <div class="move-card-q">"What do I say, and to whom?"</div>
+        <div class="move-card-desc">Produce something. Five weeks of attention has earned you the right to say something about this story that a general reader needs to hear and that only you — with your field, your weeks of following, your perception — can say in this way.</div>
+      </div></div>
+      <div class="move-card cycle-2"><div class="move-card-stripe"></div><div class="move-card-body">
+        <div class="move-card-cycle">Cycle 2 · Week 5</div>
+        <div class="move-card-title">Description — Return</div>
+        <div class="move-card-q">"What does my own piece actually say?"</div>
+        <div class="move-card-desc">Before you submit the Short Public Piece, apply Description to it. What does it actually say — according to the evidence it cites, the claims it makes, the gap between your headline and your body? If you would push back on a news story for that gap, push back on your own.</div>
+      </div></div>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>The Six Questions</h3>
+    <div class="three-q">
+      <div class="q-item"><div class="q-num">1</div><div class="q-text">What does this story actually say, according to the evidence it cites?</div></div>
+      <div class="q-item"><div class="q-num">2</div><div class="q-text">How has it moved this week — and what shaped that movement?</div></div>
+      <div class="q-item"><div class="q-num">3</div><div class="q-text">What does your knowledge reveal that the coverage does not say?</div></div>
+      <div class="q-item"><div class="q-num">4</div><div class="q-text">What is at stake here, and who is paying a cost the coverage is not naming?</div></div>
+      <div class="q-item"><div class="q-num">5</div><div class="q-text">What do you say about this, and to whom?</div></div>
+      <div class="q-item"><div class="q-num">6</div><div class="q-text">What does your own piece actually say — and does it hold up?</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ 6 · STUDENT · FINDING YOUR STORY ══ -->
+<div class="panel" id="p7">
+<div class="paste">Student Page — Finding Your Story</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Finding Your Story</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>What Makes a Good Story for This Module</h3>
+    <p>Your story needs to meet three criteria. It must be live — developing right now, with new information still arriving. It must be traceable — you can find a primary source, a named reporter, an originating institution. And it must be connected to something you know — your major, your field, your background, your lived experience — so that Interpretation in Week 3 has something real to draw on.</p>
+    <div class="callout"><div class="callout-label">Good stories</div><p>A policy debate that is still unresolved. A scientific finding that has entered mainstream coverage in a simplified or distorted form. A local or regional issue that national outlets are covering differently than local ones. A corporate, governmental, or institutional decision whose implications are still unfolding. A cultural or social development that your field has a specific vocabulary for that the general coverage lacks.</p></div>
+    <div class="callout" style="background:#fff8f5;border-color:#e8d0d0"><div class="callout-label">Stories to avoid</div><p>Topics so broad they cannot be traced to a primary source ("climate change," "the economy," "social media"). Stories that are already resolved — they have no arc left to follow. Stories you already have strong opinions about — not because opinion is wrong, but because it tends to collapse the Evaluation move into reaction before you have done Description and Analysis. Stories with no connection to anything you know — the Interpretation move will be thin.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>The Source Architecture — Find It in Week 1</h3>
+    <p>Before you commit to a story, trace it to its primary source. The primary source is the original document, study, event, statement, or institution that the story is based on. If you cannot find it, or if the story is entirely sourced from other coverage rather than from a traceable origin, find a different story. The source architecture is what makes the Story Source Map possible and what makes Analysis in Week 2 meaningful.</p>
+    <div class="callout"><div class="callout-label">The three source layers</div><p><strong>Primary:</strong> The original — a study, a government report, a legal filing, a company announcement, an event that occurred. <strong>Specialist:</strong> The first layer of coverage — a trade publication, a specialist outlet, a wire service report. <strong>Mainstream:</strong> Where the general public encounters it — a national newspaper, a broadcast outlet, a social media summary. Most stories you find will be at the mainstream layer. Your job in Week 1 is to trace backwards to the primary.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>The AI Audit — Do It Now</h3>
+    <p>When you find your story, note immediately: how did it reach you? Was there an AI summary before the article? What did the summary say versus what the article said? This observation goes into your Story Source Map and seeds five weeks of AI tracking. Students who do this audit in Week 1 have much richer material in their Short Public Piece than students who note it retrospectively.</p>
+  </div>
+</div>
+</div>
+
+<!-- ══ 7 · WEEK 1 · DESCRIPTION ══ -->
+<div class="panel" id="p8">
+<div class="paste">Week 1 — Description · Session Page + Reading Log</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Week 1 · Description</div>
+    <div class="week-title-lg">What Does Your Story Actually Say?</div>
+    <div class="week-sub-lg">Find it. Trace it. Describe it — without reacting, interpreting, or evaluating.</div>
+  </div>
+  <div class="week-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta">
+      <div class="meta-item">Move: <span>Description</span></div>
+      <div class="meta-item">Assignment due: <span>Story Source Map</span></div>
+      <div class="meta-item">Reading Log: <span>Due before class</span></div>
+    </div>
+    <p>This week you choose your story and describe it. Not analyze, not evaluate — describe. Account for what is actually there: the main claim, the evidence cited, the source architecture behind it. The Story Source Map is the document that makes everything else possible. A careful Source Map in Week 1 makes the Interpretive Note in Week 3 significantly easier to write.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Reading Log — Week 1</h3>
+    <div class="journal">
+      <div class="callout-label">Reading Log · Week 1 · Due before class</div>
+      <p><strong>Description:</strong> Name your story in one sentence — present tense, specific. What is happening right now?</p>
+      <p><strong>Analysis:</strong> Where did you find it? Name the outlet, the reporter if there is one, and what you believe to be the primary source. Note if AI played any role in how you found or first read it.</p>
+      <p><strong>Interpretation:</strong> In one sentence, name what your field or background connects to this story. What is the angle your training gives you?</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Discussion Board — Week 1</h3>
+    <div class="callout"><div class="callout-label">Your Post</div><p>Share your story: one sentence on what it is, one sentence on where it comes from, one sentence on why you chose it. Then: what is the one thing about this story that a general reader would need to understand that the headline does not give them?</p></div>
+    <div class="callout"><div class="callout-label">Your Reply</div><p>Find one classmate whose story connects to yours — not by topic, but by the kind of question it raises or the kind of knowledge it requires. Name the connection in one sentence.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ 8 · WEEK 2 · ANALYSIS ══ -->
+<div class="panel" id="p9">
+<div class="paste">Week 2 — Analysis · Session Page + Reading Log</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Week 2 · Analysis</div>
+    <div class="week-title-lg">How Has Your Story Moved?</div>
+    <div class="week-sub-lg">Track what changed. Map who spoke and who went silent. Follow the AI footprint.</div>
+  </div>
+  <div class="week-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta">
+      <div class="meta-item">Move: <span>Analysis</span></div>
+      <div class="meta-item">Reading Log: <span>Due before class</span></div>
+    </div>
+    <p>Your story has been developing for a week. Something has changed — new evidence, new voices, new silence, a shift in how outlets are framing it, a development that the algorithm surfaced or buried. This week you track that movement. The goal is not to report the latest update but to understand what the arc of coverage reveals about how your story works.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Reading Log — Week 2</h3>
+    <div class="journal">
+      <div class="callout-label">Reading Log · Week 2 · Due before class</div>
+      <p><strong>Description:</strong> What is the most significant development in your story this week — one specific thing that changed.</p>
+      <p><strong>Analysis:</strong> What drove that change — a new document, a new source, an event, an editorial decision? Who entered the coverage this week who was not there before? Who went quiet? Did the algorithm show you this development, or did you have to find it?</p>
+      <p><strong>Interpretation:</strong> What does this week's movement tell you about how your story works — about the forces shaping its coverage? One sentence, as specific as you can make it.</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Discussion Board — Week 2</h3>
+    <div class="callout"><div class="callout-label">Your Post</div><p>Share what moved in your story this week and what you think drove it. Then: what did the algorithm show you versus what you found when you searched directly? What does the difference tell you about what the recommendation system considers important in your story?</p></div>
+    <div class="callout"><div class="callout-label">Your Reply</div><p>Tell a classmate one voice that is absent from their story's coverage — someone or something that should be in the account but isn't. How would the story read differently if that voice were present?</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ 9 · WEEK 3 · INTERPRETATION ══ -->
+<div class="panel" id="p10">
+<div class="paste">Week 3 — Interpretation · Session Page + Reading Log</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Week 3 · Interpretation</div>
+    <div class="week-title-lg">What Does Your Knowledge Reveal?</div>
+    <div class="week-sub-lg">This is the move that separates a careful reader from a casual one. Use what you know.</div>
+  </div>
+  <div class="week-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta">
+      <div class="meta-item">Move: <span>Interpretation</span></div>
+      <div class="meta-item">Assignment due: <span>Interpretive Note</span></div>
+      <div class="meta-item">Reading Log: <span>Due before class</span></div>
+    </div>
+    <p>Two weeks of Description and Analysis have given you something that most readers of your story do not have: a clear picture of what the story actually says, how it has traveled, who has spoken, and what has shaped its coverage. Now you bring your own knowledge to bear on what it means. The Interpretive Note is where that perception becomes writing.</p>
+    <div class="connoisseur-box">
+      <div class="connoisseur-box-label">On the Interpretive Note</div>
+      <p>There is a kind of knowledge that comes from looking carefully at something for long enough to see what is actually there — as distinct from what you expect to see, or what the summary told you was there. It is the kind of knowledge that takes time to develop and that, once developed, changes how you see not just this story but everything adjacent to it.</p>
+      <p>The Interpretive Note asks you to name what that knowledge reveals. Not what you think about the story — what you see in it, because of what you know, that a reader without your training would miss. That is a specific and accountable claim. It is also the most useful thing you can contribute to the public understanding of this story.</p>
+      <p>Write toward that. The Note is not a summary, not a reaction, not a review of your Analysis. It is your perception, made precise.</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Reading Log — Week 3</h3>
+    <div class="journal">
+      <div class="callout-label">Reading Log · Week 3 · Due before class</div>
+      <p><strong>Description:</strong> What is the current state of your story — one sentence, present tense.</p>
+      <p><strong>Analysis:</strong> What has the coverage consistently gotten wrong, oversimplified, or left out across three weeks?</p>
+      <p><strong>Interpretation:</strong> Complete this sentence — and mean it: "What this story is really about, when you understand [something from your field or training], is…"</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Discussion Board — Week 3</h3>
+    <div class="callout"><div class="callout-label">Your Post</div><p>Share your interpretive claim — the "what this story is really about" sentence — and in two or three sentences, explain what knowledge supports it. Be specific: name the concept, the framework, the field-specific understanding that makes the claim possible.</p></div>
+    <div class="callout"><div class="callout-label">Your Reply</div><p>Tell a classmate whether their interpretive claim holds — does the knowledge they are invoking actually change the meaning of the story, or does it add context without changing the claim? Be honest. The Note is stronger for pushback than for agreement.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ 10 · WEEK 4 · EVALUATION ══ -->
+<div class="panel" id="p11">
+<div class="paste">Week 4 — Evaluation · Session Page + Reading Log</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Week 4 · Evaluation</div>
+    <div class="week-title-lg">What Is at Stake, and Who Is Paying?</div>
+    <div class="week-sub-lg">Evaluation is not reaction. It is a reasoned judgment, grounded in evidence, applied to real stakes.</div>
+  </div>
+  <div class="week-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta">
+      <div class="meta-item">Move: <span>Evaluation</span></div>
+      <div class="meta-item">Reading Log: <span>Due before class</span></div>
+    </div>
+    <p>You have described your story, tracked how it moved, and interpreted what it means. Now you evaluate it — both the events the story describes and the coverage itself. Evaluation asks: is what is happening fair? Is the coverage adequate? Who bears costs that the public record is not naming? These are harder questions than Description or Analysis, and they require everything you have done in the previous three weeks to answer well.</p>
+    <div class="callout"><div class="callout-label">Evaluation vs. reaction</div><p>A reaction is what you felt when you first read the headline. An evaluation is what you can say after three weeks of careful attention — grounded in evidence, naming the principle you are applying, specific about who is affected and how. The difference between them is the difference between a comment section and a civic contribution.</p></div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Reading Log — Week 4</h3>
+    <div class="journal">
+      <div class="callout-label">Reading Log · Week 4 · Due before class</div>
+      <p><strong>Description:</strong> What is the most recent development in your story?</p>
+      <p><strong>Analysis:</strong> Who is bearing a cost in your story — in the events themselves or in how they are being covered — that the mainstream coverage is not naming?</p>
+      <p><strong>Evaluation:</strong> Make one evaluative claim: Is what is happening fair or unfair, adequate or inadequate? Name the principle you are applying — not "this is bad" but "according to [standard], this falls short because…"</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Discussion Board — Week 4</h3>
+    <div class="callout"><div class="callout-label">Your Post</div><p>Share your evaluative claim — your principle, your evidence, your conclusion. Make it specific enough that someone could disagree with you. Then: does the coverage of your story serve the public's understanding of what is at stake? What would need to change for it to do so?</p></div>
+    <div class="callout"><div class="callout-label">Your Reply</div><p>Engage with a classmate's evaluative argument — not to agree or disagree immediately, but to ask: what is the strongest objection to their claim? State it as fairly as you can. Then let them respond.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ 11 · WEEK 5 · ENGAGEMENT ══ -->
+<div class="panel" id="p12">
+<div class="paste">Week 5 — Engagement · Session Page + Reading Log</div>
+<div class="dp-wrapper">
+  <div class="week-header">
+    <div class="week-badge">Week 5 · Engagement + Return to Description</div>
+    <div class="week-title-lg">What Do You Say, and to Whom?</div>
+    <div class="week-sub-lg">Five weeks of attention has earned you the right to say something. The Short Public Piece is where you say it — and Description is how you check whether it holds.</div>
+  </div>
+  <div class="week-rule"></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-list-alt"></i>This Week</h3>
+    <div class="meta">
+      <div class="meta-item">Moves: <span>Engagement + Return to Description</span></div>
+      <div class="meta-item">Assignment due: <span>Short Public Piece</span></div>
+      <div class="meta-item">Also due: <span>Self-Assessment</span></div>
+    </div>
+    <p>The Short Public Piece is the culminating assignment of the Medium version. It asks you to take everything you have done across five weeks — the description, the analysis, the interpretive note, the evaluative thinking — and produce something a general reader can actually use. Not a summary of your research. Not a report on your process. A piece of writing for a named audience, on a subject you now know something about, saying something that only five weeks of attention makes possible.</p>
+    <p>After you write it, apply Description to it. Run your own piece through Move 1: What does it actually say? Does the opening deliver what it promises? Is there a gap between your headline and your body? A reader who would catch that gap in a news story should catch it in their own writing too. That is what the Return to Description is for.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Reading Log — Week 5</h3>
+    <div class="journal">
+      <div class="callout-label">Reading Log · Week 5 · Due before class</div>
+      <p><strong>Description:</strong> In one sentence, state the central claim of your Short Public Piece — what it actually argues or explains.</p>
+      <p><strong>Analysis:</strong> Who is your audience — name them specifically — and what do they already know about this story? What do they need to understand that they currently do not?</p>
+      <p><strong>Interpretation:</strong> What can you say in this piece that no one who has not been following your story for five weeks can say? Name it. That is your contribution.</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-comments"></i>Discussion Board — Week 5</h3>
+    <div class="callout"><div class="callout-label">Your Post</div><p>Share your opening sentence. Just the first sentence of your Short Public Piece. Then: does it earn a stranger's attention? Would you keep reading if you encountered it outside this course?</p></div>
+    <div class="callout"><div class="callout-label">Your Reply</div><p>Tell a classmate honestly: would you read their piece? What would make you stop after the first paragraph — and what would make you keep going? This is not encouragement. It is the reader's feedback that makes the piece better.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ 12 · ASSESSMENT · STORY SOURCE MAP ══ -->
+<div class="panel" id="p13">
+<div class="paste">Assessment — Story Source Map (due end of Week 1; 300–400 words)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Assessment — Story Source Map</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle"></i>Purpose</h3>
+    <p>The Story Source Map is a short document — 300 to 400 words — that establishes the information architecture of your chosen story. It is not a summary of the story. It is a map of where the story comes from, how it has traveled, and where AI has entered the chain. A careful Source Map makes everything that follows — Analysis, Interpretation, Evaluation, and the Short Public Piece — significantly easier to write.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Instructions</h3>
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Name the story.</strong> One sentence: what is happening, right now, in present tense. Not a topic — a live development.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Map the three source layers.</strong> Primary source: what is the original document, study, event, or statement the story is based on? Specialist layer: which outlets or reporters cover this beat with expertise? Mainstream layer: where is the general public encountering this story?</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Trace the AI footprint.</strong> Where did AI touch this story — in how you found it, in how it was summarized, in how it was distributed? What did the AI summary say versus what the article said?</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Name your angle.</strong> In one sentence: what does your field, your major, or your background connect to this story? This is the seed of your Interpretive Note in Week 3.</div></div>
+    <table class="rubric" style="margin-top:20px">
+      <tr><th>Element</th><th>What We Are Looking For</th><th>Points</th></tr>
+      <tr><td><strong>Story named</strong></td><td>Specific, live, present-tense. Not a topic — a development.</td><td class="pts">20 pts</td></tr>
+      <tr><td><strong>Three source layers</strong></td><td>All three identified with named examples. Primary source located or attempted.</td><td class="pts">35 pts</td></tr>
+      <tr><td><strong>AI footprint</strong></td><td>At least one specific observation about AI's role in how the story was encountered or presented.</td><td class="pts">25 pts</td></tr>
+      <tr><td><strong>Disciplinary angle</strong></td><td>One sentence connecting your field to the story — specific enough to seed the Interpretive Note.</td><td class="pts">20 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ══ 13 · ASSESSMENT · INTERPRETIVE NOTE ══ -->
+<div class="panel" id="p14">
+<div class="paste">Assessment — Interpretive Note (due end of Week 3; 400–500 words)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Assessment — Interpretive Note</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle"></i>Purpose</h3>
+    <p>The Interpretive Note is the most intellectually demanding piece in the Medium version — and the most important. It asks you to say what your story means in light of what you know, in a way that the coverage itself cannot. It is not a summary of your Analysis, not a reaction to the events, and not a preview of your evaluative position. It is perception made precise: what a careful, educated reader sees when they look at this story that a casual reader does not.</p>
+    <div class="connoisseur-box">
+      <div class="connoisseur-box-label">The Standard</div>
+      <p>Ask yourself: could someone without my training, my field, my weeks of following this story have written this Note? If the answer is yes, go further. The Interpretive Note earns its place when it says something that is only possible because of what you bring — your major, your background, your educated attention. That is the contribution. Everything else is summary.</p>
+    </div>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Instructions</h3>
+    <p>Write an Interpretive Note of 400 to 500 words. It should read as a single, coherent piece of writing — not three labeled sections. Address the following in whatever order serves your argument.</p>
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>What the coverage says the story is about.</strong> One paragraph — accurately describe what the mainstream coverage presents as the story's meaning. Use Description: what does it actually say?</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>What your knowledge reveals.</strong> One to two paragraphs — name the concept, framework, or field-specific understanding that changes how this story reads. Explain it clearly enough that someone outside your field can follow it. Then say what it reveals: what the coverage misses, oversimplifies, or cannot say because it lacks your training.</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Your interpretive claim.</strong> One paragraph — what does this story actually mean, in light of what you now know? Make a specific, arguable claim. This is your contribution to the public understanding of the story.</div></div>
+    <table class="rubric" style="margin-top:20px">
+      <tr><th>Element</th><th>What We Are Looking For</th><th>Points</th></tr>
+      <tr><td><strong>Coverage account</strong></td><td>Accurate description of what the mainstream coverage presents as the story's meaning. Specific and fair.</td><td class="pts">20 pts</td></tr>
+      <tr><td><strong>Disciplinary knowledge</strong></td><td>At least one concept or framework named, explained accessibly, and applied specifically to the story. Not background — a lens that changes what you see.</td><td class="pts">35 pts</td></tr>
+      <tr><td><strong>Interpretive claim</strong></td><td>Specific, arguable claim about what the story means. Something only this student, with this training, following this story, could say.</td><td class="pts">35 pts</td></tr>
+      <tr><td><strong>Clarity and precision</strong></td><td>Written for an intelligent general reader. No unnecessary jargon. Every sentence earning its place.</td><td class="pts">10 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ══ 14 · ASSESSMENT · SHORT PUBLIC PIECE ══ -->
+<div class="panel" id="p15">
+<div class="paste">Assessment — Short Public Piece (due end of Week 5; 400–500 words)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Assessment — Short Public Piece</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle"></i>Purpose</h3>
+    <p>The Short Public Piece is the culminating assignment of the Medium version. It asks you to take everything you have done across five weeks — description, analysis, interpretive note, evaluative thinking — and produce something a general reader can actually use. Not a summary of your research. A piece of writing for a named audience, on a subject you now know something about, saying something that only five weeks of attention makes possible.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Instructions</h3>
+    <p>Write a Short Public Piece of 400 to 500 words for a named general audience — someone who has seen the headlines on your story but needs a knowledgeable guide to understanding it. Choose a form that fits your argument: a short explainer, an op-ed, a letter to the editor, or a public note. The form is less important than the audience and the claim.</p>
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Name your audience before you write.</strong> Not "a general reader" — a specific kind of person in a specific situation. What do they already know? What do they need to understand? Write to that person.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Lead with what only you can say.</strong> The piece earns its existence because you have been following this story for five weeks. Whatever that attention produced — the interpretive claim, the evaluative finding, the absent voice you named — lead with it. Do not save it for the end.</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Apply Description before you submit.</strong> Run your piece through Move 1: what does it actually say? Does your opening deliver what it promises? Is there a gap between your headline and your body? Fix it if there is.</div></div>
+    <div class="callout"><div class="callout-label">The AI dimension — optional but encouraged</div><p>If AI shaped how your story was covered, summarized, or distributed in ways that matter for public understanding, say so in the piece. Not as a complaint — as information. A reader who knows this is better equipped to evaluate what they have read.</p></div>
+    <table class="rubric" style="margin-top:16px">
+      <tr><th>Element</th><th>What We Are Looking For</th><th>Points</th></tr>
+      <tr><td><strong>Original contribution</strong></td><td>The piece says something that five weeks of attention produced — something that would not exist without that sustained work.</td><td class="pts">30 pts</td></tr>
+      <tr><td><strong>Named audience</strong></td><td>The piece is written for a specific reader — not a generic public — and the writing reflects that. Voice, level, emphasis all calibrated to the audience named.</td><td class="pts">20 pts</td></tr>
+      <tr><td><strong>Evidence and specificity</strong></td><td>Claims grounded in the five weeks of source work. No vague generalities. Primary sources cited or traceable.</td><td class="pts">25 pts</td></tr>
+      <tr><td><strong>Description applied to own writing</strong></td><td>The piece does what it says it does. Opening earns its promise. No gap between headline/lede and body.</td><td class="pts">25 pts</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="pts"><strong>100 pts</strong></td></tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ══ 15 · ASSESSMENT · SELF-ASSESSMENT ══ -->
+<div class="panel" id="p16">
+<div class="paste">Assessment — Self-Assessment (due with Short Public Piece; completion-graded)</div>
+<div class="dp-wrapper">
+  <div class="dp-header"><h2 class="dp-heading">Assessment — Self-Assessment</h2></div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-check-circle"></i>Purpose</h3>
+    <p>The Self-Assessment closes the Medium version. It asks you to look back across five weeks and name what the sustained attention produced — in your reading, in your thinking, in the story itself. It is completion-graded: submit it honestly and you receive full credit.</p>
+  </div>
+  <div class="dp-content-block">
+    <h3 class="dp-has-icon"><i class="dp-icon far fa-edit"></i>Six Questions — One Per Move</h3>
+    <div class="callout"><div class="callout-label">Description</div><p>What did your story actually say at Week 1 versus what it says now? What changed — in the story itself, and in how you describe it?</p></div>
+    <div class="callout"><div class="callout-label">Analysis</div><p>What did you learn about how your story's coverage works — structurally, not just in terms of its content? What forces shaped the arc of coverage across five weeks?</p></div>
+    <div class="callout"><div class="callout-label">Interpretation</div><p>What is the most specific thing your field or background let you see in this story that a general reader would miss? Name it precisely — this is the contribution you are carrying forward.</p></div>
+    <div class="callout"><div class="callout-label">Evaluation</div><p>Who bore a cost in this story that the coverage did not name adequately? What would have needed to change in the reporting for the public to understand what was at stake?</p></div>
+    <div class="callout"><div class="callout-label">Engagement</div><p>What did you say in the Short Public Piece that you could not have said at Week 1? What did five weeks of attention make possible?</p></div>
+    <div class="callout"><div class="callout-label">Return to Description</div><p>What question about your story are you leaving this module with — something five weeks of careful attention raised but did not resolve? That question is not a failure. It is where the work continues.</p></div>
+    <div class="dark" style="margin-top:20px"><div class="dark-label">For instructors — on receiving self-assessments</div><p>The Self-Assessment's sixth question — the open question students leave with — is the most useful data the module produces for curriculum development. Students who have done the Medium version well tend to leave with questions that are more specific, more disciplinarily grounded, and more civic in their orientation than the questions they arrived with. Reading those questions across a class tells you whether the Interpretive Note is doing its work and whether the Short Public Piece is connecting to something real.</p></div>
+  </div>
+</div>
+</div>
+
+<script>
+function show(n){
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.top button').forEach((b,i)=>b.classList.toggle('active',i===n));
+  window.scrollTo({top:0});
+}
+</script>
+</body>
+</html>
