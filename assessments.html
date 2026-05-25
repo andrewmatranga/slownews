@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slow News, Smart Citizens — Assessments, Assignments, and Rubrics</title>
+<style>
+/* ═══════════════════════════════════════════
+   SNSC SHARED DESIGN SYSTEM v2
+   Newspaper website aesthetic throughout
+   No heavy black backgrounds in content areas
+═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@300;400;500&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  /* Palette */
+  --ink:#1c1c1c;
+  --ink-soft:#2e2e2e;
+  --paper:#f5f1ea;
+  --cream:#fffdf7;
+  --white:#ffffff;
+  --crimson:#8b2332;
+  --crimson-dark:#6d1a27;
+  --gold:#b8924a;
+  --gold-light:#c9a96e;
+  --rule:#d4cdc3;
+  --rule-light:#e8e2d8;
+  --muted:#6a6259;
+  --sidebar-bg:#23201c;
+  --sidebar-active:#fff;
+  --sidebar-text:#8a8278;
+  --sidebar-hover:#ccc;
+
+  /* Type */
+  --mono:'DM Mono',monospace;
+  --serif:'Source Serif 4',Georgia,serif;
+  --display:'Playfair Display',Georgia,serif;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--paper);font-family:var(--serif);color:var(--ink);font-size:16px;line-height:1.75}
+
+/* ── NAVIGATION ─────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:var(--cream);
+  border-bottom:1px solid var(--rule);
+}
+.nav-rule{height:3px;background:var(--crimson)}
+.nav-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:stretch;height:46px;padding:0 24px;
+}
+.nav-logo{
+  font-family:var(--display);font-size:14px;font-weight:900;
+  color:var(--ink);text-decoration:none;
+  display:flex;align-items:center;
+  padding-right:20px;border-right:1px solid var(--rule);flex-shrink:0;
+}
+.nav-logo em{color:var(--crimson);font-style:italic}
+.nav-links{display:flex;align-items:stretch;flex:1;overflow-x:auto}
+.nav-links a{
+  font-family:var(--mono);font-size:9px;font-weight:500;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  padding:0 12px;display:flex;align-items:center;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:color .15s;white-space:nowrap;flex-shrink:0;cursor:pointer;
+  background:none;border-top:none;border-left:none;border-right:none;
+}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.active{color:var(--crimson);border-bottom-color:var(--crimson)}
+.nav-sep{width:1px;background:var(--rule);margin:12px 3px;flex-shrink:0}
+.nav-date{
+  margin-left:auto;padding-left:16px;border-left:1px solid var(--rule);
+  font-family:var(--mono);font-size:9px;color:var(--muted);
+  display:flex;align-items:center;flex-shrink:0;
+}
+
+/* ── SHELL LAYOUT ────────────────────────────────── */
+.shell{display:flex;padding-top:49px;min-height:100vh}
+
+/* Sidebar — ink background, this is the LMS chrome, intentionally dark */
+.sidebar{
+  width:210px;flex-shrink:0;
+  background:var(--sidebar-bg);
+  position:sticky;top:49px;
+  height:calc(100vh - 49px);overflow-y:auto;
+}
+.sb-section{
+  padding:10px 0 3px 14px;
+  font-family:var(--mono);font-size:7.5px;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:#4a4540;
+  border-top:1px solid #2e2b27;margin-top:6px;
+}
+.sb-section:first-child{border-top:none;margin-top:0}
+.sidebar button{
+  display:block;width:100%;background:none;border:none;
+  text-align:left;padding:6px 14px;
+  font-family:var(--mono);font-size:9px;
+  letter-spacing:.04em;text-transform:uppercase;
+  color:var(--sidebar-text);cursor:pointer;
+  transition:color .12s;line-height:1.4;
+}
+.sidebar button:hover{color:var(--sidebar-hover)}
+.sidebar button.active{
+  color:var(--sidebar-active);
+  border-left:2px solid var(--crimson);padding-left:12px;
+}
+
+/* Main content */
+.main{flex:1;min-width:0}
+
+/* ── PANELS ──────────────────────────────────────── */
+.panel{display:none;max-width:800px;margin:0 auto;padding:0 0 80px}
+.panel.active{display:block}
+
+/* ── PAGE STRUCTURE ──────────────────────────────── */
+.page-flag{
+  border-bottom:3px solid var(--ink);
+  padding:24px 32px 18px;
+  background:var(--cream);
+}
+.page-eyebrow{
+  font-family:var(--mono);font-size:8.5px;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:10px;
+}
+.page-title{
+  font-family:var(--display);font-size:clamp(22px,4vw,36px);
+  font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:8px;
+}
+.page-deck{
+  font-family:var(--display);font-size:16px;font-style:italic;
+  color:var(--muted);line-height:1.4;max-width:580px;
+}
+.page-rule{height:3px;background:var(--crimson)}
+
+/* Content blocks — white on cream paper, newspaper column feel */
+.block{
+  padding:26px 32px;
+  background:var(--white);
+  border-bottom:1px solid var(--rule-light);
+}
+.block:last-child{border-bottom:none}
+.block h3{
+  font-family:var(--display);font-size:18px;font-weight:700;
+  color:var(--ink);margin-bottom:12px;
+  padding-bottom:8px;border-bottom:1px solid var(--rule);
+}
+.block h4{
+  font-family:var(--display);font-size:15px;font-weight:700;
+  color:var(--ink);margin-bottom:8px;margin-top:18px;
+}
+.block h4:first-child{margin-top:0}
+.block p{font-size:15.5px;line-height:1.78;color:#363230;margin-bottom:14px}
+.block p:last-child{margin-bottom:0}
+.block ul,.block ol{padding-left:22px;margin-bottom:14px}
+.block li{font-size:15px;line-height:1.72;color:#363230;margin-bottom:6px}
+.block li:last-child{margin-bottom:0}
+
+/* ── INLINE ELEMENTS ─────────────────────────────── */
+.pull{
+  border-left:3px solid var(--crimson);
+  padding:12px 18px;
+  background:var(--paper);
+  margin:16px 0;
+  font-family:var(--display);font-size:17px;font-style:italic;
+  line-height:1.5;color:var(--ink);
+}
+
+.callout{
+  background:var(--paper);border:1px solid var(--rule);
+  padding:13px 17px;margin:12px 0;
+}
+.callout-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:7px;
+}
+.callout p{font-size:14px;margin:0;color:#444;line-height:1.65}
+.callout p+p{margin-top:8px}
+.callout ul{padding-left:16px;margin-top:6px;margin-bottom:0}
+.callout li{font-size:14px;line-height:1.65;color:#444;margin-bottom:4px}
+
+/* Accent box — replaces the heavy dark boxes, uses crimson rule instead */
+.accent{
+  background:var(--cream);
+  border-left:4px solid var(--crimson);
+  border:1px solid var(--rule);
+  border-left:4px solid var(--crimson);
+  padding:16px 20px;margin:14px 0;
+}
+.accent-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:10px;
+}
+.accent p{font-size:14.5px;line-height:1.72;color:#363230;margin-bottom:10px}
+.accent p:last-child{margin-bottom:0}
+.accent strong{color:var(--ink)}
+.accent em{color:var(--crimson);font-style:normal}
+.accent ul{padding-left:18px;margin-bottom:0}
+.accent li{font-size:14px;line-height:1.68;color:#444;margin-bottom:5px}
+
+/* Note box — for instructor-facing guidance, slightly warmer */
+.note{
+  background:#fdf8f0;
+  border:1px solid #e0d4ba;
+  border-left:4px solid var(--gold);
+  padding:14px 18px;margin:12px 0;
+}
+.note-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:7px;
+}
+.note p{font-size:14px;line-height:1.65;color:#4a3e28;margin:0}
+.note p+p{margin-top:8px}
+.note strong{color:#2e2416}
+
+/* Swap-out box — for discipline adaptation notes */
+.swap{
+  background:#f8f6f0;border:1px solid #ddd5c0;
+  border-left:3px solid var(--gold-light);
+  padding:10px 14px;margin-top:8px;
+}
+.swap-label{
+  font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:#a07c40;margin-bottom:4px;
+}
+.swap p{font-size:13px;line-height:1.6;color:#5a4e38;margin:0}
+
+/* ── MODULE HEADER ─────────────────────────────────── */
+/* This one keeps the dark ink — it's structural chrome, not content */
+.mod-header{background:var(--sidebar-bg);padding:26px 32px}
+.mod-badge{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold-light);margin-bottom:10px;
+}
+.mod-title{
+  font-family:var(--display);font-size:clamp(22px,4vw,34px);
+  font-weight:900;color:#fff;line-height:1.1;margin-bottom:6px;
+}
+.mod-sub{
+  font-family:var(--display);font-size:15px;
+  font-style:italic;color:#9a9088;margin-bottom:16px;
+}
+.mod-meta{
+  display:flex;gap:20px;flex-wrap:wrap;
+  border-top:1px solid #3a3530;padding-top:14px;
+}
+.mod-meta-item{
+  font-family:var(--mono);font-size:8.5px;font-weight:400;
+  letter-spacing:.05em;text-transform:uppercase;color:#6a6258;
+}
+.mod-meta-item span{
+  color:var(--gold-light);display:block;
+  font-size:11px;margin-top:2px;letter-spacing:.02em;font-weight:300;
+}
+
+/* ── CRITICAL MOVES ─────────────────────────────────── */
+.move-row{
+  display:flex;align-items:stretch;
+  background:var(--white);border:1px solid var(--rule);margin-bottom:2px;
+}
+.move-n{
+  background:var(--crimson);color:#fff;
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  padding:14px 16px;flex-shrink:0;width:42px;
+  display:flex;align-items:center;justify-content:center;
+}
+.move-body{padding:14px 18px;flex:1}
+.move-title{
+  font-family:var(--display);font-size:15px;font-weight:700;
+  color:var(--ink);margin-bottom:3px;
+}
+.move-q{font-size:14px;font-style:italic;color:var(--muted)}
+
+/* ── ARC / SCHEDULE VISUAL ─────────────────────────── */
+.arc{display:flex;flex-direction:column;gap:2px;margin:12px 0}
+.arc-row{display:flex;align-items:stretch}
+.arc-wk{
+  font-family:var(--mono);font-size:8.5px;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;color:#fff;
+  padding:9px 10px;flex-shrink:0;width:74px;
+  display:flex;align-items:center;
+}
+.arc-wk.c0{background:#888}
+.arc-wk.c1{background:#6a7d8a}
+.arc-wk.c2{background:var(--crimson)}
+.arc-wk.c3{background:var(--sidebar-bg)}
+.arc-content{
+  background:var(--white);border:1px solid var(--rule);
+  border-left:none;padding:9px 14px;flex:1;
+}
+.arc-title{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.arc-sub{font-size:12px;color:var(--muted)}
+
+/* ── RUBRIC ─────────────────────────────────────────── */
+.rubric{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px}
+.rubric th{
+  background:var(--crimson);color:#fff;
+  padding:8px 12px;text-align:left;
+  font-family:var(--mono);font-size:8px;
+  letter-spacing:.08em;text-transform:uppercase;font-weight:500;
+}
+.rubric td{
+  padding:8px 12px;vertical-align:top;
+  border-bottom:1px solid var(--rule-light);
+  line-height:1.5;color:#333;
+}
+.rubric tr:nth-child(even) td{background:var(--paper)}
+.rubric .pts{
+  font-family:var(--mono);font-size:11px;
+  color:var(--crimson);font-weight:500;white-space:nowrap;
+}
+
+/* ── READING LIST ─────────────────────────────────── */
+.rl-tier-label{
+  font-family:var(--mono);font-size:7.5px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:8px;margin-top:14px;
+  border-bottom:1px solid var(--rule-light);padding-bottom:5px;
+}
+.rl-item{display:flex;gap:9px;margin-bottom:8px;align-items:flex-start}
+.rl-dot{
+  width:4px;height:4px;background:var(--crimson);
+  border-radius:50%;flex-shrink:0;margin-top:8px;
+}
+.rl-text{font-size:13.5px;line-height:1.6;color:#444}
+.rl-flag{
+  font-family:var(--mono);font-size:7px;letter-spacing:.07em;
+  text-transform:uppercase;background:var(--paper);
+  border:1px solid var(--rule);color:var(--crimson);
+  padding:1px 4px;margin-left:4px;vertical-align:middle;display:inline-block;
+}
+
+/* ── JOURNAL / NOTEBOOK ─────────────────────────────── */
+.journal{
+  border:2px dashed #c8c0b4;padding:16px 20px;
+  margin:12px 0;background:var(--cream);
+}
+.journal-label{
+  font-family:var(--mono);font-size:8px;letter-spacing:.1em;
+  text-transform:uppercase;color:#7a6a58;margin-bottom:10px;font-weight:500;
+}
+.journal p{font-size:15px;line-height:1.72;color:#363230;margin:0}
+.journal p+p{margin-top:10px}
+
+/* ── SPEC / FEATURE GRID ────────────────────────────── */
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:12px 0}
+@media(max-width:560px){.spec-grid{grid-template-columns:1fr}}
+.spec-card{background:var(--white);border:1px solid var(--rule);padding:14px 16px}
+.spec-card-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--crimson);margin-bottom:8px;
+}
+.spec-card p{font-size:13.5px;line-height:1.65;color:#444;margin:0}
+.spec-card p+p{margin-top:7px}
+.spec-card ul{padding-left:16px;margin-bottom:0}
+.spec-card li{font-size:13px;line-height:1.65;color:#555;margin-bottom:3px}
+
+/* ── INSTRUCTOR DECISIONS ────────────────────────────── */
+.decision{
+  background:var(--paper);
+  border:1px solid var(--rule);
+  border-left:4px solid var(--gold);
+  padding:16px 20px;margin:12px 0;
+}
+.decision-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px;
+}
+.d-row{display:flex;gap:10px;margin-bottom:7px;align-items:flex-start}
+.d-num{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  color:var(--gold);flex-shrink:0;width:16px;
+}
+.d-text{font-size:14px;line-height:1.6;color:#363230}
+.d-text strong{color:var(--ink)}
+
+/* ── DISCUSSION PROMPTS ───────────────────────────────── */
+.disc{
+  background:var(--paper);border:1px solid var(--rule);
+  padding:14px 18px;margin:10px 0;
+}
+.disc-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:8px;
+}
+.disc p{font-size:14.5px;color:#363230;margin:0;line-height:1.65}
+
+/* ── FILE/STEP LISTS ─────────────────────────────────── */
+.file-index{display:flex;flex-direction:column;gap:3px;margin:14px 0}
+.file-row{display:flex;align-items:stretch;background:var(--white);border:1px solid var(--rule)}
+.file-row.featured{border-color:var(--crimson)}
+.file-icon{
+  background:var(--crimson);color:#fff;
+  font-family:var(--mono);font-size:9px;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:12px 14px;flex-shrink:0;width:68px;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;line-height:1.3;
+}
+.file-icon.muted{background:#888}
+.file-icon.warm{background:#8a6a30}
+.file-body{padding:12px 16px;flex:1}
+.file-name{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  color:var(--ink);margin-bottom:3px;
+}
+.file-desc{font-size:13.5px;color:var(--muted);line-height:1.5}
+.file-tag{
+  display:inline-block;font-family:var(--mono);font-size:7.5px;
+  font-weight:500;letter-spacing:.09em;text-transform:uppercase;
+  border:1px solid var(--crimson);color:var(--crimson);
+  padding:1px 5px;margin-left:6px;vertical-align:middle;
+}
+.file-tag.muted{border-color:#aaa;color:#aaa}
+
+.steps{display:flex;flex-direction:column;gap:2px;margin:12px 0}
+.step{display:flex;align-items:stretch;background:var(--white);border:1px solid var(--rule)}
+.step-n{
+  background:var(--crimson);color:#fff;
+  font-family:var(--display);font-size:20px;font-weight:900;
+  padding:14px 16px;flex-shrink:0;width:52px;
+  display:flex;align-items:center;justify-content:center;line-height:1;
+}
+.step-body{padding:14px 18px;flex:1}
+.step-title{
+  font-family:var(--display);font-size:15px;font-weight:700;
+  color:var(--ink);margin-bottom:4px;
+}
+.step-desc{font-size:14px;color:var(--muted);line-height:1.6}
+
+/* ── SIZE CARDS ─────────────────────────────────────── */
+.size-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin:12px 0}
+@media(max-width:620px){.size-grid{grid-template-columns:1fr}}
+.size-card{background:var(--white);border:1px solid var(--rule);padding:16px 18px}
+.size-badge{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  border:1.5px solid var(--crimson);color:var(--crimson);
+  padding:2px 6px;display:inline-block;margin-bottom:10px;
+}
+.size-card h4{
+  font-family:var(--display);font-size:15px;font-weight:700;
+  color:var(--ink);margin-bottom:8px;line-height:1.2;margin-top:0;
+}
+.size-card p{font-size:13.5px;line-height:1.6;color:#444;margin-bottom:6px}
+.size-card p:last-child{margin-bottom:0}
+.size-card ul{padding-left:16px;margin-bottom:0}
+.size-card li{font-size:13px;line-height:1.6;color:#555;margin-bottom:3px}
+
+/* ── DECISION TABLE ─────────────────────────────────── */
+.dec-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+.dec-table th{
+  background:var(--ink-soft);color:var(--cream);
+  font-family:var(--mono);font-size:8px;letter-spacing:.1em;
+  text-transform:uppercase;padding:8px 12px;text-align:left;font-weight:500;
+}
+.dec-table td{
+  padding:9px 12px;border-bottom:1px solid var(--rule-light);
+  vertical-align:top;line-height:1.55;color:#333;
+}
+.dec-table tr:last-child td{border-bottom:none}
+.dec-table tr:nth-child(even) td{background:var(--paper)}
+.dec-table .q{font-weight:600;color:var(--ink);font-size:13.5px}
+.dec-table .a{color:#555;font-size:13px}
+
+/* ── PASTE BAR (Canvas copy instructions) ────────────── */
+.paste{
+  background:#f0ede6;
+  border-left:3px solid var(--crimson);
+  padding:6px 14px;margin:2px 0;
+  font-family:var(--mono);font-size:8px;
+  color:var(--muted);letter-spacing:.07em;text-transform:uppercase;
+}
+
+/* ── NOTEBOOK ARC ────────────────────────────────────── */
+.nb-arc{display:flex;flex-direction:column;gap:2px;margin:10px 0}
+.nb-row{display:flex;align-items:stretch}
+.nb-wk{
+  font-family:var(--mono);font-size:8.5px;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;
+  color:#fff;padding:8px 10px;flex-shrink:0;width:68px;
+  display:flex;align-items:center;background:#888;
+}
+.nb-wk.active{background:var(--crimson)}
+.nb-body{
+  background:var(--white);border:1px solid var(--rule);
+  border-left:none;padding:8px 13px;flex:1;
+}
+.nb-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.nb-sub{font-size:11.5px;color:var(--muted)}
+
+/* ── RESPONSIVE ─────────────────────────────────────── */
+@media(max-width:500px){
+  .block,.page-flag,.mod-header{padding-left:20px;padding-right:20px}
+  .nav-date{display:none}
+}
+
+
+/* ── ASSESSMENT FILE SPECIFIC ── */
+
+/* Level descriptors table */
+.levels{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+.levels th{
+  background:var(--crimson);color:#fff;
+  padding:8px 12px;text-align:left;
+  font-family:var(--mono);font-size:8px;
+  letter-spacing:.08em;text-transform:uppercase;font-weight:500;
+}
+.levels th.l-exc{background:#2d6a2d}
+.levels th.l-pro{background:#4a7a2d}
+.levels th.l-dev{background:#8a7a20}
+.levels th.l-beg{background:#8a4020}
+.levels th.l-ins{background:#7a2020}
+.levels td{
+  padding:8px 11px;vertical-align:top;
+  border:1px solid var(--rule-light);
+  line-height:1.5;color:#333;font-size:13px;
+}
+.levels .crit{
+  font-weight:600;color:var(--ink);
+  background:var(--paper);border-left:3px solid var(--crimson);
+  font-size:13px;
+}
+.levels tr:nth-child(even) td{background:var(--paper)}
+
+/* Point band badge */
+.pts-badge{
+  display:inline-block;
+  font-family:var(--mono);font-size:9px;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;
+  background:var(--crimson);color:#fff;
+  padding:2px 8px;margin-left:8px;vertical-align:middle;
+}
+.pts-badge.green{background:#3a6a3a}
+.pts-badge.amber{background:#7a6020}
+.pts-badge.red{background:#6a2020}
+
+/* Exemplar box */
+.exemplar{
+  background:var(--cream);
+  border:1px solid var(--rule);
+  border-left:4px solid #3a6a3a;
+  padding:14px 18px;margin:10px 0;
+}
+.exemplar-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:#3a6a3a;margin-bottom:8px;
+}
+.exemplar p{font-size:14px;line-height:1.65;color:#2a3a2a;margin:0;font-style:italic}
+
+/* Error box */
+.errors{
+  background:var(--paper);
+  border:1px solid #e0c8b8;
+  border-left:4px solid #8a4020;
+  padding:14px 18px;margin:10px 0;
+}
+.errors-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:#8a4020;margin-bottom:8px;
+}
+.errors ul{padding-left:18px;margin:0}
+.errors li{font-size:14px;line-height:1.65;color:#4a2a10;margin-bottom:5px}
+.errors li:last-child{margin-bottom:0}
+
+/* Assignment header */
+.assign-header{
+  border-bottom:3px solid var(--ink);
+  padding:24px 32px 18px;
+  background:var(--cream);
+}
+.assign-version{
+  display:flex;align-items:center;gap:10px;margin-bottom:10px;
+}
+.assign-v-badge{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  border:1.5px solid var(--crimson);color:var(--crimson);padding:2px 6px;
+}
+.assign-module{
+  font-family:var(--mono);font-size:8.5px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+}
+.assign-title{
+  font-family:var(--display);font-size:clamp(22px,4vw,34px);
+  font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:6px;
+}
+.assign-deck{
+  font-family:var(--display);font-size:16px;font-style:italic;
+  color:var(--muted);line-height:1.4;max-width:580px;margin-bottom:14px;
+}
+.assign-meta{
+  display:flex;gap:24px;flex-wrap:wrap;
+  border-top:1px solid var(--rule);padding-top:12px;
+}
+.assign-meta-item{
+  font-family:var(--mono);font-size:8.5px;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+}
+.assign-meta-item span{
+  color:var(--ink);display:block;font-size:11.5px;
+  margin-top:2px;letter-spacing:.02em;font-weight:400;
+}
+
+/* Version header bar */
+.version-bar{
+  background:var(--sidebar-bg);
+  padding:16px 32px;border-bottom:3px solid var(--crimson);
+}
+.version-bar h2{
+  font-family:var(--display);font-size:28px;font-weight:900;
+  color:#fff;line-height:1;margin-bottom:4px;
+}
+.version-bar p{font-size:14px;color:#9a9088;font-style:italic}
+
+/* Summary table */
+.summary{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0}
+.summary th{
+  background:var(--ink-soft);color:var(--cream);
+  padding:9px 14px;text-align:left;
+  font-family:var(--mono);font-size:8px;
+  letter-spacing:.08em;text-transform:uppercase;font-weight:500;
+}
+.summary td{
+  padding:9px 14px;border-bottom:1px solid var(--rule-light);
+  vertical-align:middle;color:#333;
+}
+.summary tr:last-child td{border-bottom:none;font-weight:600;color:var(--ink)}
+.summary tr:nth-child(even) td{background:var(--paper)}
+.summary .pts{
+  font-family:var(--mono);font-size:12px;
+  color:var(--crimson);font-weight:600;text-align:right;
+}
+.summary .move-tag{
+  font-family:var(--mono);font-size:8px;letter-spacing:.06em;
+  text-transform:uppercase;background:var(--paper);
+  border:1px solid var(--rule);color:var(--muted);
+  padding:1px 6px;
+}
+
+/* Holistic scale */
+.holistic{display:flex;flex-direction:column;gap:2px;margin:12px 0}
+.h-row{display:flex;align-items:stretch}
+.h-band{
+  font-family:var(--mono);font-size:8.5px;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;
+  color:#fff;padding:10px 12px;flex-shrink:0;width:88px;
+  display:flex;align-items:center;text-align:center;line-height:1.3;
+}
+.h-band.exc{background:#2d6a2d}
+.h-band.pro{background:#4a7a2d}
+.h-band.dev{background:#8a7a20}
+.h-band.beg{background:#6a3020}
+.h-band.ins{background:#6a2020}
+.h-content{
+  background:var(--white);border:1px solid var(--rule);
+  border-left:none;padding:10px 14px;flex:1;
+}
+.h-pts{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  color:var(--crimson);margin-bottom:3px;
+}
+.h-desc{font-size:13.5px;color:#444;line-height:1.55}
+
+/* Peer review form */
+.pr-field{
+  background:var(--white);border:1px solid var(--rule);
+  padding:14px 18px;margin-bottom:3px;
+}
+.pr-field-label{
+  font-family:var(--mono);font-size:8px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:6px;
+}
+.pr-field p{font-size:14px;color:#444;line-height:1.6;margin:0}
+.pr-lines{
+  margin-top:10px;display:flex;flex-direction:column;gap:6px;
+}
+.pr-line{
+  height:1px;background:var(--rule);width:100%;
+}
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-rule"></div>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Slow News, <em>Smart Citizens</em></a>
+    <div class="nav-links">
+      <div class="nav-sep"></div>
+      <a onclick="show('overview')" class="active">Overview</a>
+      <div class="nav-sep"></div>
+      <a onclick="show('l-summary')">L · Summary</a>
+      <a onclick="show('l-beatmap')">Beat Source Map</a>
+      <a onclick="show('l-arc')">Story Arc</a>
+      <a onclick="show('l-brief')">Interpretive Brief</a>
+      <a onclick="show('l-equity')">Equity Assessment</a>
+      <a onclick="show('l-sotw')">State of the World</a>
+      <a onclick="show('l-notebook')">Notebook</a>
+      <a onclick="show('l-peer')">Peer Review</a>
+      <a onclick="show('l-self')">Self-Assessment</a>
+      <div class="nav-sep"></div>
+      <a onclick="show('m-summary')">M · Summary</a>
+      <a onclick="show('m-sourcemap')">Source Map</a>
+      <a onclick="show('m-interp')">Interpretive Note</a>
+      <a onclick="show('m-public')">Short Public Piece</a>
+      <a onclick="show('m-pub')">Publication</a>
+      <a onclick="show('m-self')">M · Self-Assessment</a>
+      <div class="nav-sep"></div>
+      <a onclick="show('s-summary')">S · Summary</a>
+      <a onclick="show('s-reflect')">Reading Reflection</a>
+      <a onclick="show('s-self')">S · Self-Assessment</a>
+    </div>
+  </div>
+</nav>
+
+<div class="shell">
+<div class="sidebar">
+  <div class="sb-section">Overview</div>
+  <button class="active" onclick="show('overview')">Assessment Overview</button>
+
+  <div class="sb-section">Large — Ten Weeks</div>
+  <button onclick="show('l-summary')">Assignment Summary</button>
+  <button onclick="show('l-beatmap')">Beat Source Map</button>
+  <button onclick="show('l-arc')">Story Arc Analysis</button>
+  <button onclick="show('l-brief')">Interpretive Brief</button>
+  <button onclick="show('l-equity')">Equity Assessment</button>
+  <button onclick="show('l-sotw')">State of the World</button>
+  <button onclick="show('l-notebook')">Notebook Archive</button>
+  <button onclick="show('l-peer')">Peer Review</button>
+  <button onclick="show('l-self')">Self-Assessment</button>
+
+  <div class="sb-section">Medium — Five Weeks</div>
+  <button onclick="show('m-summary')">Assignment Summary</button>
+  <button onclick="show('m-sourcemap')">Story Source Map</button>
+  <button onclick="show('m-interp')">Interpretive Note</button>
+  <button onclick="show('m-public')">Short Public Piece</button>
+  <button onclick="show('m-pub')">Physical Publication</button>
+  <button onclick="show('m-self')">Self-Assessment</button>
+
+  <div class="sb-section">Small — 1–3 Sessions</div>
+  <button onclick="show('s-summary')">Assignment Summary</button>
+  <button onclick="show('s-reflect')">Reading Reflection</button>
+  <button onclick="show('s-self')">Self-Assessment</button>
+</div>
+
+<div class="main">
+
+<!-- OVERVIEW -->
+<div class="panel active" id="p-overview">
+<div class="page-flag">
+  <div class="page-eyebrow">Slow News, Smart Citizens · Assessment Companion</div>
+  <h1 class="page-title">Assignments, Assessments, and Rubrics</h1>
+  <p class="page-deck">The complete assessment system for all three versions — prompts, rubrics with level descriptors, exemplar language, and instructor guidance.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>How to Use This File</h3>
+  <p>This file is the assessment companion to the Slow News, Smart Citizens Canvas shells. Every assignment in every version of the curriculum is documented here with a full student-facing prompt, a rubric with level descriptors (not just point values), exemplar language for strong and weak work, and instructor guidance on the most common errors and how to address them in feedback.</p>
+  <p>The Canvas shell pages contain abbreviated rubrics suitable for Canvas's built-in rubric tool. This file contains the full versions — everything you need to assess fairly and provide feedback that students can use.</p>
+  <div class="callout">
+    <div class="callout-label">Three versions, one assessment philosophy</div>
+    <p>The same critical process underlies all three versions. The assessment criteria scale with scope, not with standard. A Small version Reading Reflection and a Large version Interpretive Brief are both asking whether the student did the move with specificity and genuine intellectual engagement. The level descriptors use the same language across all three versions so students who move from Small to Medium to Large encounter a consistent framework.</p>
+  </div>
+</div>
+
+<div class="block">
+  <h3>The Assessment Philosophy</h3>
+  <p>Every rubric in this system is built around the same underlying question: did the student do the specific thing this move requires, or did they do something adjacent to it? The most common failure mode in media literacy assessment is accepting a sophisticated-sounding general claim in place of a specific, grounded one. The rubrics are designed to catch that substitution and reward the genuine move.</p>
+  <ul>
+    <li><strong>Description</strong> is assessed for accuracy and specificity, not length. A student who accurately describes in two sentences what a story says has done Description. A student who spends four paragraphs paraphrasing the article's argument without accounting for what its evidence actually claims has not.</li>
+    <li><strong>Analysis</strong> is assessed for structural specificity. Not "AI shapes coverage" but "the AI summary in Google's search preview for this story omitted the primary source's qualification in paragraph four." The less general the observation, the better the Analysis.</li>
+    <li><strong>Interpretation</strong> is assessed against the substitution test: could someone without this student's training, field, and weeks of following this beat have written this? If yes, the student has described rather than interpreted. Send it back.</li>
+    <li><strong>Evaluation</strong> is assessed for the counterargument. An evaluation that does not engage the strongest version of the opposing position is advocacy, not evaluation. The rubric weights this heavily.</li>
+    <li><strong>Engagement</strong> is assessed for contribution. Does the writing say something a reader who followed this beat for ten weeks needed to know? If it could have been written without the beat work, the Engagement move has not been made.</li>
+  </ul>
+</div>
+
+<div class="block">
+  <h3>Level Descriptors</h3>
+  <p>Every rubric in this file uses five performance levels. The labels and their meanings are consistent across all assignments and all versions:</p>
+  <div class="holistic">
+    <div class="h-row">
+      <div class="h-band exc">Excellent</div>
+      <div class="h-content"><div class="h-pts">Full credit</div><div class="h-desc">Does the specific move this assignment requires with precision, specificity, and genuine intellectual engagement. Exceeds the prompt's expectations without being asked to. The work could not have been produced without this student's particular training and sustained attention.</div></div>
+    </div>
+    <div class="h-row">
+      <div class="h-band pro">Proficient</div>
+      <div class="h-content"><div class="h-pts">85–90% of element points</div><div class="h-desc">Does the move correctly and with adequate specificity. Meets all elements of the prompt. The work is solid and reliable. It does not exceed expectations but it fulfills them. Minor imprecisions in language or framing that do not distort the core move.</div></div>
+    </div>
+    <div class="h-row">
+      <div class="h-band dev">Developing</div>
+      <div class="h-content"><div class="h-pts">70–80% of element points</div><div class="h-desc">Attempts the move but substitutes something adjacent. A general claim where a specific one is required. A description that slides into evaluation. An interpretive claim that a general reader could have made without the student's training. The instinct is right; the execution is not yet.</div></div>
+    </div>
+    <div class="h-row">
+      <div class="h-band beg">Beginning</div>
+      <div class="h-content"><div class="h-pts">50–65% of element points</div><div class="h-desc">The move is attempted but significantly misunderstood or replaced with an easier one. Summary in place of Description. Reaction in place of Evaluation. Generic observation in place of Interpretation. The assignment is complete but the critical move is not made.</div></div>
+    </div>
+    <div class="h-row">
+      <div class="h-band ins">Insufficient</div>
+      <div class="h-content"><div class="h-pts">0–40% of element points</div><div class="h-desc">The element is missing, too brief to assess, or demonstrates fundamental misunderstanding of the assignment. Not a quality judgment — an absence. Return with a specific note on what is missing and a deadline for resubmission where the course policy allows it.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="block">
+  <h3>The Notebook and Self-Assessment</h3>
+  <p>The notebook and self-assessment are holistic assessments, not rubric-scored ones. They are assessed at the end of the module as evidence of a complete, genuine practice — not entry by entry, not sentence by sentence. The scoring scale for both is:</p>
+  <table class="summary">
+    <tr><th>Level</th><th>Description</th><th class="pts">Credit</th></tr>
+    <tr><td><strong>Complete and engaged</strong></td><td>All entries present. Evidence of developing specificity and deepening attention across the term. Questions that develop rather than repeat. The third-to-last entry looks different from the first.</td><td class="pts">Full</td></tr>
+    <tr><td><strong>Mostly complete</strong></td><td>One or two entries thin or missing. Core arc of developing attention present but with gaps. Some entries feel like compliance rather than genuine noticing.</td><td class="pts">80–85%</td></tr>
+    <tr><td><strong>Partial</strong></td><td>Significant gaps. Multiple entries that read as summary rather than observation. Evidence that the notebook practice was not maintained throughout but assembled near the deadline.</td><td class="pts">55–65%</td></tr>
+    <tr><td><strong>Insufficient</strong></td><td>Fewer than half of entries present, or entries present but demonstrably not written before class (identical phrasing to discussion board posts, no variation in handwriting across entries, etc.).</td><td class="pts">0–30%</td></tr>
+  </table>
+</div>
+</div>
+
+<!-- LARGE SUMMARY -->
+<div class="panel" id="p-l-summary">
+<div class="version-bar">
+  <h2>Large Version — Ten Weeks</h2>
+  <p>For journalism courses or any course running the full Slow News arc. One quarter of the course grade.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>Assignment Summary</h3>
+  <table class="summary">
+    <tr><th>Assignment</th><th>Move</th><th>Due</th><th>Form</th><th class="pts">Points</th></tr>
+    <tr><td><strong>Beat Source Map</strong></td><td><span class="move-tag">Description</span></td><td>End of Week 2</td><td>400–500 words, typed</td><td class="pts">100</td></tr>
+    <tr><td><strong>Story Arc Analysis</strong></td><td><span class="move-tag">Analysis</span></td><td>End of Week 4</td><td>400–500 words, typed</td><td class="pts">100</td></tr>
+    <tr><td><strong>Interpretive Brief</strong></td><td><span class="move-tag">Interpretation</span></td><td>End of Week 6</td><td>500–650 words, typed</td><td class="pts">100</td></tr>
+    <tr><td><strong>Equity Assessment + Cluster Proposal</strong></td><td><span class="move-tag">Evaluation</span></td><td>End of Week 8</td><td>Individual 500–600w + Group 300–400w</td><td class="pts">100</td></tr>
+    <tr><td><strong>State of the World Entry</strong></td><td><span class="move-tag">Engagement</span></td><td>Week 10 Assembly</td><td>500–700 words per cluster, typed</td><td class="pts">100</td></tr>
+    <tr><td colspan="4"><em>Notebook Archive (holistic, part of Module 5 submission)</em></td><td class="pts">—</td></tr>
+    <tr><td colspan="4"><em>Self-Assessment (completion, part of Module 5 submission)</em></td><td class="pts">—</td></tr>
+    <tr><td colspan="4"><em>Peer Review (completion, Week 9)</em></td><td class="pts">—</td></tr>
+    <tr><td colspan="3"><strong>Module Total</strong></td><td></td><td class="pts">500</td></tr>
+  </table>
+  <div class="callout">
+    <div class="callout-label">On the holistic assessments</div>
+    <p>The Notebook Archive and the Self-Assessment are not separately scored. They are submitted with the Module 5 package and contribute to the holistic assessment of that submission. A student who submits strong written work but a perfunctory or incomplete notebook will find that reflected in the Module 5 score. Both matter. Neither has a separate point value because neither is a separate document — they are evidence of the practice that makes the written work possible.</p>
+  </div>
+</div>
+
+<div class="block">
+  <h3>Grading Philosophy for the Large Version</h3>
+  <p>Each of the five major assignments represents one move in the critical process. The assignments build on each other: the Beat Source Map in Week 2 is the foundation the Interpretive Brief in Week 6 depends on. A student who does perfunctory work in Week 2 will find the Week 6 assignment harder to write well — not as a punishment, but as a structural consequence of the move sequence.</p>
+  <p>Return written feedback on each assignment within one week of the due date. The most important feedback moment is the Interpretive Brief: students need to know whether their underlying question is strong enough to seed a cluster argument before they begin Module 4. Brief feedback on the underlying question alone — is it specific enough? does it genuinely require disciplinary knowledge to ask? — is more valuable than comprehensive comments on every element.</p>
+</div>
+</div>
+
+<!-- L: BEAT SOURCE MAP -->
+<div class="panel" id="p-l-beatmap">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">L · Large</div>
+    <div class="assign-module">Module 1 · Description · Due end of Week 2</div>
+  </div>
+  <h1 class="assign-title">Beat Source Map</h1>
+  <p class="assign-deck">A map of where your beat's news comes from, how it travels, and where AI enters the chain. The document that makes everything else in this module possible.</p>
+  <div class="assign-meta">
+    <div class="assign-meta-item">Length <span>400–500 words</span></div>
+    <div class="assign-meta-item">Format <span>Typed prose, submitted to Canvas</span></div>
+    <div class="assign-meta-item">Points <span>100</span></div>
+    <div class="assign-meta-item">Analog companion <span>Hand-drawn source map sketch in notebook (not submitted separately)</span></div>
+  </div>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>The Beat Source Map establishes the information architecture of your chosen beat. It is not a summary of the news. It is a map of where the news comes from, how it travels to a general audience, and where AI enters that journey. A careful map now makes every subsequent assignment in this module significantly easier to write with depth and specificity.</p>
+  <p>Before you write the typed submission, sketch the source architecture by hand in your notebook: draw the three layers, draw where AI enters, draw the path a story takes from primary source to your screen. The sketch is preparation, not a submission. It often produces insights the written version then captures.</p>
+  <p><strong>Your submission addresses five elements in prose, 400 to 500 words:</strong></p>
+  <ol>
+    <li><strong>Name the beat and the thread.</strong> One sentence each. The beat is the ongoing field. The thread is the specific developing story you are following right now. Present tense. Specific. Traceable to a primary source.</li>
+    <li><strong>Map the three source layers.</strong> Primary source: who or what generates the original material — named institutions, documents, actors, events. Specialist layer: who covers it with expertise. Mainstream layer: where the general public encounters it. Name specific examples at each layer.</li>
+    <li><strong>Trace the AI footprint.</strong> Where does AI enter your beat's information system — in recommendation, summarization, generation, or distribution? At least one specific, concrete observation about what AI does to your beat's coverage. Not a general statement about AI in news. Something specific to what you observed this week in this beat.</li>
+    <li><strong>Name your disciplinary angle.</strong> One sentence connecting your field or background to this beat — specific enough to seed the Interpretive Brief in Module 3. Not "I study journalism" but "my training in [specific area] lets me see [specific thing] in this beat."</li>
+    <li><strong>Name one structural pattern you already see.</strong> Something about how this beat's coverage works that you noticed in the first two weeks. Descriptive, not evaluative. An observation about structure, not a judgment about quality.</li>
+  </ol>
+</div>
+
+<div class="block">
+  <h3>Rubric</h3>
+  <table class="levels">
+    <tr>
+      <th style="width:18%">Element</th>
+      <th class="l-exc">Excellent</th>
+      <th class="l-pro">Proficient</th>
+      <th class="l-dev">Developing</th>
+      <th class="l-beg">Beginning</th>
+      <th style="width:6%;background:var(--crimson)">Points</th>
+    </tr>
+    <tr>
+      <td class="crit">Beat and Thread Named</td>
+      <td>Both specific, live, present-tense. Thread traceable to a named primary source. Distinction between beat (ongoing field) and thread (current story) is clear.</td>
+      <td>Both present. Thread is specific and live. Primary source may be named generally rather than precisely.</td>
+      <td>Beat named but thread too broad to follow weekly ("AI in journalism," "climate change"). Or thread present but not traceable to a primary source.</td>
+      <td>Topic described rather than beat and thread. No distinction made between field and specific story. Not actionable as a ten-week commitment.</td>
+      <td class="pts">15</td>
+    </tr>
+    <tr>
+      <td class="crit">Three Source Layers</td>
+      <td>All three described with named, specific examples at each layer. Primary source located precisely (document, institution, named actor). Distinction between layers is clear and accurate.</td>
+      <td>All three present with examples. Primary source identified or genuinely attempted with evidence of effort. Layers distinct.</td>
+      <td>Two of three layers present, or all three present but with generic examples ("major newspapers," "experts"). Primary source vague or absent.</td>
+      <td>One layer described. Layers conflated. No attempt at primary source identification.</td>
+      <td class="pts">30</td>
+    </tr>
+    <tr>
+      <td class="crit">AI Footprint</td>
+      <td>At least one specific, concrete, firsthand observation about AI's role in this beat's information system — something the student observed this week. Precise about what AI did, not what AI generally does.</td>
+      <td>One specific observation present. May be slightly general but grounded in a specific instance the student encountered.</td>
+      <td>General statement about AI in news applied to the beat without a specific firsthand observation. "AI shapes how stories are distributed" without evidence from this beat.</td>
+      <td>No AI footprint attempted, or a claim so general it applies to all news equally.</td>
+      <td class="pts">25</td>
+    </tr>
+    <tr>
+      <td class="crit">Disciplinary Angle</td>
+      <td>One sentence specific enough to seed Module 3. Names a concept, framework, or area of training that only someone in this discipline would bring to this beat. Not background — a lens.</td>
+      <td>Discipline connected to beat. May be more general than ideal but points toward the Interpretive Brief.</td>
+      <td>Discipline named but not connected to the specific beat. "I study journalism" without explaining what that lets this student see in this specific story.</td>
+      <td>No disciplinary angle, or angle that any reader could claim regardless of training.</td>
+      <td class="pts">20</td>
+    </tr>
+    <tr>
+      <td class="crit">Structural Pattern</td>
+      <td>One structural observation about how this beat's coverage works — specific, descriptive, and clearly distinguished from evaluation. About the system, not about quality.</td>
+      <td>One structural observation present. May slide slightly toward evaluation but core observation is structural.</td>
+      <td>Evaluative claim presented as structural observation. "The coverage is poor" rather than "the coverage consistently moves from primary source to mainstream in 48 hours without specialist layer."</td>
+      <td>No structural pattern, or an observation too general to be specific to this beat.</td>
+      <td class="pts">10</td>
+    </tr>
+    <tr>
+      <td colspan="5"><strong>Total</strong></td>
+      <td class="pts">100</td>
+    </tr>
+  </table>
+</div>
+
+<div class="block">
+  <h3>What Strong Work Looks Like</h3>
+  <div class="exemplar">
+    <div class="exemplar-label">Exemplar — Beat and Thread (Excellent)</div>
+    <p>"My beat is pharmaceutical pricing policy in the United States. My thread is the Senate Finance Committee's ongoing investigation into insulin pricing at three major manufacturers, which filed preliminary findings in late September. The primary source is the committee's public document repository at finance.senate.gov."</p>
+  </div>
+  <div class="exemplar">
+    <div class="exemplar-label">Exemplar — AI Footprint (Excellent)</div>
+    <p>"When I searched 'insulin pricing Senate investigation' on Monday, Google's AI Overview synthesized an answer that cited the investigation's findings but attributed them to the manufacturers rather than to the committee — reversing the accountability direction of the original document. The mainstream article the Overview linked to did not make this error. The AI summary did."</p>
+  </div>
+  <div class="exemplar">
+    <div class="exemplar-label">Exemplar — Disciplinary Angle (Excellent)</div>
+    <p>"My training in health policy journalism lets me see that this story is structured around a document-release cycle — the committee drops filings on a schedule that sets the media's agenda — rather than around the underlying policy question, which has not changed in a decade."</p>
+  </div>
+</div>
+
+<div class="block">
+  <h3>Common Errors and How to Address Them</h3>
+  <div class="errors">
+    <div class="errors-label">Common Errors in the Beat Source Map</div>
+    <ul>
+      <li><strong>The topic trap.</strong> Students name a topic ("healthcare," "climate," "AI") rather than a beat with a thread. A topic has no primary source and generates no weekly news. Redirect: what specific institution, document, or actor is generating new material every week? That is the beat.</li>
+      <li><strong>The AI generality.</strong> "AI shapes how I find news" is not an AI footprint. An AI footprint is a specific instance: this summary, this recommendation, this generated paragraph, observed this week in this beat. Ask students to name the specific platform, the specific article, and the specific thing AI did or did not do accurately.</li>
+      <li><strong>The discipline placeholder.</strong> "My background in journalism lets me evaluate sources" applies to every journalism student following every beat. The disciplinary angle must be specific to the beat: what does training in this area of the discipline let this student see in this specific story that a general reader cannot?</li>
+      <li><strong>The structural evaluation.</strong> Students frequently write "the coverage is shallow" or "the coverage ignores marginalized voices" and present it as a structural observation. These are evaluative claims — not wrong, but belonging in Module 4, not Module 1. Redirect: describe the structure first. What is the coverage doing? Then evaluate what it should be doing.</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- L: STORY ARC ANALYSIS -->
+<div class="panel" id="p-l-arc">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">L · Large</div>
+    <div class="assign-module">Module 2 · Analysis · Due end of Week 4</div>
+  </div>
+  <h1 class="assign-title">Story Arc Analysis</h1>
+  <p class="assign-deck">An analytical argument about how your beat's coverage has worked across four weeks. Not what the story is about — how the coverage functions as a system.</p>
+  <div class="assign-meta">
+    <div class="assign-meta-item">Length <span>400–500 words</span></div>
+    <div class="assign-meta-item">Format <span>Typed prose</span></div>
+    <div class="assign-meta-item">Points <span>100</span></div>
+    <div class="assign-meta-item">Draws from <span>Beat Source Map + four weeks of notebook entries</span></div>
+  </div>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>The Story Arc Analysis asks you to make an argument about structure — not about the events your beat covers, but about how the coverage of those events functions. How did coverage develop over four weeks? What drove the turning points? Who spoke and who was absent? What does the AI footprint look like across four weeks rather than one? The central deliverable is one arguable analytical claim, supported by specific evidence from your beat work.</p>
+  <p><strong>Your submission addresses four elements in prose, 400 to 500 words:</strong></p>
+  <ol>
+    <li><strong>The arc.</strong> Map the development of your thread across four weeks of coverage. Name the key turning points and what drove them — new evidence, new sources, editorial decisions, or shifts in how the algorithm surfaces the story. Four or more specific coverage items, with dates.</li>
+    <li><strong>The voices.</strong> Who has spoken in your beat's coverage across four weeks, named specifically? Who has been described but not directly heard? Who does not appear at all? Propose a structural explanation for the pattern — not "the media ignored X" but a specific reason why the information architecture of your beat produces this voice distribution.</li>
+    <li><strong>The AI footprint.</strong> Where has AI touched your beat's coverage over four weeks — in how stories were found, summarized, distributed, or generated? At least two specific observations about what AI did, not one general statement about what AI does.</li>
+    <li><strong>The analytical claim.</strong> Two to three sentences stating your argument about how this coverage works — a claim about structure, not a judgment about quality. Specific enough that someone who followed your beat could meaningfully disagree with it on the basis of evidence.</li>
+  </ol>
+</div>
+
+<div class="block">
+  <h3>Rubric</h3>
+  <table class="levels">
+    <tr>
+      <th style="width:18%">Element</th>
+      <th class="l-exc">Excellent</th>
+      <th class="l-pro">Proficient</th>
+      <th class="l-dev">Developing</th>
+      <th class="l-beg">Beginning</th>
+      <th style="width:6%;background:var(--crimson)">Points</th>
+    </tr>
+    <tr>
+      <td class="crit">Arc Mapping</td>
+      <td>Four or more coverage items cited with dates. Turning points identified with specific, named causes. The arc tells a story about how coverage moved, not just that it moved.</td>
+      <td>Three or more coverage items with dates. Turning points identified, causes proposed even if not fully evidenced.</td>
+      <td>Coverage items cited but without dates or with vague attribution. Turning points described generally ("coverage increased after the announcement") without structural explanation.</td>
+      <td>Fewer than two coverage items. Arc described as a topic summary rather than a map of coverage movement.</td>
+      <td class="pts">25</td>
+    </tr>
+    <tr>
+      <td class="crit">Voice Inventory</td>
+      <td>Named sources present and absent at each layer. Structural explanation for absence is specific and plausible — grounded in the information architecture of the beat, not in an assumed editorial intention.</td>
+      <td>Named sources present and some absent. Structural explanation attempted, may be somewhat general.</td>
+      <td>Sources described categorically rather than named specifically. Absence noted but not explained structurally. "Marginalized voices are absent" without a structural account of why.</td>
+      <td>No voice inventory, or inventory that conflates who was quoted with who was covered.</td>
+      <td class="pts">25</td>
+    </tr>
+    <tr>
+      <td class="crit">AI Footprint</td>
+      <td>Two or more specific, firsthand observations about AI's role across four weeks. Precise about what platform, what format, what the AI did or did not accurately represent. Shows week-over-week pattern, not just two isolated instances.</td>
+      <td>Two specific observations present. May not show a pattern but both are concrete and firsthand.</td>
+      <td>One specific observation and one general claim. Or two observations that are essentially the same observation repeated in different weeks.</td>
+      <td>General claim about AI in news applied to the beat. No specific firsthand observations.</td>
+      <td class="pts">25</td>
+    </tr>
+    <tr>
+      <td class="crit">Analytical Claim</td>
+      <td>A clear, arguable claim about how this specific beat's coverage works structurally. Specific enough that a reader of this beat could disagree with it. Distinct from evaluation — describes what the coverage does, not whether it does it well.</td>
+      <td>Arguable claim present. May blend description and evaluation slightly but core structural observation is clear.</td>
+      <td>Claim is either too general to be specific to this beat, or is evaluative rather than analytical ("the coverage is inadequate" rather than "the coverage follows a document-release cycle that privileges institutional sources").</td>
+      <td>No analytical claim, or a claim that is a restatement of the beat description.</td>
+      <td class="pts">25</td>
+    </tr>
+    <tr><td colspan="5"><strong>Total</strong></td><td class="pts">100</td></tr>
+  </table>
+</div>
+
+<div class="block">
+  <h3>What Strong Work Looks Like</h3>
+  <div class="exemplar">
+    <div class="exemplar-label">Exemplar — Analytical Claim (Excellent)</div>
+    <p>"Coverage of the insulin pricing investigation follows a reactive arc: the committee releases a document, mainstream outlets publish a story within 24 hours that paraphrases the committee's framing without reaching the manufacturers for comment, and the story disappears within 72 hours until the next document release. The investigation has been running for eight weeks; no outlet has produced an explanatory piece situating the findings in the decade-long legislative history of pharmaceutical pricing policy."</p>
+  </div>
+  <div class="exemplar">
+    <div class="exemplar-label">Exemplar — Voice Inventory (Excellent)</div>
+    <p>"Named sources across four weeks: Committee Chair [name], three patient advocacy organizations, two health economists (both affiliated with think tanks that receive pharmaceutical industry funding — not disclosed in coverage). Named and present in documents but never quoted: the manufacturers' responses to the committee's preliminary findings, which are in the public record. Absent entirely: patients, pharmacists, or anyone whose daily experience is shaped by the pricing practices under investigation. The structural reason is access: journalists work from the press release cycle the committee controls, and the manufacturers' responses are in document format that requires reading rather than quoting."</p>
+  </div>
+  <div class="errors">
+    <div class="errors-label">Common Errors</div>
+    <ul>
+      <li><strong>The topic summary.</strong> Students describe what the underlying story is about across four weeks rather than how coverage of it worked. The arc should describe the coverage, not the events. Redirect: not "the committee released three documents" but "coverage spiked within 24 hours of each document release and returned to baseline within 72 hours — suggesting a release-driven rather than story-driven coverage pattern."</li>
+      <li><strong>The general AI claim.</strong> "AI summarized my beat's stories" is not a footprint. Ask students to name one specific AI summary they encountered, what it said, and how it differed from or matched the underlying article. The specificity is the analysis.</li>
+      <li><strong>The evaluative analytical claim.</strong> The most common error in Module 2 is sliding from "how does coverage work" to "is the coverage adequate." The analytical claim should describe a structural pattern, not judge it. Judgment comes in Module 4. Send evaluative claims back with a note: "This is your Module 4 claim. What structural pattern produced the situation you are evaluating?"</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- L: INTERPRETIVE BRIEF -->
+<div class="panel" id="p-l-brief">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">L · Large</div>
+    <div class="assign-module">Module 3 · Interpretation · Due end of Week 6</div>
+  </div>
+  <h1 class="assign-title">Interpretive Brief</h1>
+  <p class="assign-deck">What your knowledge reveals that the coverage cannot say. The intellectual center of the module and the seed of your cluster's collective argument.</p>
+  <div class="assign-meta">
+    <div class="assign-meta-item">Length <span>500–650 words</span></div>
+    <div class="assign-meta-item">Format <span>Typed prose</span></div>
+    <div class="assign-meta-item">Points <span>100</span></div>
+    <div class="assign-meta-item">Instructor note <span>Return with feedback before Module 5 begins</span></div>
+  </div>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>The Interpretive Brief is the intellectual center of the ten-week module. It asks you to say what your beat means in light of what you know — in a way the coverage itself cannot. It is not a summary of your analysis, not a reaction to the events, and not a preview of your evaluation. It is perception made precise: what a careful, educated person sees when they look at this beat that a casual reader does not.</p>
+  <p>The test for a genuine Interpretive Brief: could someone without your training, your field, and your six weeks of following this beat have written this? If the answer is yes, go further. The Brief earns its place when it says something that is only possible because of what you bring.</p>
+  <p><strong>Your submission addresses four elements in prose, 500 to 650 words:</strong></p>
+  <ol>
+    <li><strong>What the coverage says the beat is about.</strong> One paragraph. Accurately describe what mainstream coverage presents as the beat's meaning. Use Description: what does the coverage actually say, not what you think of it?</li>
+    <li><strong>What your knowledge reveals.</strong> One to two paragraphs. Name the concept, framework, or field-specific understanding that changes how this beat reads. Explain it accessibly enough that a general reader can follow the logic. Then say specifically what the coverage misses or misrepresents that your training allows you to see.</li>
+    <li><strong>Your interpretive claim.</strong> One paragraph. What does this beat actually mean, in light of what you know? Specific, arguable, and only possible because of what you bring to it.</li>
+    <li><strong>The underlying question.</strong> One sentence. The question your interpretation opens but does not close — specific enough to seed your cluster's shared inquiry in Modules 4 and 5.</li>
+  </ol>
+</div>
+
+<div class="block">
+  <h3>Rubric</h3>
+  <table class="levels">
+    <tr>
+      <th style="width:18%">Element</th>
+      <th class="l-exc">Excellent</th>
+      <th class="l-pro">Proficient</th>
+      <th class="l-dev">Developing</th>
+      <th class="l-beg">Beginning</th>
+      <th style="width:6%;background:var(--crimson)">Points</th>
+    </tr>
+    <tr>
+      <td class="crit">Coverage Account</td>
+      <td>Accurate, specific, and fair description of what mainstream coverage presents as the beat's meaning. Does not editorialize or evaluate. Could be accepted by a reporter covering this beat as an accurate account of their work's framing.</td>
+      <td>Accurate account with minor imprecisions. No significant distortion of what the coverage says.</td>
+      <td>Account that slides into evaluation or interpretation before establishing what the coverage actually says. Or an account so general it could describe any story in this field.</td>
+      <td>Missing or so brief it cannot be assessed. Or fundamentally inaccurate account of the coverage's framing.</td>
+      <td class="pts">15</td>
+    </tr>
+    <tr>
+      <td class="crit">Disciplinary Knowledge</td>
+      <td>A specific named concept, framework, or area of training applied to this beat. Explained accessibly — a general reader can follow it. The knowledge changes what the reader sees in the beat. It is a lens, not background information.</td>
+      <td>Disciplinary knowledge named and applied. May be explained with some jargon or applied slightly loosely but genuinely changes the reading.</td>
+      <td>Disciplinary background described rather than applied. "My training in health policy" without showing what that training sees. Or knowledge applied so broadly it would illuminate any story in any field.</td>
+      <td>No disciplinary knowledge applied. Or knowledge that any reader regardless of training could claim.</td>
+      <td class="pts">35</td>
+    </tr>
+    <tr>
+      <td class="crit">Interpretive Claim</td>
+      <td>Passes the substitution test: someone without this student's training, field, and six weeks of beat work could not have written this. Specific, arguable, and grounded in the disciplinary knowledge named above.</td>
+      <td>Claim is present and requires some disciplinary knowledge. May be slightly less specific than ideal but cannot easily be made by a general reader.</td>
+      <td>Claim that could be made by an attentive general reader without disciplinary training. The discipline is in the background but does not do the interpretive work. "This story is really about power" without specifying what kind of power, operating through what mechanism, visible through what disciplinary lens.</td>
+      <td>No interpretive claim, or a claim that is a restatement of the coverage's own framing.</td>
+      <td class="pts">35</td>
+    </tr>
+    <tr>
+      <td class="crit">Underlying Question</td>
+      <td>A specific, open question that the interpretation raises but cannot close alone. Specific enough that two or three other beats in the class could address it from different angles. Genuinely requires the cluster to answer it.</td>
+      <td>A real open question. May be slightly general but points toward a shared inquiry.</td>
+      <td>A question so broad any beat could claim it ("What does this mean for democracy?") or so narrow only this beat can address it (not generative for a cluster).</td>
+      <td>Missing or a restatement of the interpretive claim as a question.</td>
+      <td class="pts">15</td>
+    </tr>
+    <tr><td colspan="5"><strong>Total</strong></td><td class="pts">100</td></tr>
+  </table>
+</div>
+
+<div class="block">
+  <h3>What Strong Work Looks Like</h3>
+  <div class="exemplar">
+    <div class="exemplar-label">Exemplar — Disciplinary Knowledge Applied (Excellent)</div>
+    <p>"Health policy journalism has a concept for what is happening in this coverage: the therapeutic misconception, originally identified in clinical trial research, describes how people systematically overestimate the personal benefit and underestimate the systemic nature of medical interventions. The Senate investigation is being covered as a story about individual patients' insulin costs — and it is that — but the policy mechanism under investigation is a rebate system that operates at the payer level, not the patient level. Coverage that centers individual patient stories is not wrong; it is using the available emotional logic to tell a story whose actual mechanics are institutional. My training lets me see that the coverage is choosing the right emotional register for a story whose policy register is being systematically underrepresented."</p>
+  </div>
+  <div class="exemplar">
+    <div class="exemplar-label">Exemplar — Underlying Question (Excellent)</div>
+    <p>"When policy coverage systematically centers the emotional register of individual harm over the institutional mechanics of institutional decision-making, who decides which register is primary — and what does that choice do to public understanding of the policy options available?"</p>
+  </div>
+  <div class="errors">
+    <div class="errors-label">Common Errors</div>
+    <ul>
+      <li><strong>The background problem.</strong> Students describe their training rather than apply it. "As a health policy student, I know that pharmaceutical pricing is complex" is background, not interpretation. What does health policy training let this student see in this specific beat that changes how it reads?</li>
+      <li><strong>The general claim.</strong> "This story is really about power" or "this story is really about inequality" fails the substitution test. Any attentive reader can make that claim. What specifically — what mechanism, what institutional structure, what disciplinary concept — is producing the coverage's specific form?</li>
+      <li><strong>The premature evaluation.</strong> The Interpretive Brief is not the Equity Assessment. Students who arrive at "the coverage is inadequate because..." have skipped Interpretation and moved to Evaluation. Redirect: what does your training let you see about how the coverage works — before you judge whether it works well?</li>
+      <li><strong>The question that closes.</strong> "Is the coverage adequate?" is not a good underlying question — it can be answered with the Equity Assessment. A good underlying question cannot be answered by one student in one module. It requires the cluster's collective attention from multiple angles.</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- L: EQUITY ASSESSMENT -->
+<div class="panel" id="p-l-equity">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">L · Large</div>
+    <div class="assign-module">Module 4 · Evaluation · Due end of Week 8</div>
+  </div>
+  <h1 class="assign-title">Equity Assessment and Cluster Proposal</h1>
+  <p class="assign-deck">Two deliverables due together. The Equity Assessment closes your individual arc. The Cluster Proposal opens the collective one.</p>
+  <div class="assign-meta">
+    <div class="assign-meta-item">Equity Assessment <span>Individual · 500–600 words · 100 points</span></div>
+    <div class="assign-meta-item">Cluster Proposal <span>Group · 300–400 words · Completion-graded</span></div>
+    <div class="assign-meta-item">Due <span>End of Week 8</span></div>
+  </div>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>Part 1: Equity Assessment — The Prompt (Student-Facing)</h3>
+  <p>The Equity Assessment is your structured evaluative argument about your beat. It asks you to move beyond description, analysis, and interpretation to make a reasoned judgment: about what is at stake for real people, whether the distribution of costs and benefits is fair, and whether the coverage adequately serves public understanding of those stakes.</p>
+  <p>Evaluation is not reaction. A reaction is what you felt when you first read the headline at Week 1. An evaluation is what you can say after eight weeks of careful attention: a claim grounded in evidence, named by a principle you can state and defend, and specific about who is affected and how.</p>
+  <p><strong>Your submission addresses four elements in prose, 500 to 600 words:</strong></p>
+  <ol>
+    <li><strong>The stakes.</strong> Who is affected by the developments in your beat? Name them specifically — not a category, but named communities, institutions, or people. What do they stand to gain or lose?</li>
+    <li><strong>The evaluative claim.</strong> Is the distribution of costs and benefits in your beat fair or unfair, according to a principle you can name and defend? Support your claim with specific evidence from your eight weeks of beat work.</li>
+    <li><strong>Coverage evaluation.</strong> Does your beat's coverage adequately represent the equity and ethical dimensions you have identified? What is missing, and why — structurally — might it be absent?</li>
+    <li><strong>The counterargument.</strong> State the strongest objection to your evaluation and respond to it substantively — not by dismissing it, but by engaging with it and saying what it adds or changes to your position.</li>
+  </ol>
+</div>
+
+<div class="block">
+  <h3>Equity Assessment Rubric</h3>
+  <table class="levels">
+    <tr>
+      <th style="width:18%">Element</th>
+      <th class="l-exc">Excellent</th>
+      <th class="l-pro">Proficient</th>
+      <th class="l-dev">Developing</th>
+      <th class="l-beg">Beginning</th>
+      <th style="width:6%;background:var(--crimson)">Points</th>
+    </tr>
+    <tr>
+      <td class="crit">Stakes Account</td>
+      <td>Named, specific affected parties with a concrete account of what each stands to gain or lose. The stakes are grounded in the beat's actual developments, not in the general topic. The reader understands why this matters to specific people.</td>
+      <td>Specific affected parties named. Stakes present. May be slightly general about what specifically is at risk for each party.</td>
+      <td>Categories rather than named parties ("patients," "communities," "workers"). Stakes described generally without grounding in specific beat developments.</td>
+      <td>No specific affected parties. Stakes described at the level of the topic ("healthcare matters to everyone") rather than the beat.</td>
+      <td class="pts">20</td>
+    </tr>
+    <tr>
+      <td class="crit">Evaluative Claim</td>
+      <td>A clear, arguable claim about fairness or adequacy, grounded in a named principle. The principle is explicit and defensible. The claim is supported by specific evidence from the beat — not from general knowledge about the topic. Could be meaningfully disputed by someone who disagrees with the principle or the evidence.</td>
+      <td>Evaluative claim and principle present. Evidence offered. Principle may be implicit rather than fully named.</td>
+      <td>Evaluative claim present but grounded in general topic knowledge rather than beat-specific evidence. Or principle vague ("fairness," "justice") without being made specific to this situation.</td>
+      <td>Reaction rather than evaluation. "This is wrong" without a named principle or evidence. Or no evaluative claim at all.</td>
+      <td class="pts">30</td>
+    </tr>
+    <tr>
+      <td class="crit">Coverage Evaluation</td>
+      <td>Specific claim about what is missing from coverage and a structural account of why — grounded in the source architecture and AI footprint work from Modules 1 and 2. The coverage evaluation builds on the analysis, not on a general sense that coverage is inadequate.</td>
+      <td>Coverage gap identified with some specificity. Structural reason for absence proposed, may be somewhat general.</td>
+      <td>General claim that coverage is inadequate without specificity about what is missing or why, structurally, it might be absent.</td>
+      <td>No coverage evaluation, or a claim that the coverage is wrong about the facts rather than about what it represents or omits.</td>
+      <td class="pts">25</td>
+    </tr>
+    <tr>
+      <td class="crit">Counterargument</td>
+      <td>The strongest version of the opposing position, stated fairly enough that a proponent of that position would recognize it. Engaged substantively — the student's response changes or qualifies their position in response, rather than simply reasserting it.</td>
+      <td>Counterargument present and genuine. Response engages it. May not fully change the student's position but takes the objection seriously.</td>
+      <td>A weak version of the counterargument ("some people might say coverage is fine, but I disagree") that does not represent the best case against the student's position.</td>
+      <td>No counterargument, or a counterargument so brief it is clearly not engaged.</td>
+      <td class="pts">25</td>
+    </tr>
+    <tr><td colspan="5"><strong>Total</strong></td><td class="pts">100</td></tr>
+  </table>
+</div>
+
+<div class="block">
+  <h3>Part 2: Cluster Proposal — The Prompt (Student-Facing)</h3>
+  <p>One submission per cluster. Graded on completion and specificity. A Proposal that addresses all four elements with genuine specificity receives full credit.</p>
+  <ol>
+    <li><strong>The shared question.</strong> One sentence — specific enough to guide the State of the World entry and broad enough to genuinely require all beats in the cluster to address it.</li>
+    <li><strong>What each beat contributes.</strong> One sentence per beat on the irreplaceable thing it brings to the cluster argument — the angle, the knowledge, or the evidence that only that thread can supply.</li>
+    <li><strong>Proposed content.</strong> What will a reader encounter in the State of the World entry? What will they understand after reading it that they did not understand before?</li>
+    <li><strong>Publication plan.</strong> What pages in the physical publication will this cluster produce? What form will they take?</li>
+  </ol>
+  <div class="callout">
+    <div class="callout-label">Cluster Proposal grading</div>
+    <p>The Cluster Proposal is graded on completion and specificity, not on quality of the proposed argument — that is what Module 5 is for. A Proposal that genuinely addresses all four elements with specificity receives full credit. A Proposal that is vague, incomplete, or that could describe any cluster in the class receives partial credit proportional to how much of the specificity is present. Return Proposals that use placeholder language ("we will write about our beats") with a note asking for the specific version.</p>
+  </div>
+</div>
+
+<div class="block">
+  <h3>What Strong Work Looks Like</h3>
+  <div class="exemplar">
+    <div class="exemplar-label">Exemplar — Evaluative Claim (Excellent)</div>
+    <p>"The Senate investigation's findings document a pattern in which a rebate system created by the Affordable Care Act, intended to reduce patient costs, was instead used by pharmacy benefit managers to extract value from manufacturers without passing savings to patients. The principle I am applying is distributive justice: that policy mechanisms should benefit the populations they are designed to serve, and that when they do not, accountability requires naming who captured the benefit instead. The evidence from eight weeks of beat work shows that mainstream coverage has consistently framed the investigation as a story about manufacturer greed rather than as a story about how a policy mechanism was captured by intermediaries — which is a materially different claim with materially different policy implications."</p>
+  </div>
+  <div class="errors">
+    <div class="errors-label">Common Errors</div>
+    <ul>
+      <li><strong>The category stakeholder.</strong> "Patients" is not a specific affected party. "The estimated 8.4 million Americans who ration insulin due to cost" is. The specificity of the stakeholder account signals whether the student has been following an actual beat or a topic.</li>
+      <li><strong>The reaction-as-evaluation.</strong> "This is deeply unfair" is a reaction. An evaluation names a principle: unfair by what standard, compared to what alternative, and in what specific way? Without the named principle, the evaluative claim cannot be disputed — and undisputable claims are not arguments.</li>
+      <li><strong>The weak counterargument.</strong> "Some might say the coverage is fine, but I disagree" is not a counterargument. Ask students: what is the strongest case that your evaluative claim is wrong? What evidence would a reasonable person point to? Only after engaging that evidence can the student's position be defended rather than merely asserted.</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- L: STATE OF THE WORLD -->
+<div class="panel" id="p-l-sotw">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">L · Large</div>
+    <div class="assign-module">Module 5 · Engagement · Due at Week 10 Assembly</div>
+  </div>
+  <h1 class="assign-title">State of the World Entry and Physical Publication</h1>
+  <p class="assign-deck">The piece of writing that exists because this specific group of people followed these specific beats at this specific moment and then looked at what they found together.</p>
+  <div class="assign-meta">
+    <div class="assign-meta-item">Entry length <span>500–700 words per cluster</span></div>
+    <div class="assign-meta-item">Format <span>Typed prose (cluster submission) + physical publication (assembled at assembly session)</span></div>
+    <div class="assign-meta-item">Points <span>100 (combined with notebook archive and self-assessment)</span></div>
+    <div class="assign-meta-item">Process <span>Draft → peer review → revision → assembly</span></div>
+  </div>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>The State of the World entry is the piece of writing that exists because this specific group of people followed these specific beats at this specific moment and then looked at what they found together. It is not a collection of individual summaries. It is a collective argument — one that requires all of the cluster's beats to sustain, and that could not have been made by any one person alone.</p>
+  <p>Before submitting, apply the test: could a reader who has never heard of any of these beats encounter this entry and find it worth reading? Does it make a claim rather than describe a situation? Does it draw on the evidence of all the beats in the cluster? Does it say something that ten weeks of collective attention made possible? If the answer to any of these is no, revise before submitting.</p>
+  <p>The process: draft submitted by mid-Week 9, peer review returned by end of Week 9, revised entry submitted before the assembly session in Week 10.</p>
+</div>
+
+<div class="block">
+  <h3>Rubric — State of the World Entry</h3>
+  <table class="levels">
+    <tr>
+      <th style="width:18%">Element</th>
+      <th class="l-exc">Excellent</th>
+      <th class="l-pro">Proficient</th>
+      <th class="l-dev">Developing</th>
+      <th class="l-beg">Beginning</th>
+      <th style="width:6%;background:var(--crimson)">Points</th>
+    </tr>
+    <tr>
+      <td class="crit">Collective Argument</td>
+      <td>Makes a claim that genuinely requires all beats in the cluster to sustain. No single beat could have made this argument alone. The synthesis is real: the beats illuminate the claim from different angles rather than running in parallel.</td>
+      <td>Claim present and requires more than one beat. Synthesis present, may be slightly uneven across beats.</td>
+      <td>Separate summaries of each beat's findings joined by transitional phrases. The "collective argument" could be disaggregated into individual summaries without loss of meaning.</td>
+      <td>No argument, or a claim that one beat could have made independently. Absence of genuine synthesis.</td>
+      <td class="pts">30</td>
+    </tr>
+    <tr>
+      <td class="crit">Evidence and Specificity</td>
+      <td>Claims grounded in specific evidence from ten weeks of beat work. No vague generalities about the topic. A reader can tell that the writers followed these specific beats, not that they read about this topic generally.</td>
+      <td>Evidence present and specific. May have one or two general claims but core argument is grounded.</td>
+      <td>Evidence present but could have been gathered in an afternoon of research rather than ten weeks of beat work. No visible difference between what beat work produced and what general research would produce.</td>
+      <td>Claims unsupported by specific evidence. Could have been written without any beat work.</td>
+      <td class="pts">20</td>
+    </tr>
+    <tr>
+      <td class="crit">Accessibility</td>
+      <td>Readable by someone outside the class with no prior knowledge of any beat in the cluster. No unexplained jargon. Opening that earns a general reader's attention. Claim stated clearly enough that someone encountering it cold can evaluate it.</td>
+      <td>Mostly accessible. One or two places where prior knowledge of the beats would help the reader. Generally readable.</td>
+      <td>Assumes reader knowledge of the beats, the cluster's conversation, or the module's context. Would not be fully intelligible to someone outside the class.</td>
+      <td>Inaccessible to a general reader. Assumes context that is not provided.</td>
+      <td class="pts">20</td>
+    </tr>
+    <tr>
+      <td class="crit">Peer Feedback Incorporated</td>
+      <td>Week 9 draft meaningfully revised in response to peer review. Changes are substantive — the argument or the evidence has been strengthened, clarified, or restructured — not cosmetic. The revision shows that the cluster engaged with the peer review rather than acknowledged it.</td>
+      <td>Revision present. Changes are real. May not address every peer review comment but core feedback engaged.</td>
+      <td>Minor cosmetic revision. Peer review acknowledged but not substantively engaged. The entry is essentially the same as the draft.</td>
+      <td>No revision. Draft submitted as final without engaging peer review.</td>
+      <td class="pts">15</td>
+    </tr>
+    <tr>
+      <td class="crit">Description Applied</td>
+      <td>The entry says what it claims to say. The opening earns what it promises. The claim in the final paragraph follows from the evidence in the body. No gap between what the entry sets up and what it delivers.</td>
+      <td>Entry mostly delivers on its opening. Minor gaps between setup and delivery.</td>
+      <td>Entry opens with a claim the evidence does not fully support, or closes with a claim the opening did not prepare the reader for.</td>
+      <td>Significant gap between what the entry promises and what it delivers.</td>
+      <td class="pts">15</td>
+    </tr>
+    <tr><td colspan="5"><strong>Total</strong></td><td class="pts">100</td></tr>
+  </table>
+</div>
+
+<div class="block">
+  <h3>Physical Publication</h3>
+  <p>The physical publication is assembled during the Week 10 assembly session. It is not assessed separately from the State of the World entry and the notebook archive — it is the physical form that both take. The assessment question is whether the cluster arrived at the assembly with the materials necessary to produce a genuine publication: the printed entry, notebook excerpts, and any visual or found materials from the beat work. A cluster that arrives unprepared affects the assembly session for the entire class.</p>
+  <div class="callout">
+    <div class="callout-label">What "assembled" means</div>
+    <p>The publication is assembled by hand in the room. Typed text is printed and physically placed on the artboard. Hand-lettered headlines, annotations, and drawings are made directly on the page. The seams and imperfections are not flaws. They are evidence that specific people made it. A cluster that produces a polished digital-looking document with all text pre-formatted has not done the assignment. A cluster whose pages look made — uneven, annotated, visibly assembled — has.</p>
+  </div>
+</div>
+</div>
+
+<!-- L: NOTEBOOK -->
+<div class="panel" id="p-l-notebook">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">L · Large</div>
+    <div class="assign-module">All Ten Weeks · Submitted with Module 5 Package</div>
+  </div>
+  <h1 class="assign-title">Notebook Archive</h1>
+  <p class="assign-deck">Ten weekly entries, kept by hand, submitted as a photo set. Assessed holistically as evidence of a sustained, developing practice — not entry by entry.</p>
+  <div class="assign-meta">
+    <div class="assign-meta-item">Entries <span>Ten, one per week</span></div>
+    <div class="assign-meta-item">Format <span>Handwritten, photographed, uploaded to Canvas</span></div>
+    <div class="assign-meta-item">Assessment <span>Holistic, part of Module 5 submission</span></div>
+    <div class="assign-meta-item">Weekly upload <span>Photo to Canvas before each class session</span></div>
+  </div>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>The notebook is kept by hand throughout the module. Before each class session, you write a brief entry using the three-part prompt: what I noticed, what moved, and what I'm sitting with. The entry is 150 to 250 words. You photograph it and upload the photo to Canvas before class. The instructor reads the photos. The physical notebook is yours throughout the module.</p>
+  <p>At Week 10, you compile all ten entries into a single submission — photographs in chronological order, each labeled by week, and submit them as part of your Module 5 package. The notebook is assessed holistically, as an arc, not entry by entry.</p>
+</div>
+
+<div class="block">
+  <h3>Holistic Assessment Scale</h3>
+  <div class="holistic">
+    <div class="h-row">
+      <div class="h-band exc">Complete + Engaged</div>
+      <div class="h-content">
+        <div class="h-pts">Full credit toward Module 5</div>
+        <div class="h-desc">All ten entries present. Evidence of developing specificity across the term — the Week 8 entry looks different from the Week 1 entry in the precision of its observations and the depth of its questions. "What I'm sitting with" entries become more specific and more disciplinarily grounded over time. The notebook reads as a genuine record of sustained attention, not as a compliance exercise.</div>
+      </div>
+    </div>
+    <div class="h-row">
+      <div class="h-band pro">Mostly Complete</div>
+      <div class="h-content">
+        <div class="h-pts">85% toward Module 5</div>
+        <div class="h-desc">Eight or nine entries present. The missing entries do not disrupt the arc. Evidence of developing attention across the term. Some entries may be thinner than others but the overall practice is present.</div>
+      </div>
+    </div>
+    <div class="h-row">
+      <div class="h-band dev">Partial</div>
+      <div class="h-content">
+        <div class="h-pts">60–70% toward Module 5</div>
+        <div class="h-desc">Fewer than eight entries, or all ten entries present but showing no development across the term — Week 9 reads like Week 1, or entries are clearly summary rather than observation, or photographs suggest entries were written in a single session near the deadline (uniform handwriting pressure, identical pen, no visible week-to-week variation in the physical conditions of writing).</div>
+      </div>
+    </div>
+    <div class="h-row">
+      <div class="h-band ins">Insufficient</div>
+      <div class="h-content">
+        <div class="h-pts">0–30% toward Module 5</div>
+        <div class="h-desc">Fewer than five entries, or entries so brief they cannot be assessed as genuine observation (one sentence per prompt), or entries demonstrably not kept as a weekly practice.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="block">
+  <h3>What the Instructor Is Looking For</h3>
+  <p>The notebook is not graded on writing quality. It is assessed on three dimensions:</p>
+  <ul>
+    <li><strong>Specificity of observation.</strong> "What I noticed" entries that name a specific thing — a specific source, a specific gap, a specific AI behavior in a specific platform — rather than summarizing the week's news. The specificity of the noticing is the evidence that the student is practicing Description, not just reading.</li>
+    <li><strong>Development over time.</strong> The questions in "what I'm sitting with" should become more specific and more disciplinarily grounded across ten weeks. A first-week question like "why does AI change journalism?" should, by Week 7, look more like "why does the AI summary of this beat's primary documents consistently attribute findings to the committee chair rather than to the committee's staff researchers, who wrote the documents?"</li>
+    <li><strong>Honest engagement.</strong> The notebook is not a place for performance. An entry that says "I couldn't find anything interesting this week because coverage went quiet" is more valuable than an entry that manufactures an observation to fill the space. Honest engagement with what the practice actually produces — including weeks where the beat is slow — is what the holistic assessment rewards.</li>
+  </ul>
+</div>
+</div>
+
+<!-- L: PEER REVIEW -->
+<div class="panel" id="p-l-peer">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">L · Large</div>
+    <div class="assign-module">Module 5 · Week 9 · Completion-Graded</div>
+  </div>
+  <h1 class="assign-title">Peer Review</h1>
+  <p class="assign-deck">An editorial response to another cluster's State of the World draft. Not praise, not criticism — an editorial question that moves the entry forward.</p>
+  <div class="assign-meta">
+    <div class="assign-meta-item">Length <span>200–300 words</span></div>
+    <div class="assign-meta-item">Format <span>Group submission</span></div>
+    <div class="assign-meta-item">Assessment <span>Completion-graded — present and substantive = full credit</span></div>
+    <div class="assign-meta-item">Due <span>End of Week 9</span></div>
+  </div>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>Your cluster has been assigned one other cluster's draft State of the World entry to review. Peer review is not praise and it is not criticism — it is an editorial response. The goal is to help the entry say what it is trying to say more clearly and more completely before the assembly session.</p>
+  <p>Your review addresses three things:</p>
+  <div class="pr-field">
+    <div class="pr-field-label">Description — What does this entry actually say?</div>
+    <p>State the central claim in your own words. Not what the entry is trying to say — what it actually says on the page. If you cannot state the claim clearly in one sentence, the entry has a Description problem: its central argument is not yet visible to a reader coming to it fresh.</p>
+  </div>
+  <div class="pr-field">
+    <div class="pr-field-label">Analysis — Where does the synthesis feel genuine?</div>
+    <p>Where does the entry say something that requires all of the beats to sustain? Name it specifically. Then: where does it feel like separate pieces sitting next to each other rather than a genuine collective argument? Name that specifically too.</p>
+  </div>
+  <div class="pr-field">
+    <div class="pr-field-label">Editorial Question — What is the one thing this entry needs?</div>
+    <p>Ask it as a question, not a directive. Not "you need to add more evidence" but "what would the reader need to know about the relationship between [X] and [Y] for the claim in paragraph three to hold?" One question. The most important one. Leave the revision to the cluster.</p>
+  </div>
+</div>
+
+<div class="block">
+  <h3>Completion Assessment</h3>
+  <p>Peer review is completion-graded. A review that addresses all three elements with genuine specificity, not praise (not "it was interesting"), but specific observations about what the entry says and what it needs) — receives full credit. A review that is vague, formulaic, or clearly not engaged with the specific draft receives partial credit proportional to how much genuine engagement is present.</p>
+  <div class="callout">
+    <div class="callout-label">For instructors — on monitoring peer review quality</div>
+    <p>Read the peer reviews before returning them to clusters. A review that says "the entry is well-written and covers all the beats" has not done the editorial work — it has offered praise. Return it with a note asking for the Description (what does the entry actually argue?) and the editorial question (what does it need to argue it better?). The quality of peer review is often a leading indicator of the quality of the final entry: clusters that engage genuinely with each other's drafts produce stronger State of the World entries.</p>
+  </div>
+</div>
+</div>
+
+<!-- L: SELF-ASSESSMENT -->
+<div class="panel" id="p-l-self">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">L · Large</div>
+    <div class="assign-module">Module 5 · Submitted with Week 10 Package · Completion-Graded</div>
+  </div>
+  <h1 class="assign-title">Self-Assessment</h1>
+  <p class="assign-deck">Six questions — one per move plus the notebook practice. A completion-graded account of what changed across ten weeks.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>The self-assessment is submitted with the notebook archive and the Module 5 package. Answer these six questions. A sentence or two each — more if you have more to say. Honest engagement with what the practice actually produced, including what did not work, is more valuable than a performance of completion.</p>
+  <div class="pr-field">
+    <div class="pr-field-label">1. Description</div>
+    <p>What did you believe about your beat at Week 1 that turned out to be wrong, incomplete, or more complicated than you understood? Name something specific.</p>
+  </div>
+  <div class="pr-field">
+    <div class="pr-field-label">2. Analysis</div>
+    <p>What structural pattern in your beat's coverage could you name by Week 4 that you could not have named before following it? Be specific about the pattern and about what following it for four weeks made visible.</p>
+  </div>
+  <div class="pr-field">
+    <div class="pr-field-label">3. Interpretation</div>
+    <p>What is the most specific thing your training lets you see in your beat that a general reader would miss? Name it as precisely as you can — the concept, the mechanism, what it reveals about this beat specifically.</p>
+  </div>
+  <div class="pr-field">
+    <div class="pr-field-label">4. Evaluation</div>
+    <p>Who bore a cost in your beat that the coverage did not name adequately? What would the coverage have needed to include for the public to understand what was actually at stake?</p>
+  </div>
+  <div class="pr-field">
+    <div class="pr-field-label">5. Engagement</div>
+    <p>What does the State of the World entry argue that none of your individual assignments argued? What required the cluster, more than one person following more than one beat, to make it possible?</p>
+  </div>
+  <div class="pr-field">
+    <div class="pr-field-label">6. The Notebook</div>
+    <p>What is the most specific thing you noticed and wrote down by hand that you would not have noticed if you had been reading your beat casually, without the notebook practice? Name the entry, the week, and what it captured.</p>
+  </div>
+</div>
+
+<div class="block">
+  <h3>Completion Assessment</h3>
+  <p>The self-assessment is completion-graded. All six questions answered with genuine specificity (not placeholder language, not "I learned a lot") receive full credit. The self-assessment is part of the holistic Module 5 package: a perfunctory self-assessment alongside a strong written submission will affect the instructor's overall read of the student's engagement with the module's practice. Both matter.</p>
+  <div class="callout">
+    <div class="callout-label">For instructors — what to look for</div>
+    <p>The self-assessment is the student's own account of what the module produced in their thinking. The most valuable responses are ones where the student names something specific that surprised them — a belief at Week 1 that turned out to be wrong, a structural pattern they could not have seen without four weeks of attention. These responses tell you whether the module did its work. Students who answer with generalities ("I learned to think critically about media") have not yet done the reflective move the question is asking for. Brief written response on the self-assessment — "what specifically?" — is the most useful feedback you can give.</p>
+  </div>
+</div>
+</div>
+
+<!-- MEDIUM SUMMARY -->
+<div class="panel" id="p-m-summary">
+<div class="version-bar">
+  <h2>Medium Version — Five Weeks</h2>
+  <p>For any course with five weeks of available thread. Students follow one live story across all five critical moves.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>Assignment Summary</h3>
+  <table class="summary">
+    <tr><th>Assignment</th><th>Move</th><th>Due</th><th>Form</th><th class="pts">Points</th></tr>
+    <tr><td><strong>Story Source Map</strong></td><td><span class="move-tag">Description</span></td><td>End of Week 1</td><td>300–400 words, typed</td><td class="pts">100</td></tr>
+    <tr><td><strong>Interpretive Note</strong></td><td><span class="move-tag">Interpretation</span></td><td>End of Week 3</td><td>400–500 words, typed</td><td class="pts">100</td></tr>
+    <tr><td><strong>Short Public Piece</strong></td><td><span class="move-tag">Engagement</span></td><td>End of Week 5</td><td>400–500 words, typed</td><td class="pts">100</td></tr>
+    <tr><td><em>Notebook Archive (holistic, submitted with Short Public Piece)</em></td><td></td><td>Week 5</td><td>Five entries, photographed</td><td class="pts">—</td></tr>
+    <tr><td><em>Physical Publication (completion, submitted after assembly)</em></td><td></td><td>Week 5</td><td>4–6 pages, photographed</td><td class="pts">—</td></tr>
+    <tr><td><em>Self-Assessment (completion, submitted with Week 5 package)</em></td><td></td><td>Week 5</td><td>Six questions</td><td class="pts">—</td></tr>
+    <tr><td colspan="3"><strong>Module Total</strong></td><td></td><td class="pts">300</td></tr>
+  </table>
+  <div class="callout">
+    <div class="callout-label">On Analysis and Evaluation in the Medium version</div>
+    <p>The Medium version does not have standalone assignments for Analysis or Evaluation. Both moves are practiced through the weekly notebook entries and the in-class discussion, and both are assessed through their contribution to the Story Source Map (Analysis informs the source architecture work) and the Short Public Piece (Evaluation informs the framing of the public argument). Instructors who want to add standalone Analysis or Evaluation assignments can adapt the Large version's Story Arc Analysis and Equity Assessment by reducing the word count and removing the cluster-formation components.</p>
+  </div>
+</div>
+
+<div class="block">
+  <h3>The Key Feedback Moment</h3>
+  <p>Return the Interpretive Note with written feedback before students begin drafting the Short Public Piece. The Short Public Piece should be grounded in the interpretive claim the student developed in Week 3. Without feedback on the Note, students cannot strengthen the claim before building the public piece on top of it. A Note without feedback produces a Public Piece without a genuine contribution — and a submission package that is difficult to assess fairly because the foundational move was never corrected.</p>
+</div>
+</div>
+
+<!-- M: STORY SOURCE MAP -->
+<div class="panel" id="p-m-sourcemap">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">M · Medium</div>
+    <div class="assign-module">Week 1 · Description · Due end of Week 1</div>
+  </div>
+  <h1 class="assign-title">Story Source Map</h1>
+  <p class="assign-deck">A shorter version of the Beat Source Map — establishing your story's source architecture in three hundred words. The foundation that makes the Interpretive Note possible.</p>
+  <div class="assign-meta">
+    <div class="assign-meta-item">Length <span>300–400 words</span></div>
+    <div class="assign-meta-item">Format <span>Typed prose</span></div>
+    <div class="assign-meta-item">Points <span>100</span></div>
+  </div>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>The Story Source Map establishes the information architecture of the live story you will follow for five weeks. It is not a summary of the story. It is a map of where the story comes from, how it reaches a general reader, and where AI enters that journey. A careful map in Week 1 makes the Interpretive Note in Week 3 significantly easier to write with depth.</p>
+  <p><strong>Your submission addresses four elements in prose, 300 to 400 words:</strong></p>
+  <ol>
+    <li><strong>Name the story.</strong> One sentence — specific, live, present-tense. Traceable to a primary source.</li>
+    <li><strong>Map the source layers.</strong> Primary source (who or what generates the original material), specialist layer (who covers it with expertise), and mainstream layer (where the general public encounters it). At least one named example at each layer.</li>
+    <li><strong>Trace the AI footprint.</strong> At least one specific, firsthand observation about where AI enters this story's information chain — not a general statement about AI in news, but something specific you observed this week.</li>
+    <li><strong>Name your disciplinary angle.</strong> One sentence connecting your field or background to this story — specific enough that it could seed an interpretive claim in Week 3.</li>
+  </ol>
+</div>
+
+<div class="block">
+  <h3>Rubric</h3>
+  <table class="levels">
+    <tr>
+      <th style="width:20%">Element</th>
+      <th class="l-exc">Excellent</th>
+      <th class="l-pro">Proficient</th>
+      <th class="l-dev">Developing</th>
+      <th class="l-beg">Beginning</th>
+      <th style="width:6%;background:var(--crimson)">Points</th>
+    </tr>
+    <tr>
+      <td class="crit">Story Named</td>
+      <td>Specific, live, present-tense. Traceable to a named primary source. Not a topic — a developing story with new information arriving.</td>
+      <td>Specific and live. Primary source may be described generally rather than named precisely.</td>
+      <td>Topic described rather than story. Too broad to follow weekly with a clear primary source.</td>
+      <td>No story named, or a story already resolved with no ongoing news.</td>
+      <td class="pts">20</td>
+    </tr>
+    <tr>
+      <td class="crit">Three Source Layers</td>
+      <td>All three described with named, specific examples. Distinction between layers is clear and accurate. Primary source identified.</td>
+      <td>All three present. Examples may be somewhat general but layers are distinct.</td>
+      <td>Two of three layers, or all three with generic examples and no primary source identified.</td>
+      <td>One layer or layers conflated.</td>
+      <td class="pts">35</td>
+    </tr>
+    <tr>
+      <td class="crit">AI Footprint</td>
+      <td>Specific, firsthand observation about this story's AI presence. Names platform, format, and what AI did or did not accurately represent.</td>
+      <td>Specific observation present. Concrete enough to be grounded in a real encounter this week.</td>
+      <td>General claim about AI in news without a specific firsthand observation from this story.</td>
+      <td>No AI footprint, or a claim so general it applies to all news.</td>
+      <td class="pts">25</td>
+    </tr>
+    <tr>
+      <td class="crit">Disciplinary Angle</td>
+      <td>One sentence naming a specific area of training or field knowledge that changes how this story reads. Could seed an interpretive claim.</td>
+      <td>Discipline connected to story. May be more general than ideal but points toward Week 3.</td>
+      <td>"I study [field]" without connecting training to what it lets this student see in this specific story.</td>
+      <td>No disciplinary angle, or one any reader could claim.</td>
+      <td class="pts">20</td>
+    </tr>
+    <tr><td colspan="5"><strong>Total</strong></td><td class="pts">100</td></tr>
+  </table>
+</div>
+</div>
+
+<!-- M: INTERPRETIVE NOTE -->
+<div class="panel" id="p-m-interp">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">M · Medium</div>
+    <div class="assign-module">Week 3 · Interpretation · Due end of Week 3</div>
+  </div>
+  <h1 class="assign-title">Interpretive Note</h1>
+  <p class="assign-deck">A shorter version of the Interpretive Brief — what your knowledge reveals about your story in four hundred words. The intellectual foundation of the Short Public Piece.</p>
+  <div class="assign-meta">
+    <div class="assign-meta-item">Length <span>400–500 words</span></div>
+    <div class="assign-meta-item">Format <span>Typed prose</span></div>
+    <div class="assign-meta-item">Points <span>100</span></div>
+    <div class="assign-meta-item">Critical <span>Return with feedback before Week 5 drafting begins</span></div>
+  </div>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>The Interpretive Note asks you to say what your story means in light of what you know — in a way the coverage itself cannot. It is the intellectual move that makes the Short Public Piece worth writing: without a genuine interpretive claim, the public piece has nothing to say that a general reader could not have said without your three weeks of attention and your training.</p>
+  <p>The test: could someone without your field, your training, and your three weeks of following this story have written this? If yes, go further.</p>
+  <p><strong>Your submission addresses three elements in prose, 400 to 500 words:</strong></p>
+  <ol>
+    <li><strong>What the coverage says.</strong> One paragraph. Accurately describe what mainstream coverage presents as the story's meaning — without editorializing.</li>
+    <li><strong>What your knowledge reveals.</strong> One to two paragraphs. Name the concept, framework, or field knowledge that changes how this story reads. Apply it specifically to what you have found in three weeks of following this story.</li>
+    <li><strong>Your interpretive claim.</strong> One paragraph. What does this story actually mean in light of what you know? Specific, arguable, and only possible because of what you bring.</li>
+  </ol>
+</div>
+
+<div class="block">
+  <h3>Rubric</h3>
+  <table class="levels">
+    <tr>
+      <th style="width:20%">Element</th>
+      <th class="l-exc">Excellent</th>
+      <th class="l-pro">Proficient</th>
+      <th class="l-dev">Developing</th>
+      <th class="l-beg">Beginning</th>
+      <th style="width:6%;background:var(--crimson)">Points</th>
+    </tr>
+    <tr>
+      <td class="crit">Coverage Account</td>
+      <td>Accurate, specific, and fair description of what mainstream coverage presents. Does not editorialize. A reporter covering this story would recognize it as an accurate account of their framing.</td>
+      <td>Accurate with minor imprecisions. No significant distortion.</td>
+      <td>Slides into evaluation before establishing what the coverage says. Or too general to be specific to this story.</td>
+      <td>Missing, or fundamentally inaccurate account of the coverage's framing.</td>
+      <td class="pts">20</td>
+    </tr>
+    <tr>
+      <td class="crit">Disciplinary Knowledge</td>
+      <td>Named, explained accessibly, applied specifically to this story. A lens that changes what the reader sees. Could not have been applied without training in this specific area.</td>
+      <td>Knowledge named and applied. May be explained with some jargon or applied loosely but genuinely changes the reading.</td>
+      <td>Background described rather than applied. "My training in [field]" without showing what it sees in this specific story.</td>
+      <td>No disciplinary knowledge, or knowledge any reader could claim regardless of training.</td>
+      <td class="pts">35</td>
+    </tr>
+    <tr>
+      <td class="crit">Interpretive Claim</td>
+      <td>Passes the substitution test. Specific, arguable, grounded in the disciplinary knowledge applied above. Could not have been written by a general reader without this student's training and three weeks of attention.</td>
+      <td>Claim requires some disciplinary knowledge. Specific enough to go beyond what a general reader would observe.</td>
+      <td>Could be made by an attentive general reader without the student's training. The discipline is in the background but does not do the interpretive work.</td>
+      <td>No interpretive claim, or a restatement of the coverage's own framing.</td>
+      <td class="pts">35</td>
+    </tr>
+    <tr>
+      <td class="crit">Clarity and Precision</td>
+      <td>Written for an intelligent general reader. No unexplained jargon. Claim stated clearly enough that someone encountering it cold can evaluate it. Under 500 words — nothing wasted.</td>
+      <td>Mostly clear. One or two places where prior knowledge would help. Generally readable.</td>
+      <td>Assumes reader knowledge the Note has not provided, or padded to length without adding substance.</td>
+      <td>Inaccessible to a general reader, or significantly under the minimum word count.</td>
+      <td class="pts">10</td>
+    </tr>
+    <tr><td colspan="5"><strong>Total</strong></td><td class="pts">100</td></tr>
+  </table>
+</div>
+</div>
+
+<!-- M: SHORT PUBLIC PIECE -->
+<div class="panel" id="p-m-public">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">M · Medium</div>
+    <div class="assign-module">Week 5 · Engagement · Due end of Week 5</div>
+  </div>
+  <h1 class="assign-title">Short Public Piece</h1>
+  <p class="assign-deck">Four hundred words written for a named general audience. Only five weeks of attention and a genuine interpretive claim make this possible.</p>
+  <div class="assign-meta">
+    <div class="assign-meta-item">Length <span>400–500 words</span></div>
+    <div class="assign-meta-item">Format <span>Typed prose, for a named general audience</span></div>
+    <div class="assign-meta-item">Points <span>100</span></div>
+    <div class="assign-meta-item">Process <span>Write → apply Description to your own writing → revise → submit</span></div>
+  </div>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>The Short Public Piece is what five weeks of careful attention makes possible. It is written for a named general audience — not for your instructor, not for your classmates, but for a specific reader who has not been following your story and who has not been trained in your field. Your job is to say something they need to know, in a form they can actually use.</p>
+  <p>Before you submit: run the piece through Description. What does it actually say? Does the opening deliver what it promises? Is there a gap between what you set up and what you deliver? Find the gap and close it before submitting.</p>
+  <p><strong>The piece must:</strong></p>
+  <ul>
+    <li>Name the story and why a general reader should care — in the first two sentences.</li>
+    <li>Build from your interpretive claim — say something only five weeks of attention and your training make possible.</li>
+    <li>Be grounded in specific evidence from your source work — no vague generalities about the topic.</li>
+    <li>Be written for a named audience — specify in a one-line header who you are writing for ("For a reader of the Denver Post's Sunday opinion section" or "For a student in an introductory biology course").</li>
+    <li>Do what it says it does — the closing paragraph should follow from the opening claim.</li>
+  </ul>
+</div>
+
+<div class="block">
+  <h3>Rubric</h3>
+  <table class="levels">
+    <tr>
+      <th style="width:20%">Element</th>
+      <th class="l-exc">Excellent</th>
+      <th class="l-pro">Proficient</th>
+      <th class="l-dev">Developing</th>
+      <th class="l-beg">Beginning</th>
+      <th style="width:6%;background:var(--crimson)">Points</th>
+    </tr>
+    <tr>
+      <td class="crit">Original Contribution</td>
+      <td>Says something that five weeks of attention and disciplinary training made possible. A reader who spent one afternoon researching the topic could not have written this. The interpretive claim from Week 3 is the foundation — visible, developed, not just referenced.</td>
+      <td>Interpretive claim present and grounded in the source work. May be somewhat less developed than the Note but genuinely builds on it.</td>
+      <td>Competent summary of the story that could have been written from a single afternoon's research. The five weeks of attention are not visible in the writing.</td>
+      <td>General topic summary with no visible grounding in beat work or disciplinary knowledge.</td>
+      <td class="pts">30</td>
+    </tr>
+    <tr>
+      <td class="crit">Named Audience</td>
+      <td>A specific reader named in a header. The piece is written for that reader — the vocabulary, the assumed knowledge, and the framing are calibrated to that audience, not to the instructor or the class.</td>
+      <td>Audience named. Piece mostly calibrated to that reader. Minor inconsistencies in assumed knowledge level.</td>
+      <td>Audience named but piece reads as if written for the instructor or a general academic audience. The calibration is theoretical rather than actual.</td>
+      <td>No named audience, or piece clearly written for the instructor or the class rather than a general reader.</td>
+      <td class="pts">20</td>
+    </tr>
+    <tr>
+      <td class="crit">Evidence and Specificity</td>
+      <td>Claims grounded in specific source work. A reader can tell that the writer followed this story for five weeks. No vague generalities about the topic that could have been generated without beat work.</td>
+      <td>Specific evidence present. May have one or two general claims but core argument is grounded in the source work.</td>
+      <td>Evidence present but could have been gathered without five weeks of beat work. No visible difference between what the beat produced and what a single afternoon of research would produce.</td>
+      <td>Claims unsupported by specific evidence from the source work.</td>
+      <td class="pts">25</td>
+    </tr>
+    <tr>
+      <td class="crit">Description Applied</td>
+      <td>The piece does what it says it does. Opening earns what it promises. Closing follows from the body. No gap between setup and delivery. Evidence that Description was applied before submission.</td>
+      <td>Piece mostly delivers on its opening. Minor gaps between setup and delivery.</td>
+      <td>Opening makes a promise the piece does not keep. Or closing introduces a claim the opening did not prepare for.</td>
+      <td>Significant gap between what the piece promises and what it delivers.</td>
+      <td class="pts">25</td>
+    </tr>
+    <tr><td colspan="5"><strong>Total</strong></td><td class="pts">100</td></tr>
+  </table>
+</div>
+</div>
+
+<!-- M: PUBLICATION -->
+<div class="panel" id="p-m-pub">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">M · Medium</div>
+    <div class="assign-module">Week 5 · Physical Deliverable · Completion-Graded</div>
+  </div>
+  <h1 class="assign-title">Physical Publication</h1>
+  <p class="assign-deck">Four to six pages of hand-assembled material drawn from the five weeks of source work, notebook entries, and the Short Public Piece.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>The physical publication is the Slow News deliverable for the Medium version. It is assembled by hand — not designed on a screen, not a digital project printed out. It exists because you followed a live story for five weeks and made something physical from what you found. The Short Public Piece is the anchor. The notebook excerpts are the raw material. The hand-lettered headlines, annotations, and drawings are the form.</p>
+  <p>Your instructor has specified the format and the minimum page count for this course. Whatever the format, the assembly happens by hand. Typed text is printed and cut and pasted in physically. Nothing is designed digitally and printed as a finished layout.</p>
+</div>
+
+<div class="block">
+  <h3>Completion Assessment</h3>
+  <div class="holistic">
+    <div class="h-row">
+      <div class="h-band exc">Complete</div>
+      <div class="h-content">
+        <div class="h-pts">Full credit</div>
+        <div class="h-desc">Meets the instructor's specified format and minimum page count. Includes the Short Public Piece as the anchor piece. Includes at least two notebook excerpts. Includes at least one hand-made element (headline, annotation, drawing) on each page. Submitted as a clear photograph set with pages in order.</div>
+      </div>
+    </div>
+    <div class="h-row">
+      <div class="h-band pro">Mostly Complete</div>
+      <div class="h-content">
+        <div class="h-pts">80%</div>
+        <div class="h-desc">Meets format. One element missing (notebook excerpt, hand-made element, or page count slightly under minimum). Photographs clear enough to assess.</div>
+      </div>
+    </div>
+    <div class="h-row">
+      <div class="h-band dev">Partial</div>
+      <div class="h-content">
+        <div class="h-pts">50–60%</div>
+        <div class="h-desc">Significantly under minimum page count, or missing the Short Public Piece as anchor, or assembled digitally rather than by hand, or photographs too unclear to assess.</div>
+      </div>
+    </div>
+    <div class="h-row">
+      <div class="h-band ins">Insufficient</div>
+      <div class="h-content">
+        <div class="h-pts">0%</div>
+        <div class="h-desc">Not submitted, or a digital design printed out and presented as a hand-assembled publication.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- M: SELF-ASSESSMENT -->
+<div class="panel" id="p-m-self">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">M · Medium</div>
+    <div class="assign-module">Week 5 · Completion-Graded · Submitted with Week 5 Package</div>
+  </div>
+  <h1 class="assign-title">Self-Assessment</h1>
+  <p class="assign-deck">Six questions — one per move plus the notebook practice. A completion-graded account of what five weeks produced.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>Answer these six questions. A sentence or two each — more if you have more to say. Honest engagement with what the practice actually produced, including what did not go well, is more valuable than a performance of completion.</p>
+  <div class="pr-field"><div class="pr-field-label">1. Description</div><p>What did you believe about your story at Week 1 that turned out to be wrong, incomplete, or more complicated than you understood?</p></div>
+  <div class="pr-field"><div class="pr-field-label">2. Analysis</div><p>What did you learn about how your story's coverage works, structurally, that you could not have known without following it for five weeks?</p></div>
+  <div class="pr-field"><div class="pr-field-label">3. Interpretation</div><p>What does your training let you see in this story that a general reader would miss? Name it as precisely as you can.</p></div>
+  <div class="pr-field"><div class="pr-field-label">4. Evaluation</div><p>Who bore a cost in your story that the coverage did not name adequately? What would adequate coverage have needed to include?</p></div>
+  <div class="pr-field"><div class="pr-field-label">5. Engagement</div><p>What does your Short Public Piece say that your five weeks of source work made possible? What could not have been written without that attention?</p></div>
+  <div class="pr-field"><div class="pr-field-label">6. The Notebook</div><p>What is the most specific thing you noticed and wrote by hand that you would not have noticed without the notebook practice?</p></div>
+</div>
+</div>
+
+<!-- SMALL SUMMARY -->
+<div class="panel" id="p-s-summary">
+<div class="version-bar">
+  <h2>Small Version — 1 to 3 Sessions</h2>
+  <p>For any course, any discipline, grades 9 through 16. A recurring ritual or a stand-alone module using the first three critical moves.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>Assignment Summary</h3>
+  <table class="summary">
+    <tr><th>Assignment</th><th>Move</th><th>Due</th><th>Form</th><th class="pts">Points</th></tr>
+    <tr><td><strong>Reading Reflection</strong></td><td><span class="move-tag">Description · Analysis · Interpretation</span></td><td>End of module</td><td>300–400 words, typed</td><td class="pts">100</td></tr>
+    <tr><td><em>Reading Log (completion, each session)</em></td><td></td><td>Before each session</td><td>Three-move entry, photographed</td><td class="pts">—</td></tr>
+    <tr><td><em>Self-Assessment (completion, closing)</em></td><td></td><td>End of module</td><td>Three questions</td><td class="pts">—</td></tr>
+    <tr><td><em>Physical Page (completion, end of module)</em></td><td></td><td>End of module</td><td>One page or spread, hand-assembled</td><td class="pts">—</td></tr>
+    <tr><td colspan="3"><strong>Module Total</strong></td><td></td><td class="pts">100</td></tr>
+  </table>
+  <div class="callout">
+    <div class="callout-label">On the Reading Log</div>
+    <p>The Reading Log is completion-graded: submitted before each session, addresses all three moves, and reflects genuine engagement with a real news item. Instructors who want to create a graded version of the log should apply the Reading Reflection rubric at reduced scale — the moves are the same, the log is just shorter and session-specific rather than chosen and developed over time.</p>
+  </div>
+</div>
+
+<div class="block">
+  <h3>Adapting for Recurring Use</h3>
+  <p>When the Small version runs as a recurring ritual across a semester, the Reading Reflection is typically assigned once at the end of the module or once every three to four weeks as a checkpoint. Reading Logs accumulate across the semester and can be submitted as a compiled set at the end, assessed holistically on the same scale as the Large version's notebook archive.</p>
+  <p>The physical page can be produced as a semester-end collective document: each student's best session page assembled into a class publication using the same format as the Large version's State of the World. This is the simplest version of the assembly session and can run in the last twenty minutes of a regular class meeting.</p>
+</div>
+</div>
+
+<!-- S: READING REFLECTION -->
+<div class="panel" id="p-s-reflect">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">S · Small</div>
+    <div class="assign-module">Primary Assignment · Due end of module</div>
+  </div>
+  <h1 class="assign-title">Reading Reflection</h1>
+  <p class="assign-deck">Three hundred words applying the three critical moves to one chosen news item. The primary individual assessment for the Small version.</p>
+  <div class="assign-meta">
+    <div class="assign-meta-item">Length <span>300–400 words</span></div>
+    <div class="assign-meta-item">Format <span>Typed prose</span></div>
+    <div class="assign-meta-item">Points <span>100</span></div>
+    <div class="assign-meta-item">News item <span>Student's choice from the past two weeks</span></div>
+  </div>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>Choose one news item from the past two weeks — on any topic, from any source. Run it through the three critical moves. Write your reflection in prose, 300 to 400 words. Include a link or citation for the item at the top.</p>
+  <p>The three moves, applied in sequence:</p>
+  <div class="pr-field">
+    <div class="pr-field-label">Move 1 — Description: What does this story actually say?</div>
+    <p>Account for what is present: the main claim, the evidence cited, the gap between what the headline promises and what the body delivers. Without reaction. Without evaluation. Just what is there. Start here, every time.</p>
+  </div>
+  <div class="pr-field">
+    <div class="pr-field-label">Move 2 — Analysis: Where did this story come from, and how did it reach you?</div>
+    <p>What is the primary source the story is based on — the document, event, or statement that preceded the coverage? How did the story travel from that source to you? What did AI do along the way — in how you found it, in how it was summarized, in how it was recommended?</p>
+  </div>
+  <div class="pr-field">
+    <div class="pr-field-label">Move 3 — Interpretation: What does your knowledge add?</div>
+    <p>What does your field, your training, your background, or your experience let you see in this story that a general reader would not? This is not "my opinion." This is: what specifically does your education or experience reveal about what this story means?</p>
+  </div>
+</div>
+
+<div class="block">
+  <h3>Rubric</h3>
+  <table class="levels">
+    <tr>
+      <th style="width:18%">Move</th>
+      <th class="l-exc">Excellent</th>
+      <th class="l-pro">Proficient</th>
+      <th class="l-dev">Developing</th>
+      <th class="l-beg">Beginning</th>
+      <th style="width:6%;background:var(--crimson)">Points</th>
+    </tr>
+    <tr>
+      <td class="crit">Description</td>
+      <td>Accurate, specific account of what the story says. Main claim named. Evidence cited. Gap between headline and body identified if present. No evaluation or reaction mixed in. Could be accepted by the story's author as a fair description of their work's content.</td>
+      <td>Accurate account of the main claim. May miss one element (gap, specific evidence cited) but no significant distortion.</td>
+      <td>Summary of the story's topic rather than account of its specific claims. Or Description mixed with evaluation ("the story says X, which is wrong").</td>
+      <td>Description missing, or a reaction rather than an account of what the story says.</td>
+      <td class="pts">30</td>
+    </tr>
+    <tr>
+      <td class="crit">Analysis</td>
+      <td>Primary source identified or genuinely attempted. Distribution path traced. At least one specific AI observation — what platform, what happened, how it differed from the underlying article if at all. Structural, not evaluative.</td>
+      <td>Primary source identified or attempted. AI presence noted specifically. Distribution path described.</td>
+      <td>Primary source vague or absent. AI observation general ("algorithms shape what I see") rather than specific to this item. Distribution path not traced.</td>
+      <td>No Analysis, or Analysis that describes the story's subject rather than its production and distribution.</td>
+      <td class="pts">35</td>
+    </tr>
+    <tr>
+      <td class="crit">Interpretation</td>
+      <td>A genuine contribution from the student's knowledge, training, or experience — something a general reader without that background would not have observed. Named specifically. Not "my opinion" but "what my training in [X] lets me see."</td>
+      <td>Contribution present and requires some background. May be stated more generally than ideal but is clearly grounded in something the student knows.</td>
+      <td>A general observation any attentive reader could make without the student's specific background. Or "my opinion is..." rather than "what my training reveals..."</td>
+      <td>No Interpretation, or an Interpretation that is reaction rather than educated perception.</td>
+      <td class="pts">35</td>
+    </tr>
+    <tr><td colspan="5"><strong>Total</strong></td><td class="pts">100</td></tr>
+  </table>
+</div>
+
+<div class="block">
+  <h3>What Strong Work Looks Like</h3>
+  <div class="exemplar">
+    <div class="exemplar-label">Exemplar — Description (Excellent)</div>
+    <p>"The article claims that a recent study found a correlation between adolescent social media use and increased rates of self-reported anxiety. The primary evidence cited is a survey of 3,200 teenagers conducted by a university research group. The headline says 'Social media causes teen anxiety'; the article's own methodology section notes the study is correlational and cannot establish causation. That gap between headline and body is the most important thing in the piece."</p>
+  </div>
+  <div class="exemplar">
+    <div class="exemplar-label">Exemplar — Interpretation (Excellent)</div>
+    <p>"My coursework in research methods lets me see that the study this article is based on has a significant self-report problem: it asks teenagers to estimate their own social media use and their own anxiety levels, both of which are notoriously unreliable self-assessments. The study's authors acknowledge this in the limitations section. The article does not. My training tells me to look at the methodology before accepting the headline's causal claim — and the methodology here does not support it."</p>
+  </div>
+  <div class="errors">
+    <div class="errors-label">Common Errors</div>
+    <ul>
+      <li><strong>Description that evaluates.</strong> "The story says X, which is misleading" has already left Description and entered Evaluation. The Description move accounts for what the story says before judging whether it says it accurately. Split the moves: say what is there, then analyze how it got there, then interpret what your knowledge adds.</li>
+      <li><strong>Analysis that stays on the surface.</strong> "I found this on Twitter" is not Analysis. Analysis traces the path: what was the primary source, how did it become a story, how did AI touch it along the way? The student who says "I found it because an algorithm surfaced it in my feed, and the AI summary omitted the study's methodology section" has done Analysis.</li>
+      <li><strong>Interpretation as opinion.</strong> "In my opinion, social media is harmful" is not Interpretation in the critical process sense. Interpretation is what your training, your field, or your specific knowledge reveals about this story. The discipline is the lens; the story is what the lens illuminates.</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- S: SELF-ASSESSMENT -->
+<div class="panel" id="p-s-self">
+<div class="assign-header">
+  <div class="assign-version">
+    <div class="assign-v-badge">S · Small</div>
+    <div class="assign-module">Closing · Completion-Graded</div>
+  </div>
+  <h1 class="assign-title">Self-Assessment</h1>
+  <p class="assign-deck">Three questions — one per move. A completion-graded account of what the three moves produced in how you read.</p>
+</div>
+<div class="page-rule"></div>
+
+<div class="block">
+  <h3>The Prompt (Student-Facing)</h3>
+  <p>Answer these three questions. A sentence or two each. Honest engagement with what the practice actually produced — including what did not quite work, is more valuable than a polished account of how much you learned.</p>
+  <div class="pr-field">
+    <div class="pr-field-label">1. Description</div>
+    <p>What did you read differently after practicing Description than you read before? Give a specific example — a headline, a gap between headline and body, a specific claim you would have missed before the move was named for you.</p>
+  </div>
+  <div class="pr-field">
+    <div class="pr-field-label">2. Analysis</div>
+    <p>Where did you notice AI's role in how a news item reached you — either in this module or in the week after it ended? Name what you found and how you knew (or how you were not sure).</p>
+  </div>
+  <div class="pr-field">
+    <div class="pr-field-label">3. Interpretation</div>
+    <p>What is one thing your field, your training, or your experience lets you see in a news story that a general reader would miss? Try to be specific — not "my background helps me read critically" but a particular thing your particular preparation reveals.</p>
+  </div>
+</div>
+
+<div class="block">
+  <h3>Completion Assessment</h3>
+  <p>All three questions answered with genuine specificity (not placeholder language, not "I learned to think critically") receive full credit. The self-assessment is not separately scored in the Small version's 100-point total, but it is a required submission. Students who do not submit it have not completed the module.</p>
+  <div class="callout">
+    <div class="callout-label">Using self-assessments for course improvement</div>
+    <p>The Small version self-assessment is the most useful feedback instrument in this file. Students who answer question 2 specifically — naming what they found and how they noticed it — are giving you a record of how AI is actually operating in the information environment they navigate. Read them. They tell you which moves stuck, where the AI conversation landed, and what students are actually noticing in their media diet. This is more useful data than an end-of-course survey.</p>
+  </div>
+</div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+function show(id){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.sidebar button').forEach(function(b){b.classList.remove('active')});
+  document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('active')});
+  var panel = document.getElementById('p-'+id);
+  if(panel) panel.classList.add('active');
+  document.querySelectorAll('.sidebar button').forEach(function(b){
+    var oc = b.getAttribute('onclick');
+    if(oc && oc.indexOf("'"+id+"'")>=0) b.classList.add('active');
+  });
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    var oc = a.getAttribute('onclick');
+    if(oc && oc.indexOf("'"+id+"'")>=0) a.classList.add('active');
+  });
+  window.scrollTo(0,49);
+}
+</script>
+</body>
+</html>
