@@ -5,504 +5,148 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Slow News, Smart Citizens</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@300;400;500&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --ink:#1c1c1c;
-  --paper:#f5f1ea;
-  --cream:#fffdf7;
-  --white:#fff;
-  --crimson:#8b2332;
-  --gold:#b8924a;
-  --rule:#d4cdc3;
-  --rule-light:#e8e2d8;
-  --muted:#6a6259;
-  --mono:'DM Mono',monospace;
-  --serif:'Source Serif 4',Georgia,serif;
-  --display:'Playfair Display',Georgia,serif;
+  --ink:#1c1c1c;--paper:#f5f1ea;--cream:#fffdf7;--white:#fff;
+  --crimson:#8b2332;--gold:#b8924a;--rule:#d4cdc3;--rule-lt:#e8e2d8;
+  --muted:#6a6259;--sidebar:#23201c;--green:#2d6a2d;--amber:#8a7a20;--brick:#7a2020;
+  --display:'Playfair Display',Georgia,serif;--serif:'Source Serif 4',Georgia,serif;--mono:'DM Mono','Courier New',monospace;
 }
-
 html{scroll-behavior:smooth}
-body{
-  background:var(--paper);
-  font-family:var(--serif);
-  color:var(--ink);
-  font-size:16px;
-  line-height:1.7;
-  min-height:100vh;
-}
-
-/* ── MASTHEAD ── */
-.masthead{
-  background:var(--cream);
-  border-bottom:1px solid var(--rule);
-}
-.masthead-rule{height:4px;background:var(--crimson)}
-.masthead-inner{
-  max-width:900px;margin:0 auto;
-  padding:32px 32px 24px;
-}
-.masthead-kicker{
-  font-family:var(--mono);font-size:8.5px;font-weight:500;
-  letter-spacing:.16em;text-transform:uppercase;
-  color:var(--crimson);margin-bottom:16px;
-  display:flex;align-items:center;gap:12px;
-}
-.masthead-kicker::after{
-  content:'';flex:1;height:1px;background:var(--crimson);opacity:.25;max-width:50px;
-}
-.masthead-title{
-  font-family:var(--display);
-  font-size:clamp(48px,7vw,80px);
-  font-weight:900;line-height:.95;
-  letter-spacing:-.02em;
-  color:var(--ink);
-  margin-bottom:8px;
-}
-.masthead-title em{font-style:italic;color:var(--crimson)}
-.masthead-rule-mid{
-  width:52px;height:3px;background:var(--crimson);margin:18px 0;
-}
-.masthead-deck{
-  font-family:var(--display);
-  font-size:clamp(16px,2.5vw,21px);
-  font-style:italic;font-weight:400;
-  line-height:1.45;color:var(--muted);
-  max-width:620px;
-}
-
-/* ── BYLINE STRIP ── */
-.byline{
-  border-top:1px solid var(--rule);
-  border-bottom:3px solid var(--ink);
-  padding:10px 32px;
-  max-width:900px;margin:0 auto;
-  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
-}
-.byline-item{
-  font-family:var(--mono);font-size:9px;font-weight:400;
-  letter-spacing:.05em;color:var(--muted);
-  display:flex;align-items:center;gap:6px;
-}
-.byline-item strong{color:var(--ink);font-weight:500}
-.byline-sep{width:1px;height:14px;background:var(--rule)}
-
-/* ── LAYOUT ── */
-.layout{
-  max-width:900px;margin:0 auto;
-  padding:40px 32px 80px;
-  display:grid;
-  grid-template-columns:1fr 280px;
-  gap:48px;
-  align-items:start;
-}
-@media(max-width:700px){
-  .layout{grid-template-columns:1fr;gap:36px}
-  .masthead-inner,.byline{padding-left:20px;padding-right:20px}
-  .layout{padding-left:20px;padding-right:20px}
-}
-
-/* ── LEFT COLUMN ── */
-.lede{
-  font-size:18px;line-height:1.75;
-  color:#363230;
-  margin-bottom:28px;
-  padding-bottom:28px;
-  border-bottom:2px solid var(--ink);
-}
-.lede p+p{margin-top:14px}
-
-/* Navigation sections */
-.nav-section{margin-bottom:28px}
-.nav-section-label{
-  font-family:var(--mono);font-size:8.5px;font-weight:500;
-  letter-spacing:.14em;text-transform:uppercase;
-  color:var(--crimson);margin-bottom:12px;
-  padding-bottom:7px;border-bottom:1px solid var(--rule);
-  display:flex;align-items:center;gap:10px;
-}
-.nav-section-label::after{
-  content:'';flex:1;height:1px;background:var(--rule);max-width:30px;
-}
-
-/* Nav links */
-.nav-link{
-  display:flex;align-items:stretch;
-  text-decoration:none;
-  margin-bottom:3px;
-  transition:all .15s;
-}
-.nav-link:hover .nav-link-title{color:var(--crimson)}
-.nav-link:hover .nav-link-icon{background:var(--crimson)}
-.nav-link-icon{
-  background:var(--ink);color:var(--cream);
-  font-family:var(--mono);font-size:8px;font-weight:500;
-  letter-spacing:.08em;text-transform:uppercase;
-  padding:10px 12px;flex-shrink:0;width:60px;
-  display:flex;align-items:center;justify-content:center;
-  text-align:center;line-height:1.3;
-  transition:background .15s;
-}
-.nav-link-icon.start{background:var(--crimson)}
-.nav-link-icon.ref{background:#5a6a5a}
-.nav-link-icon.assess{background:#3a4a6a}
-.nav-link-body{
-  background:var(--white);border:1px solid var(--rule);
-  border-left:none;padding:10px 14px;flex:1;
-}
-.nav-link-title{
-  font-family:var(--display);font-size:15px;font-weight:700;
-  color:var(--ink);margin-bottom:2px;line-height:1.2;
-  transition:color .15s;
-}
-.nav-link-desc{font-size:13px;color:var(--muted);line-height:1.5}
-.nav-link-url{
-  font-family:var(--mono);font-size:8px;color:var(--rule);
-  margin-top:4px;letter-spacing:.03em;
-}
-
-/* Path dividers */
-.path-group{margin-bottom:6px}
-.path-label{
-  font-family:var(--mono);font-size:8px;font-weight:500;
-  letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);padding:6px 0 4px;
-  display:flex;align-items:center;gap:8px;
-}
-.path-label::after{
-  content:'';flex:1;height:1px;background:var(--rule-light);
-}
-
-/* ── RIGHT COLUMN / SIDEBAR ── */
-.sidebar{}
-
-.sidebar-block{
-  background:var(--white);
-  border:1px solid var(--rule);
-  margin-bottom:3px;
-  overflow:hidden;
-}
-.sidebar-block-header{
-  background:var(--ink);
-  padding:9px 14px;
-  font-family:var(--mono);font-size:8.5px;font-weight:500;
-  letter-spacing:.1em;text-transform:uppercase;color:#c9a96e;
-}
-.sidebar-block-body{padding:14px 15px}
-.sidebar-block-body p{
-  font-size:13.5px;line-height:1.65;color:#444;margin-bottom:10px;
-}
-.sidebar-block-body p:last-child{margin-bottom:0}
-.sidebar-block-body a{color:var(--crimson);text-decoration:underline;text-underline-offset:2px}
-.sidebar-block-body strong{color:var(--ink)}
-
-/* Live moment box */
-.live-block{
-  background:var(--cream);
-  border:1px solid var(--rule);
-  border-top:3px solid var(--crimson);
-  margin-bottom:3px;
-  overflow:hidden;
-}
-.live-header{
-  padding:9px 14px 7px;
-  display:flex;align-items:center;gap:8px;
-}
-.live-dot{
-  width:7px;height:7px;
-  background:var(--crimson);
-  border-radius:50%;
-  flex-shrink:0;
-  animation:pulse 2s ease-in-out infinite;
-}
-@keyframes pulse{
-  0%,100%{opacity:1}
-  50%{opacity:.4}
-}
-.live-label{
-  font-family:var(--mono);font-size:8px;font-weight:500;
-  letter-spacing:.12em;text-transform:uppercase;color:var(--crimson);
-}
-.live-date{
-  font-family:var(--mono);font-size:8px;color:var(--muted);
-  margin-left:auto;
-}
-.live-body{padding:2px 14px 14px}
-.live-body h4{
-  font-family:var(--display);font-size:14px;font-weight:700;
-  color:var(--ink);margin-bottom:6px;line-height:1.3;
-}
-.live-body p{
-  font-size:13px;line-height:1.62;color:#444;margin-bottom:8px;
-}
-.live-body p:last-child{margin-bottom:0}
-.live-body a{color:var(--crimson);text-decoration:underline;text-underline-offset:2px;font-size:12px}
-.live-rule{width:100%;height:1px;background:var(--rule-light);margin:10px 0}
-.live-body em{font-style:italic}
-
-/* Five moves quick ref */
-.moves-quick{display:flex;flex-direction:column;gap:2px;margin-top:8px}
-.mq-row{display:flex;align-items:center;gap:0}
-.mq-n{
-  background:var(--crimson);color:#fff;
-  font-family:var(--mono);font-size:9px;font-weight:500;
-  padding:5px 8px;flex-shrink:0;width:26px;
-  display:flex;align-items:center;justify-content:center;
-}
-.mq-body{
-  background:var(--white);border:1px solid var(--rule);
-  border-left:none;padding:5px 10px;flex:1;
-}
-.mq-name{font-family:var(--display);font-size:12px;font-weight:700;color:var(--ink)}
-.mq-q{font-size:11px;font-style:italic;color:var(--muted)}
-
-/* ── FOOTER ── */
-footer{
-  border-top:3px solid var(--ink);
-  background:var(--cream);
-  padding:24px 32px;
-}
-.footer-inner{
-  max-width:900px;margin:0 auto;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:16px;flex-wrap:wrap;
-}
-.footer-credit{
-  font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.04em;
-}
-.footer-credit strong{color:var(--ink)}
-.footer-back{
-  font-family:var(--mono);font-size:9px;color:var(--muted);
-  text-decoration:none;letter-spacing:.06em;text-transform:uppercase;
-  transition:color .15s;
-}
-.footer-back:hover{color:var(--crimson)}
+body{background:var(--paper);font-family:var(--serif);color:var(--ink);font-size:16px;line-height:1.72}
+.topbar{position:sticky;top:0;z-index:10;background:var(--cream);border-bottom:1px solid var(--rule)}
+.top-rule{height:4px;background:var(--crimson)}
+.nav{max-width:980px;margin:0 auto;padding:0 24px;display:flex;gap:18px;align-items:center;min-height:46px;overflow-x:auto}
+.nav-title{font-family:var(--display);font-size:15px;font-weight:900;color:var(--ink);text-decoration:none;white-space:nowrap}
+.nav-title em{color:var(--crimson);font-style:italic}
+.nav a{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap}
+.nav a:hover{color:var(--crimson)}
+.masthead{background:var(--cream);border-bottom:3px solid var(--ink)}
+.masthead-inner{max-width:980px;margin:0 auto;padding:34px 28px 28px}
+.kicker{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--crimson);margin-bottom:14px}
+h1{font-family:var(--display);font-size:clamp(42px,7vw,72px);font-weight:900;line-height:.96;letter-spacing:-.02em;color:var(--ink);margin-bottom:12px}
+h1 em{font-style:italic;color:var(--crimson)}
+.deck{font-family:var(--display);font-size:clamp(17px,2.4vw,21px);font-style:italic;line-height:1.45;color:var(--muted);max-width:660px}
+.byline{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.04em;margin-top:18px;padding-top:14px;border-top:1px solid var(--rule)}
+.layout{max-width:980px;margin:0 auto;padding:0 28px 70px}
+.section{padding:34px 0;border-bottom:1px solid var(--rule-lt)}
+.section:last-child{border-bottom:none}
+.label{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--crimson);margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--rule)}
+h2{font-family:var(--display);font-size:clamp(24px,4vw,34px);font-weight:900;line-height:1.1;margin-bottom:14px}
+h3{font-family:var(--display);font-size:20px;font-weight:700;line-height:1.2;margin:18px 0 10px}
+p{font-size:16px;line-height:1.78;color:#363230;margin-bottom:14px}
+p:last-child{margin-bottom:0}
+ul,ol{padding-left:22px;margin-bottom:14px}
+li{font-size:15.5px;line-height:1.7;color:#363230;margin-bottom:6px}
+.pull{border-left:4px solid var(--crimson);padding:14px 18px;background:var(--white);margin:18px 0}
+.pull p{font-family:var(--display);font-size:18px;font-style:italic;line-height:1.5;color:var(--ink);margin:0}
+.note{background:#fdf8f0;border:1px solid #e0d4ba;border-left:4px solid var(--gold);padding:14px 18px;margin:16px 0}
+.note-label,.card-label,.table-label{font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.note p{font-size:14px;line-height:1.65;color:#4a3e28;margin:0}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:16px 0}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:16px 0}
+@media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr}.nav{padding:0 18px}.layout{padding:0 20px 60px}.masthead-inner{padding:28px 20px 24px}}
+.card{background:var(--white);border:1px solid var(--rule);padding:17px 18px}
+.card-label{color:var(--crimson)}
+.card h3{margin:0 0 8px;font-size:19px}
+.card p{font-size:14px;line-height:1.65;color:#444;margin-bottom:8px}
+.card p:last-child{margin-bottom:0}
+.badge{font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;border:1.5px solid var(--crimson);color:var(--crimson);padding:2px 7px;display:inline-block;margin-bottom:10px}
+.moves{display:flex;flex-direction:column;gap:2px;margin:16px 0}
+.move{display:flex;align-items:stretch}
+.move-n{background:var(--crimson);color:#fff;font-family:var(--mono);font-size:13px;font-weight:700;width:42px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:11px}
+.move-body{background:var(--white);border:1px solid var(--rule);border-left:none;padding:12px 15px;flex:1}
+.move-name{font-family:var(--display);font-size:16px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.move-q{font-size:14px;color:var(--muted);line-height:1.55}
+.table{width:100%;border-collapse:collapse;margin:16px 0;background:var(--white);font-size:14px}
+.table th{background:var(--sidebar);color:var(--cream);font-family:var(--mono);font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;text-align:left;padding:9px 12px}
+.table td{border-bottom:1px solid var(--rule-lt);padding:10px 12px;vertical-align:top;line-height:1.55;color:#333}
+.table tr:nth-child(even) td{background:var(--paper)}
+.table .pts{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--crimson);white-space:nowrap}
+.arc{display:flex;flex-direction:column;gap:2px;margin:16px 0}
+.arc-row{display:flex;align-items:stretch}
+.arc-label{background:var(--crimson);color:#fff;font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:10px;flex-shrink:0;width:84px;display:flex;align-items:center}
+.arc-body{background:var(--white);border:1px solid var(--rule);border-left:none;padding:10px 14px;flex:1}
+.arc-title{font-size:14px;font-weight:600;color:var(--ink)}
+.arc-sub{font-size:12.5px;color:var(--muted)}
+.footer{background:var(--sidebar);border-top:4px solid var(--crimson);padding:28px}
+.footer-inner{max-width:980px;margin:0 auto;font-family:var(--mono);font-size:9px;color:#8a8278;letter-spacing:.04em}
+.footer-inner strong{color:#b7aca2}
 </style>
 </head>
 <body>
-
-<!-- MASTHEAD -->
-<div class="masthead">
-  <div class="masthead-rule"></div>
-  <div class="masthead-inner">
-    <div class="masthead-kicker">University of Denver · MFJS · CEAI Curriculum Project 2026</div>
-    <h1 class="masthead-title">Slow News,<br><em>Smart Citizens</em></h1>
-    <div class="masthead-rule-mid"></div>
-    <p class="masthead-deck">A modular media literacy curriculum for democratic life in the age of generative AI — and a practice for the coffee klatch, the deliberate conversation, the slow read.</p>
-  </div>
-  <div class="byline">
-    <div class="byline-item"><strong>Andrew J. Matranga, EdD</strong> · Principal Investigator</div>
-    <div class="byline-sep"></div>
-    <div class="byline-item">Media, Film &amp; Journalism Studies</div>
-    <div class="byline-sep"></div>
-    <div class="byline-item">Center for Ethical Artificial Intelligence · 2026</div>
+<div class="topbar">
+  <div class="top-rule"></div>
+  <div class="nav">
+    <a class="nav-title" href="SNSC_Start_Standardized.html">Slow News, <em>Smart Citizens</em></a>
+    <a href="SNSC_Start_Standardized.html">Project Start</a>
+<a href="SNSC_Student_Standardized.html">Student Home</a>
+<a href="SNSC_Teacher_Standardized.html">Teacher Home</a>
+<a href="SNSC_Assessments_Standardized.html">Assessments</a>
   </div>
 </div>
-
-<div class="layout">
-
-  <!-- LEFT: LEDE + NAVIGATION -->
-  <div class="left">
-
-    <div class="lede">
-      <p>This is a curriculum for learning to read carefully in a world that makes careful reading hard. It runs in fifteen minutes or across a full quarter. It fits inside any course, in any discipline, from ninth grade through graduate school. It asks students to slow down, apply five critical moves to the news, keep a hand-written notebook, and assemble a physical publication at the end of the module.</p>
-      <p>The links below are the complete project. Start with the README if you are an instructor. Start with the site if you want the overview first. If you are a student whose instructor assigned this, start where they told you to — and if they did not say, start with the site.</p>
-    </div>
-
-    <!-- ORIENTATION -->
-    <div class="nav-section">
-      <div class="nav-section-label">Start Here</div>
-
-      <a class="nav-link" href="https://andrewmatranga.github.io/slownews/readme.html">
-        <div class="nav-link-icon start">READ ME</div>
-        <div class="nav-link-body">
-          <div class="nav-link-title">Instructor README</div>
-          <div class="nav-link-desc">The thesis, the file index, the S/M/L guide, the analog layer spec, Canvas setup, and discipline adaptation guidance. Read this before anything else.</div>
-          <div class="nav-link-url">readme.html</div>
-        </div>
-      </a>
-
-      <a class="nav-link" href="https://andrewmatranga.github.io/slownews/">
-        <div class="nav-link-icon">Site</div>
-        <div class="nav-link-body">
-          <div class="nav-link-title">Project Site — The Front Door</div>
-          <div class="nav-link-desc">Overview, the five critical moves, and descriptions of all three versions. Written for both faculty and students. Share this link before the first session.</div>
-          <div class="nav-link-url">slownews/ (index)</div>
-        </div>
-      </a>
-    </div>
-
-    <!-- FACULTY PATHS -->
-    <div class="nav-section">
-      <div class="nav-section-label">Canvas Shells — Choose One</div>
-
-      <div class="path-group">
-        <div class="path-label">S · Small — Any course, 1–3 sessions, grades 9–16</div>
-        <a class="nav-link" href="https://andrewmatranga.github.io/slownews/small-course.html">
-          <div class="nav-link-icon" style="background:#6a7a5a">Small</div>
-          <div class="nav-link-body">
-            <div class="nav-link-title">Small Canvas Shell</div>
-            <div class="nav-link-desc">15 minutes per session. Three critical moves. Notebook entries, Reading Reflection, and a hand-assembled page. Fits inside any existing course without restructuring anything.</div>
-            <div class="nav-link-url">small-course.html</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="path-group">
-        <div class="path-label">M · Medium — Any course with five weeks available</div>
-        <a class="nav-link" href="https://andrewmatranga.github.io/slownews/medium-course.html">
-          <div class="nav-link-icon" style="background:#7a6a3a">Medium</div>
-          <div class="nav-link-body">
-            <div class="nav-link-title">Medium Canvas Shell</div>
-            <div class="nav-link-desc">Five weeks, all five moves, one live story followed from Description to Engagement. Interpretive Note, Short Public Piece, notebook archive, and a four-to-six page physical publication.</div>
-            <div class="nav-link-url">medium-course.html</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="path-group">
-        <div class="path-label">L · Large — Journalism course, ten weeks, 25% of grade</div>
-        <a class="nav-link" href="https://andrewmatranga.github.io/slownews/large-course.html">
-          <div class="nav-link-icon" style="background:var(--crimson)">Large</div>
-          <div class="nav-link-body">
-            <div class="nav-link-title">Large Canvas Shell — Ten Weeks</div>
-            <div class="nav-link-desc">The full Citizen Scholar arc. One beat for ten weeks. Five modules, cluster formation, State of the World entry, twenty-page physical publication assembled at the final session.</div>
-            <div class="nav-link-url">large-course.html</div>
-          </div>
-        </a>
-      </div>
-    </div>
-
-    <!-- REFERENCE -->
-    <div class="nav-section">
-      <div class="nav-section-label">Reference and Assessment</div>
-
-      <a class="nav-link" href="https://andrewmatranga.github.io/slownews/additions.html">
-        <div class="nav-link-icon ref">Add+</div>
-        <div class="nav-link-body">
-          <div class="nav-link-title">Supplementary Pages</div>
-          <div class="nav-link-desc">Trust and Authority in the AI Era, AI in the Field, reading lists with swap-out notes for twelve disciplines, and Course Introduction updates. Add these to any version.</div>
-          <div class="nav-link-url">additions.html</div>
-        </div>
-      </a>
-
-      <a class="nav-link" href="https://andrewmatranga.github.io/slownews/assessments.html">
-        <div class="nav-link-icon assess">Assess</div>
-        <div class="nav-link-body">
-          <div class="nav-link-title">Assessments, Assignments, and Rubrics</div>
-          <div class="nav-link-desc">The complete assessment companion. Every assignment for all three versions — full prompts, rubrics with five-level descriptors, exemplar language, and common errors with instructor guidance.</div>
-          <div class="nav-link-url">assessments.html</div>
-        </div>
-      </a>
-    </div>
-
-    <!-- WORKFLOW GUIDES -->
-    <div class="nav-section">
-      <div class="nav-section-label">Two Paths Through the Project</div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:3px">
-        <div style="background:var(--white);border:1px solid var(--rule);padding:14px 16px">
-          <div style="font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--crimson);margin-bottom:8px">Faculty Path</div>
-          <div style="font-size:13px;line-height:1.6;color:#444">
-            1. Read the README<br>
-            2. Open the project site<br>
-            3. Choose Small, Medium, or Large<br>
-            4. Open that Canvas shell<br>
-            5. Make three decisions (notebook name, publication format, minimum pages)<br>
-            6. Assign Lippmann for Week 1
-          </div>
-        </div>
-        <div style="background:var(--white);border:1px solid var(--rule);padding:14px 16px">
-          <div style="font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--crimson);margin-bottom:8px">Student Path</div>
-          <div style="font-size:13px;line-height:1.6;color:#444">
-            1. Open the project site<br>
-            2. Read the Overview section<br>
-            3. Open the Canvas shell your instructor assigned<br>
-            4. Read Course Home<br>
-            5. Read The Critical Process<br>
-            6. Find a beat and buy a notebook
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /left -->
-
-  <!-- RIGHT: SIDEBAR -->
-  <div class="sidebar">
-
-    <!-- LIVE NEWS MOMENT -->
-    <div class="live-block">
-      <div class="live-header">
-        <div class="live-dot"></div>
-        <div class="live-label">Live Example · May 25, 2026</div>
-        <div class="live-date">Today</div>
-      </div>
-      <div class="live-body">
-        <h4>The Five Moves, Applied Right Now</h4>
-        <p>On the day this curriculum is published, Pope Leo XIV released <em>Magnifica Humanitas</em> — "On Safeguarding the Human Person in the Time of Artificial Intelligence" — his first encyclical and the Catholic Church's formal entry into the AI governance conversation. He signed it on May 15, the 135th anniversary of <em>Rerum Novarum</em>, Leo XIII's foundational 1891 encyclical on labor and capital during the first Industrial Revolution. He presented it in person — the first pope to personally present an encyclical — alongside an Anthropic co-founder.</p>
-        <p>This is not religious instruction. It is a media literacy exercise in progress:</p>
-        <p><strong>Description:</strong> What does the document actually argue? The title is "Magnificent Humanity" — the framing centers human dignity, not AI danger.<br>
-        <strong>Analysis:</strong> Why today? Why this co-presenter? Who is the primary source and what are the specialist and mainstream layers doing with it?<br>
-        <strong>Interpretation:</strong> What does the timing — 135 years after the first Industrial Revolution encyclical — tell a student of media history or religious studies?<br>
-        <strong>Evaluation:</strong> Who bears the costs this document names, and who is absent from the framing?<br>
-        <strong>Engagement:</strong> What would you add to the public record about this story that the coverage does not say?</p>
-        <div class="live-rule"></div>
-        <p>The AI conversation has left Silicon Valley and journalism schools. It is now being addressed by the oldest continuous institutional tradition in the Western world, on the same day a university journalism professor is publishing a media literacy curriculum. That is the state of the world on May 25, 2026.</p>
-        <p><a href="https://www.vatican.va/content/leo-xiv/en/encyclicals/documents/20260515-magnifica-humanitas.html" target="_blank">Read the primary source at the Vatican →</a></p>
-      </div>
-    </div>
-
-    <!-- FIVE MOVES REFERENCE -->
-    <div class="sidebar-block">
-      <div class="sidebar-block-header">The Five Critical Moves</div>
-      <div class="sidebar-block-body" style="padding:12px 14px">
-        <div class="moves-quick">
-          <div class="mq-row"><div class="mq-n">1</div><div class="mq-body"><div class="mq-name">Description</div><div class="mq-q">What does this actually say?</div></div></div>
-          <div class="mq-row"><div class="mq-n">2</div><div class="mq-body"><div class="mq-name">Analysis</div><div class="mq-q">How does it work, and how did it get here?</div></div></div>
-          <div class="mq-row"><div class="mq-n">3</div><div class="mq-body"><div class="mq-name">Interpretation</div><div class="mq-q">What does it mean, in light of what you know?</div></div></div>
-          <div class="mq-row"><div class="mq-n">4</div><div class="mq-body"><div class="mq-name">Evaluation</div><div class="mq-q">Is it fair, and who pays the costs?</div></div></div>
-          <div class="mq-row"><div class="mq-n">5</div><div class="mq-body"><div class="mq-name">Engagement</div><div class="mq-q">What do you do with what you know?</div></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PROJECT INFO -->
-    <div class="sidebar-block">
-      <div class="sidebar-block-header">About This Project</div>
-      <div class="sidebar-block-body">
-        <p><strong>Grant:</strong> Center for Ethical Artificial Intelligence (CEAI) · University of Denver · $3,000</p>
-        <p><strong>Project period:</strong> March 30 – June 1, 2026</p>
-        <p><strong>PI:</strong> Andrew J. Matranga, EdD · Department of Media, Film &amp; Journalism Studies</p>
-        <p>This curriculum is built for reuse and adaptation. If you teach the Medium or Small version in a field other than journalism and develop strong field-specific examples, share them. The goal is adoption, not proprietary control.</p>
-      </div>
-    </div>
-
-    <!-- WHAT YOU NEED -->
-    <div class="sidebar-block">
-      <div class="sidebar-block-header">What You Need to Start</div>
-      <div class="sidebar-block-body">
-        <p><strong>A notebook.</strong> Physical. Unlined or lightly lined. At least 40 pages for the Large version. A three-dollar composition book is fine.</p>
-        <p><strong>A beat.</strong> An ongoing area of public life connected to your field or your life. Live, traceable to a primary source, generating news each week.</p>
-        <p><strong>Lippmann.</strong> <em>Public Opinion</em>, Chapter 1 — "The World Outside and the Pictures in Our Heads." 1922. Public domain. Free online. Five to seven pages. Assign it before the first session.</p>
-      </div>
-    </div>
-
-  </div><!-- /sidebar -->
-
-</div><!-- /layout -->
-
-<footer>
-  <div class="footer-inner">
-    <div class="footer-credit">
-      <strong>Slow News, Smart Citizens</strong> · Andrew J. Matranga, EdD · University of Denver MFJS · CEAI 2026
-    </div>
-    <a class="footer-back" href="https://andrewmatranga.github.io/slownews/">
-      andrewmatranga.github.io/slownews/ ↗
-    </a>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="kicker">Project Start · Shared Overview</div>
+    <h1>Slow News,<br><em>Smart Citizens</em></h1>
+    <p class="deck">A simplified front door for the full project: one practice, three scopes, one physical reading object, and a shared framework instructors can adapt.</p>
+    <div class="byline">Andrew J. Matranga, EdD · University of Denver MFJS · Center for Ethical AI · 2026</div>
   </div>
-</footer>
+</header>
+<main class="layout">
 
+<section class="section">
+  <div class="label">The Project</div>
+  <h2>One Start Page for the Whole Curriculum</h2>
+  <p><strong>Slow News, Smart Citizens</strong> is a media literacy curriculum that can run inside almost any course. Students slow down with a physical or replica publication, keep a hand-written notebook, trace how information moves, and produce a final public-facing piece of thinking.</p>
+  <p>The course can address AI, algorithms, search, and synthetic media, but it does not need to sound like an AI course. The durable language is reading, evidence, attention, interpretation, fairness, and public life.</p>
+  <div class="pull"><p>Read carefully in a world that makes careful reading hard.</p></div>
+</section>
+<section class="section">
+  <div class="label">The Required Reading Object</div>
+  <h2>The Newspaper, Magazine, Journal, or Replica Edition</h2>
+  <p>The core material is not only “news.” It is a publication with editorial intention. Students should encounter at least one object that preserves layout, hierarchy, adjacency, and editorial judgment.</p>
+  <div class="grid-2">
+    <div class="card"><div class="card-label">Print newspaper</div><h3>Local, regional, national, weekly, or Sunday</h3><p>One copy per table is enough. Grocery stores, bookstores, and libraries are usually the easiest sources.</p></div>
+    <div class="card"><div class="card-label">Digital replica edition</div><h3>Print layout on screen</h3><p>Library tools such as PressReader or campus newspaper databases often provide replica editions without requiring students to buy subscriptions.</p></div>
+    <div class="card"><div class="card-label">Magazine or trade publication</div><h3>Weekly or monthly works</h3><p>A current issue of a magazine, trade publication, or field-specific periodical often works better than a daily paper for some disciplines.</p></div>
+    <div class="card"><div class="card-label">Academic journal</div><h3>For discipline-first courses</h3><p>A print or replica issue of a scholarly journal lets students contrast expert discourse with mainstream coverage of the same field.</p></div>
+  </div>
+  <div class="note"><div class="note-label">Accessibility principle</div><p>Do not require a specific paid subscription. Let students use library access, shared copies, replica editions, bookstore copies, or institution-provided databases.</p></div>
+</section>
+<section class="section">
+  <div class="label">The Framework</div>
+  <h2>The Five Critical Moves</h2>
+  <div class="moves">
+    <div class="move"><div class="move-n">1</div><div class="move-body"><div class="move-name">Description</div><div class="move-q">What does this actually say? What is present before we react?</div></div></div>
+    <div class="move"><div class="move-n">2</div><div class="move-body"><div class="move-name">Analysis</div><div class="move-q">How does it work, and how did it get here?</div></div></div>
+    <div class="move"><div class="move-n">3</div><div class="move-body"><div class="move-name">Interpretation</div><div class="move-q">What does it mean in light of what we know?</div></div></div>
+    <div class="move"><div class="move-n">4</div><div class="move-body"><div class="move-name">Evaluation</div><div class="move-q">Is it fair, adequate, and who bears the costs?</div></div></div>
+    <div class="move"><div class="move-n">5</div><div class="move-body"><div class="move-name">Engagement</div><div class="move-q">What do we do with what we know?</div></div></div>
+  </div>
+</section>
+<section class="section">
+  <div class="label">Choose a Scope</div>
+  <h2>Three Versions, One Practice</h2>
+  <div class="grid-3">
+    <div class="card"><div class="badge">S · Small</div><h3>1–3 sessions</h3><p>A recurring reading ritual or short unit. Best for trying the method without redesigning a course.</p><p><strong>Students produce:</strong> reading log, short reflection, one physical page.</p></div>
+    <div class="card"><div class="badge">M · Medium</div><h3>Five weeks</h3><p>Students follow one developing thread through the five moves and build a short public-facing piece.</p><p><strong>Students produce:</strong> source map, interpretive note, public piece, notebook archive.</p></div>
+    <div class="card"><div class="badge">L · Large</div><h3>Ten weeks</h3><p>A full course arc with sustained thread tracking, cluster synthesis, peer review, and a collective publication.</p><p><strong>Students produce:</strong> five assignments, notebook archive, peer review, final edition.</p></div>
+  </div>
+</section>
+<section class="section">
+  <div class="label">Suggested Reading Spine</div>
+  <h2>Readings That Work Across All Versions</h2>
+  <table class="table">
+    <tr><th>Tier</th><th>Purpose</th><th>Examples</th></tr>
+    <tr><td><strong>Tier 1</strong></td><td>Foundational media literacy and civic reading</td><td>Campbell critical process; source evaluation; verification; news literacy; public reason.</td></tr>
+    <tr><td><strong>Tier 2</strong></td><td>Current field example</td><td>One recent article, report, policy document, case study, or AI-in-the-field example selected by the instructor.</td></tr>
+    <tr><td><strong>Tier 3</strong></td><td>The publication object</td><td>Newspaper, magazine, trade publication, academic journal, or replica edition used in class.</td></tr>
+  </table>
+</section>
+
+</main>
+<footer class="footer"><div class="footer-inner"><strong>Slow News, Smart Citizens</strong> · A scalable media literacy curriculum for slow reading, field knowledge, and civic attention.</div></footer>
 </body>
 </html>
