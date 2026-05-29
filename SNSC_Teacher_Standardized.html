@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slow News, Smart Citizens — Teacher Home</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1c1c1c;--paper:#f5f1ea;--cream:#fffdf7;--white:#fff;
+  --crimson:#8b2332;--gold:#b8924a;--rule:#d4cdc3;--rule-lt:#e8e2d8;
+  --muted:#6a6259;--sidebar:#23201c;--green:#2d6a2d;--amber:#8a7a20;--brick:#7a2020;
+  --display:'Playfair Display',Georgia,serif;--serif:'Source Serif 4',Georgia,serif;--mono:'DM Mono','Courier New',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);font-family:var(--serif);color:var(--ink);font-size:16px;line-height:1.72}
+.topbar{position:sticky;top:0;z-index:10;background:var(--cream);border-bottom:1px solid var(--rule)}
+.top-rule{height:4px;background:var(--crimson)}
+.nav{max-width:980px;margin:0 auto;padding:0 24px;display:flex;gap:18px;align-items:center;min-height:46px;overflow-x:auto}
+.nav-title{font-family:var(--display);font-size:15px;font-weight:900;color:var(--ink);text-decoration:none;white-space:nowrap}
+.nav-title em{color:var(--crimson);font-style:italic}
+.nav a{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap}
+.nav a:hover{color:var(--crimson)}
+.masthead{background:var(--cream);border-bottom:3px solid var(--ink)}
+.masthead-inner{max-width:980px;margin:0 auto;padding:34px 28px 28px}
+.kicker{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--crimson);margin-bottom:14px}
+h1{font-family:var(--display);font-size:clamp(42px,7vw,72px);font-weight:900;line-height:.96;letter-spacing:-.02em;color:var(--ink);margin-bottom:12px}
+h1 em{font-style:italic;color:var(--crimson)}
+.deck{font-family:var(--display);font-size:clamp(17px,2.4vw,21px);font-style:italic;line-height:1.45;color:var(--muted);max-width:660px}
+.byline{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.04em;margin-top:18px;padding-top:14px;border-top:1px solid var(--rule)}
+.layout{max-width:980px;margin:0 auto;padding:0 28px 70px}
+.section{padding:34px 0;border-bottom:1px solid var(--rule-lt)}
+.section:last-child{border-bottom:none}
+.label{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--crimson);margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--rule)}
+h2{font-family:var(--display);font-size:clamp(24px,4vw,34px);font-weight:900;line-height:1.1;margin-bottom:14px}
+h3{font-family:var(--display);font-size:20px;font-weight:700;line-height:1.2;margin:18px 0 10px}
+p{font-size:16px;line-height:1.78;color:#363230;margin-bottom:14px}
+p:last-child{margin-bottom:0}
+ul,ol{padding-left:22px;margin-bottom:14px}
+li{font-size:15.5px;line-height:1.7;color:#363230;margin-bottom:6px}
+.pull{border-left:4px solid var(--crimson);padding:14px 18px;background:var(--white);margin:18px 0}
+.pull p{font-family:var(--display);font-size:18px;font-style:italic;line-height:1.5;color:var(--ink);margin:0}
+.note{background:#fdf8f0;border:1px solid #e0d4ba;border-left:4px solid var(--gold);padding:14px 18px;margin:16px 0}
+.note-label,.card-label,.table-label{font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.note p{font-size:14px;line-height:1.65;color:#4a3e28;margin:0}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:16px 0}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:16px 0}
+@media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr}.nav{padding:0 18px}.layout{padding:0 20px 60px}.masthead-inner{padding:28px 20px 24px}}
+.card{background:var(--white);border:1px solid var(--rule);padding:17px 18px}
+.card-label{color:var(--crimson)}
+.card h3{margin:0 0 8px;font-size:19px}
+.card p{font-size:14px;line-height:1.65;color:#444;margin-bottom:8px}
+.card p:last-child{margin-bottom:0}
+.badge{font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;border:1.5px solid var(--crimson);color:var(--crimson);padding:2px 7px;display:inline-block;margin-bottom:10px}
+.moves{display:flex;flex-direction:column;gap:2px;margin:16px 0}
+.move{display:flex;align-items:stretch}
+.move-n{background:var(--crimson);color:#fff;font-family:var(--mono);font-size:13px;font-weight:700;width:42px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:11px}
+.move-body{background:var(--white);border:1px solid var(--rule);border-left:none;padding:12px 15px;flex:1}
+.move-name{font-family:var(--display);font-size:16px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.move-q{font-size:14px;color:var(--muted);line-height:1.55}
+.table{width:100%;border-collapse:collapse;margin:16px 0;background:var(--white);font-size:14px}
+.table th{background:var(--sidebar);color:var(--cream);font-family:var(--mono);font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;text-align:left;padding:9px 12px}
+.table td{border-bottom:1px solid var(--rule-lt);padding:10px 12px;vertical-align:top;line-height:1.55;color:#333}
+.table tr:nth-child(even) td{background:var(--paper)}
+.table .pts{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--crimson);white-space:nowrap}
+.arc{display:flex;flex-direction:column;gap:2px;margin:16px 0}
+.arc-row{display:flex;align-items:stretch}
+.arc-label{background:var(--crimson);color:#fff;font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:10px;flex-shrink:0;width:84px;display:flex;align-items:center}
+.arc-body{background:var(--white);border:1px solid var(--rule);border-left:none;padding:10px 14px;flex:1}
+.arc-title{font-size:14px;font-weight:600;color:var(--ink)}
+.arc-sub{font-size:12.5px;color:var(--muted)}
+.footer{background:var(--sidebar);border-top:4px solid var(--crimson);padding:28px}
+.footer-inner{max-width:980px;margin:0 auto;font-family:var(--mono);font-size:9px;color:#8a8278;letter-spacing:.04em}
+.footer-inner strong{color:#b7aca2}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="top-rule"></div>
+  <div class="nav">
+    <a class="nav-title" href="SNSC_Start_Standardized.html">Slow News, <em>Smart Citizens</em></a>
+    <a href="SNSC_Start_Standardized.html">Project Start</a>
+<a href="SNSC_Student_Standardized.html">Student Home</a>
+<a href="SNSC_Teacher_Standardized.html">Teacher Home</a>
+<a href="SNSC_Assessments_Standardized.html">Assessments</a>
+  </div>
+</div>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="kicker">Teacher Home · Instructor Guide</div>
+    <h1>Teach the Practice<br><em>Without Overbuilding</em></h1>
+    <p class="deck">A simplified instructor home for choosing S/M/L, setting up Canvas, assigning the physical publication, and keeping the course rigorous but adaptable.</p>
+    <div class="byline">Andrew J. Matranga, EdD · University of Denver MFJS · Center for Ethical AI · 2026</div>
+  </div>
+</header>
+<main class="layout">
+
+<section class="section">
+  <div class="label">Teacher Home</div>
+  <h2>Run This Without Rebuilding Your Course</h2>
+  <p>This curriculum works as an overlay. You choose the version, name the notebook, choose or approve the physical publication format, and select one current field-specific reading per module. The rest of the structure can remain stable across courses.</p>
+</section>
+<section class="section">
+  <div class="label">Three Setup Decisions</div>
+  <h2>Decide These Before Week One</h2>
+  <div class="grid-3">
+    <div class="card"><div class="badge">1</div><h3>Name the notebook</h3><p>Reporter’s notebook, field journal, case notes, studio book, observer’s record, researcher’s log.</p></div>
+    <div class="card"><div class="badge">2</div><h3>Name the publication object</h3><p>Newspaper, magazine, journal, trade publication, or replica edition. Do not require a specific paid subscription.</p></div>
+    <div class="card"><div class="badge">3</div><h3>Choose the scope</h3><p>Small for a ritual, Medium for a unit, Large for a full course arc.</p></div>
+  </div>
+</section>
+<section class="section">
+  <div class="label">Reading Materials</div>
+  <h2>Suggested Reading Architecture</h2>
+  <table class="table">
+    <tr><th>Layer</th><th>What Instructors Provide</th><th>What Students Bring</th></tr>
+    <tr><td><strong>Shared theory</strong></td><td>Short common reading on media literacy, verification, source evaluation, public information, or civic reading.</td><td>Notes and questions.</td></tr>
+    <tr><td><strong>Field example</strong></td><td>One recent AI/media/source-chain example from your discipline or profession.</td><td>Disciplinary interpretation.</td></tr>
+    <tr><td><strong>Physical publication</strong></td><td>Options and access guidance: library replica editions, subject journals, bookstore/grocery sources, campus library holdings.</td><td>One object or shared table copy.</td></tr>
+  </table>
+</section>
+<section class="section">
+  <div class="label">Pacing</div>
+  <h2>Small / Medium / Large</h2>
+  <div class="arc">
+    <div class="arc-row"><div class="arc-label">Small</div><div class="arc-body"><div class="arc-title">1–3 sessions</div><div class="arc-sub">Description, Analysis, Interpretation. One reading reflection.</div></div></div>
+    <div class="arc-row"><div class="arc-label">Medium</div><div class="arc-body"><div class="arc-title">Five weeks</div><div class="arc-sub">One week per move. Source Map, Interpretive Note, Short Public Piece.</div></div></div>
+    <div class="arc-row"><div class="arc-label">Large</div><div class="arc-body"><div class="arc-title">Ten weeks</div><div class="arc-sub">Two weeks per move. Five assignments, notebook archive, peer review, collective publication.</div></div></div>
+  </div>
+</section>
+<section class="section">
+  <div class="label">Canvas Setup</div>
+  <h2>Keep the Shell Clean</h2>
+  <p>Use a simple Canvas navigation: Home, Modules, Discussions, Assignments, Grades. Hide Files and Pages from students when possible. Let the page design create the editorial feel.</p>
+  <table class="table">
+    <tr><th>Canvas Area</th><th>Recommended Use</th></tr>
+    <tr><td><strong>Modules</strong></td><td>Start Here, Publication Practice, Notebook, Discussions, Assignments, Final Edition.</td></tr>
+    <tr><td><strong>Pages</strong></td><td>Student-facing guides and module overviews.</td></tr>
+    <tr><td><strong>Discussions</strong></td><td>Pre-class response and post-class reflection.</td></tr>
+    <tr><td><strong>Assignments</strong></td><td>Submitted work with simplified rubrics.</td></tr>
+  </table>
+</section>
+
+</main>
+<footer class="footer"><div class="footer-inner"><strong>Slow News, Smart Citizens</strong> · A scalable media literacy curriculum for slow reading, field knowledge, and civic attention.</div></footer>
+</body>
+</html>
