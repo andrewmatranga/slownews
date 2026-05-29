@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slow News, Smart Citizens — About the Investigator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1c1c1c;--paper:#f5f1ea;--cream:#fffdf7;--white:#fff;
+  --crimson:#8b2332;--gold:#b8924a;--rule:#d4cdc3;--rule-lt:#e8e2d8;
+  --muted:#6a6259;--sidebar:#23201c;--green:#2d6a2d;--amber:#8a7a20;--brick:#7a2020;
+  --display:'Playfair Display',Georgia,serif;--serif:'Source Serif 4',Georgia,serif;--mono:'DM Mono','Courier New',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);font-family:var(--serif);color:var(--ink);font-size:16px;line-height:1.72}
+.topbar{position:sticky;top:0;z-index:10;background:var(--cream);border-bottom:1px solid var(--rule)}
+.top-rule{height:4px;background:var(--crimson)}
+.nav{max-width:980px;margin:0 auto;padding:0 24px;display:flex;gap:18px;align-items:center;min-height:46px;overflow-x:auto}
+.nav-title{font-family:var(--display);font-size:15px;font-weight:900;color:var(--ink);text-decoration:none;white-space:nowrap}
+.nav-title em{color:var(--crimson);font-style:italic}
+.nav a{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap}
+.nav a:hover{color:var(--crimson)}
+.masthead{background:var(--cream);border-bottom:3px solid var(--ink)}
+.masthead-inner{max-width:980px;margin:0 auto;padding:34px 28px 28px}
+.kicker{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--crimson);margin-bottom:14px}
+h1{font-family:var(--display);font-size:clamp(42px,7vw,72px);font-weight:900;line-height:.96;letter-spacing:-.02em;color:var(--ink);margin-bottom:12px}
+h1 em{font-style:italic;color:var(--crimson)}
+.deck{font-family:var(--display);font-size:clamp(17px,2.4vw,21px);font-style:italic;line-height:1.45;color:var(--muted);max-width:660px}
+.byline{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.04em;margin-top:18px;padding-top:14px;border-top:1px solid var(--rule)}
+.layout{max-width:980px;margin:0 auto;padding:0 28px 70px}
+.section{padding:34px 0;border-bottom:1px solid var(--rule-lt)}
+.section:last-child{border-bottom:none}
+.label{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--crimson);margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--rule)}
+h2{font-family:var(--display);font-size:clamp(24px,4vw,34px);font-weight:900;line-height:1.1;margin-bottom:14px}
+h3{font-family:var(--display);font-size:20px;font-weight:700;line-height:1.2;margin:18px 0 10px}
+p{font-size:16px;line-height:1.78;color:#363230;margin-bottom:14px}
+p:last-child{margin-bottom:0}
+ul,ol{padding-left:22px;margin-bottom:14px}
+li{font-size:15.5px;line-height:1.7;color:#363230;margin-bottom:6px}
+.pull{border-left:4px solid var(--crimson);padding:14px 18px;background:var(--white);margin:18px 0}
+.pull p{font-family:var(--display);font-size:18px;font-style:italic;line-height:1.5;color:var(--ink);margin:0}
+.note{background:#fdf8f0;border:1px solid #e0d4ba;border-left:4px solid var(--gold);padding:14px 18px;margin:16px 0}
+.note-label,.card-label,.table-label{font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.note p{font-size:14px;line-height:1.65;color:#4a3e28;margin:0}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:16px 0}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:16px 0}
+@media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr}.nav{padding:0 18px}.layout{padding:0 20px 60px}.masthead-inner{padding:28px 20px 24px}}
+.card{background:var(--white);border:1px solid var(--rule);padding:17px 18px}
+.card-label{color:var(--crimson)}
+.card h3{margin:0 0 8px;font-size:19px}
+.card p{font-size:14px;line-height:1.65;color:#444;margin-bottom:8px}
+.card p:last-child{margin-bottom:0}
+.badge{font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;border:1.5px solid var(--crimson);color:var(--crimson);padding:2px 7px;display:inline-block;margin-bottom:10px}
+.moves{display:flex;flex-direction:column;gap:2px;margin:16px 0}
+.move{display:flex;align-items:stretch}
+.move-n{background:var(--crimson);color:#fff;font-family:var(--mono);font-size:13px;font-weight:700;width:42px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:11px}
+.move-body{background:var(--white);border:1px solid var(--rule);border-left:none;padding:12px 15px;flex:1}
+.move-name{font-family:var(--display);font-size:16px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.move-q{font-size:14px;color:var(--muted);line-height:1.55}
+.table{width:100%;border-collapse:collapse;margin:16px 0;background:var(--white);font-size:14px}
+.table th{background:var(--sidebar);color:var(--cream);font-family:var(--mono);font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;text-align:left;padding:9px 12px}
+.table td{border-bottom:1px solid var(--rule-lt);padding:10px 12px;vertical-align:top;line-height:1.55;color:#333}
+.table tr:nth-child(even) td{background:var(--paper)}
+.table .pts{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--crimson);white-space:nowrap}
+.arc{display:flex;flex-direction:column;gap:2px;margin:16px 0}
+.arc-row{display:flex;align-items:stretch}
+.arc-label{background:var(--crimson);color:#fff;font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:10px;flex-shrink:0;width:84px;display:flex;align-items:center}
+.arc-body{background:var(--white);border:1px solid var(--rule);border-left:none;padding:10px 14px;flex:1}
+.arc-title{font-size:14px;font-weight:600;color:var(--ink)}
+.arc-sub{font-size:12.5px;color:var(--muted)}
+.footer{background:var(--sidebar);border-top:4px solid var(--crimson);padding:28px}
+.footer-inner{max-width:980px;margin:0 auto;font-family:var(--mono);font-size:9px;color:#8a8278;letter-spacing:.04em}
+.footer-inner strong{color:#b7aca2}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="top-rule"></div>
+  <div class="nav">
+    <a class="nav-title" href="SNSC_Start_Standardized.html">Slow News, <em>Smart Citizens</em></a>
+    <a href="SNSC_Start_Standardized.html">Project Start</a>
+<a href="SNSC_Student_Standardized.html">Student Home</a>
+<a href="SNSC_Teacher_Standardized.html">Teacher Home</a>
+<a href="SNSC_Assessments_Standardized.html">Assessments</a>
+<a href="SNSC_Investigator_Standardized.html">About</a>
+  </div>
+</div>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="kicker">About the Investigator · Slow News, Smart Citizens</div>
+    <h1>Professor Andrew<br><em>Matranga</em></h1>
+    <p class="deck">Journalism professor, Doctor of Education, curriculum designer, and lifelong newspaper reader building a practical media literacy curriculum for democratic life in an AI-shaped information environment.</p>
+    <div class="byline">Andrew J. Matranga, EdD · University of Denver · Media, Film &amp; Journalism Studies · Principal Investigator</div>
+  </div>
+</header>
+<main class="layout">
+
+<section class="section">
+  <div class="label">Investigator Profile</div>
+  <h2>Who I Am</h2>
+  <p>I am a professor of journalism and media studies at the University of Denver, where I teach courses in journalism, editorial design, data visualization, brand journalism, media production, and civic media literacy. My work sits at the intersection of journalism practice, design thinking, curriculum, public life, and the habits of attention students need to navigate contemporary information environments.</p>
+  <p>I am also a Doctor of Education, with research focused on teaching presence, flipped learning, reflective practice, and the ways instructors design learning environments that help students move from information exposure to meaningful understanding. <strong>Slow News, Smart Citizens</strong> grows out of that work: it is a teaching framework, a media literacy practice, and a civic reading habit.</p>
+  <div class="pull"><p>The project begins with a simple belief: students do not only need more information. They need better habits for reading, questioning, comparing, and responding to information.</p></div>
+</section>
+
+<section class="section">
+  <div class="label">Professional Grounding</div>
+  <h2>Why This Project Fits My Work</h2>
+  <div class="grid-3">
+    <div class="card"><div class="card-label">Professor</div><h3>Journalism + Media</h3><p>I teach students how stories are reported, designed, edited, distributed, and understood across print, digital, visual, and social media environments.</p></div>
+    <div class="card"><div class="card-label">Doctor of Education</div><h3>Curriculum + Instruction</h3><p>My research focuses on teaching presence, reflective learning, and course design that helps students build transferable habits rather than simply complete assignments.</p></div>
+    <div class="card"><div class="card-label">Practitioner</div><h3>Editorial + Brand Work</h3><p>Before and alongside my academic work, I have worked in journalism, magazines, brand storytelling, web publishing, and creative production.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="label">The Reading Life Behind the Curriculum</div>
+  <h2>Why Newspapers Matter Here</h2>
+  <p>This project is also personal. I grew up reading newspapers and have spent much of my life studying how publications organize public attention. A printed newspaper or magazine is not nostalgic decoration in this curriculum. It is a teaching object. It lets students see hierarchy, adjacency, emphasis, omission, design, and editorial judgment in ways a personalized feed often hides.</p>
+  <p>The curriculum does not require every student to subscribe to a daily paper. It asks students and instructors to find a shared reading object: a print newspaper, a magazine, a trade publication, a hard copy of an academic journal, or a digital replica edition that preserves the logic of a printed issue. The point is not paper for paper’s sake. The point is visible editorial intention.</p>
+  <div class="note"><div class="note-label">The practical commitment</div><p>The project is designed to be usable by instructors who do not have journalism training, students who do not have paid subscriptions, and courses that only have a small amount of time to devote to media literacy.</p></div>
+</section>
+
+<section class="section">
+  <div class="label">Research and Teaching Commitments</div>
+  <h2>What Guides the Curriculum</h2>
+  <table class="table">
+    <tr><th>Commitment</th><th>How it appears in the curriculum</th></tr>
+    <tr><td><strong>Slow reading</strong></td><td>Students begin with description before reaction, interpretation, or evaluation.</td></tr>
+    <tr><td><strong>Field knowledge</strong></td><td>Students apply what they are learning in a discipline to public information about that field.</td></tr>
+    <tr><td><strong>Reflective practice</strong></td><td>The notebook turns reading into a repeated habit of observation, questioning, and revision.</td></tr>
+    <tr><td><strong>Civic responsibility</strong></td><td>The final work asks students to consider what they should do with what they now know.</td></tr>
+    <tr><td><strong>Instructor adaptability</strong></td><td>The S/M/L structure lets faculty adopt the framework at the scale their course can support.</td></tr>
+  </table>
+</section>
+
+<section class="section">
+  <div class="label">Principal Investigator Statement</div>
+  <h2>What I Am Trying to Build</h2>
+  <p><strong>Slow News, Smart Citizens</strong> is a curriculum for reading public life with care. It is built for a moment when students encounter news, summaries, search results, platform recommendations, synthetic media, and public claims in overlapping streams. The answer is not to retreat from technology or to romanticize print. The answer is to practice better habits of attention.</p>
+  <p>The project uses newspapers, magazines, journals, and replica editions because they make editorial choices visible. It uses notebooks because handwriting slows down thinking. It uses discussions because interpretation improves when students test ideas together. It uses assignments and rubrics because media literacy has to be teachable, assessable, and adaptable beyond one instructor.</p>
+  <div class="pull"><p>The goal is not simply to teach students how to spot bad information. The goal is to help them become the kind of readers and citizens who can tell what is known, what is missing, what is at stake, and what a responsible response might require.</p></div>
+</section>
+
+<section class="section">
+  <div class="label">Project Role</div>
+  <h2>How to Read This Page in the Course Shell</h2>
+  <p>This page gives context for the project and its investigator. It is not required student reading in every implementation, but it can help students and instructors understand why the curriculum brings together journalism, physical publications, AI-era media literacy, reflective notebooks, and civic learning.</p>
+</section>
+
+</main>
+<footer class="footer"><div class="footer-inner"><strong>Slow News, Smart Citizens</strong> · Andrew J. Matranga, EdD · Professor of Journalism · Doctor of Education · University of Denver MFJS.</div></footer>
+</body>
+</html>
